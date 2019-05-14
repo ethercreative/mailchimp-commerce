@@ -1,2 +1,2 @@
-# mailchimp-commerce
+# Mailchimp for Craft Commerce
 Mailchimp integration with Craft Commerce

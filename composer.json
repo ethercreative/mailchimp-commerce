@@ -1,0 +1,41 @@
+{
+  "name": "ether/mailchimp-commerce",
+  "description": "Mailchimp integration with Craft Commerce",
+  "version": "1.0.0",
+  "type": "craft-plugin",
+  "keywords": [
+    "mailchimp",
+    "commerce",
+    "abandoned",
+    "carts"
+  ],
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Ether",
+      "homepage": "https://ethercreative.co.uk"
+    }
+  ],
+  "support": {
+    "email": "dev@ethercreative.co.uk",
+    "issues": "https://github.com/ethercreative/mailchimp-commerce/issues?state=open",
+    "source": "https://github.com/ethercreative/mailchimp-commerce",
+    "docs": "https://github.com/ethercreative/mailchimp-commerce/blob/master/README.md"
+  },
+  "require": {
+    "craftcms/cms": "^3.1.0",
+    "guzzlehttp/guzzle": "^6.3.3",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "ether\\mc\\": "src/"
+    }
+  },
+  "extra": {
+    "handle": "mailchimp-commerce",
+    "name": "Mailchimp Commerce",
+    "documentationUrl": "https://github.com/ethercreative/mailchimp-commerce/blob/master/README.md",
+    "class": "ether\\mc\\MailchimpCommerce"
+  }
+}
