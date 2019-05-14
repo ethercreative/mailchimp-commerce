@@ -1,0 +1,27 @@
+{% extends 'mailchimp-commerce/_start/_layout' %}
+{% import '_includes/forms' as forms %}
+{% set step = 1 %}
+{% set next = 'finish' %}
+
+{% block content %}
+	<input type="hidden" name="action" value="plugins/save-plugin-settings">
+	<input type="hidden" name="pluginHandle" value="mailchimp-commerce">
+
+	{% namespace 'settings' %}
+	{{ forms.autosuggestField({
+		first: true,
+		label: 'Mailchimp API Key'|t('mailchimp-commerce'),
+		instructions: 'Your Mailchimp API key. [About API Keys]({aboutUrl})'|t('mailchimp-commerce', {
+			'aboutUrl': 'https://mailchimp.com/help/about-api-keys/',
+		}),
+		id: 'apiKey',
+		name: 'apiKey',
+		suggestEnvVars: true,
+		value: settings.apiKey,
+		autofocus: true,
+		required: true,
+		errors: settings.getErrors('apiKey'),
+	}) }}
+	{% endnamespace %}
+
+{% endblock %}

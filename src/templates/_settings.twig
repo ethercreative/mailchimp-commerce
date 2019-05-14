@@ -1,0 +1,20 @@
+{% import '_includes/forms' as forms %}
+
+{% if not settings.apiKey %}
+	{% redirect cpUrl('mailchimp-commerce/start') %}
+{% endif %}
+
+{{ forms.autosuggestField({
+	first: true,
+	label: 'Mailchimp API Key'|t('mailchimp-commerce'),
+	instructions: 'Your Mailchimp API key. [About API Keys]({aboutUrl})'|t('mailchimp-commerce', {
+		'aboutUrl': 'https://mailchimp.com/help/about-api-keys/',
+	}),
+	id: 'apiKey',
+	name: 'apiKey',
+	suggestEnvVars: true,
+	value: settings.apiKey,
+	autofocus: true,
+	required: true,
+	errors: settings.getErrors('apiKey'),
+}) }}

@@ -1,0 +1,16 @@
+{% extends 'mailchimp-commerce/_start/_layout' %}
+{% import '_includes/forms' as forms %}
+{% set step = 2 %}
+{% set buttonText = 'Next Step'|t('mailchimp-commerce') %}
+
+{% block content %}
+	<input type="hidden" name="action" value="mailchimp-commerce/start/complete">
+
+	{{ forms.selectField({
+		label: 'Store List'|t('mailchimp-commerce'),
+		name: 'listId',
+		instructions: 'Select the Mailchimp list you want this store to be attached to. If you can\'t see any lists, go back to the previous step and check your API key.'|t('mailchimp-commerce'),
+		options: lists,
+	}) }}
+
+{% endblock %}
