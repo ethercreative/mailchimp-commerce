@@ -9,47 +9,49 @@
 namespace ether\mc\jobs;
 
 use craft\db\QueryAbortedException;
-use craft\errors\SiteNotFoundException;
 use craft\queue\BaseJob;
 use craft\queue\QueueInterface;
 use ether\mc\MailchimpCommerce;
-use yii\db\Exception;
+use Throwable;
+use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\queue\Queue;
 
 /**
- * Class SyncProducts
+ * Class SyncOrders
  *
  * @author  Ether Creative
  * @package ether\mc\jobs
  */
-class SyncProducts extends BaseJob
+class SyncOrders extends BaseJob
 {
 
 	// Properties
 	// =========================================================================
 
-	public $productIds = [];
+	public $orderIds = [];
 
 	// Methods
 	// =========================================================================
 
 	/**
-	 * @param Queue|QueueInterface $queue The queue the job belongs to
+	 * @param QueueInterface|Queue $queue
 	 *
-	 * @throws Exception
 	 * @throws QueryAbortedException
-	 * @throws SiteNotFoundException
+	 * @throws Throwable
+	 * @throws Exception
+	 * @throws InvalidConfigException
 	 */
 	public function execute ($queue)
 	{
-		$products = MailchimpCommerce::$i->products;
+		$orders = MailchimpCommerce::$i->orders;
 		$i = 0;
-		$total = count($this->productIds);
+		$total = count($this->orderIds);
 
-		foreach ($this->productIds as $id)
+		foreach ($this->orderIds as $id)
 		{
-			if (!$products->syncProductById($id))
-				throw new QueryAbortedException('Failed to sync product');
+			if (!$orders->syncOrderById($id))
+				throw new QueryAbortedException('Failed to sync order');
 
 			$this->setProgress($queue, $i++ / $total);
 		}
@@ -57,7 +59,7 @@ class SyncProducts extends BaseJob
 
 	protected function defaultDescription ()
 	{
-		return MailchimpCommerce::t('Syncing Products to Mailchimp');
+		return MailchimpCommerce::t('Syncing Orders to Mailchimp');
 	}
 
 }

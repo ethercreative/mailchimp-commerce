@@ -1,0 +1,32 @@
+{% extends 'mailchimp-commerce/_layout' %}
+{% import '_includes/forms' as forms %}
+{% set title = 'Settings'|t('app') %}
+{% set fullPageForm = true %}
+
+{% block content %}
+	<input type="hidden" name="action" value="plugins/save-plugin-settings">
+	<input type="hidden" name="pluginHandle" value="mailchimp-commerce">
+
+	{% namespace 'settings' %}
+
+		{{ forms.selectField({
+			first: true,
+			name: 'shippedStatusHandle',
+			label: 'Shipped Order Status'|t('mailchimp-commerce'),
+			instructions: 'The statues that is used to define when an order has been shipped.'|t('mailchimp-commerce'),
+			required: true,
+			options: orderStatuses,
+			value: settings.shippedStatusHandle,
+		}) }}
+
+		{{ forms.textField({
+			name: 'orderUri',
+			label: 'Order Complete URI'|t('mailchimp-commerce'),
+			instructions: 'The URI to view the completed order.'|t('mailchimp-commerce'),
+			placeholder: '/customer/order?number={number}',
+			value: settings.orderUri,
+		}) }}
+
+	{% endnamespace %}
+
+{% endblock %}

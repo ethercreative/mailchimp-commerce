@@ -14,6 +14,7 @@ use craft\commerce\Plugin as Commerce;
 use craft\errors\ElementNotFoundException;
 use craft\errors\SiteNotFoundException;
 use craft\helpers\App;
+use ether\mc\helpers\AddressHelper;
 use ether\mc\MailchimpCommerce;
 use Throwable;
 use yii\base\Exception;
@@ -159,16 +160,7 @@ class StoreService extends Component
 
 		if ($storeLocation)
 		{
-			$storeData['address'] = [
-				'address1' => $storeLocation->address1,
-				'address2' => $storeLocation->address2,
-				'city' => $storeLocation->city,
-				'province' => $storeLocation->stateText,
-				'postal_code' => $storeLocation->zipCode,
-				'country' => $storeLocation->countryText,
-				'country_code' => $storeLocation->country->iso,
-			];
-
+			$storeData['address'] = AddressHelper::asArray($storeLocation);
 			$storeData['phone'] = $storeLocation->phone;
 		}
 

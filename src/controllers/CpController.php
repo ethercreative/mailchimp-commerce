@@ -10,9 +10,11 @@ namespace ether\mc\controllers;
 
 use Craft;
 use craft\base\Field;
+use craft\commerce\models\OrderStatus;
 use craft\commerce\models\ProductType;
 use craft\commerce\Plugin as Commerce;
 use craft\fields\Assets;
+use craft\fields\Lightswitch;
 use craft\models\FieldGroup;
 use craft\web\Controller;
 use ether\mc\MailchimpCommerce;
@@ -73,6 +75,8 @@ class CpController extends Controller
 			'settings' => $i->getSettings(),
 			'totalProductsSynced' => $i->products->getTotalProductsSynced(),
 			'productTypes' => $productTypes,
+			'totalCartsSynced' => $i->orders->getTotalOrdersSynced(true),
+			'totalOrdersSynced' => $i->orders->getTotalOrdersSynced(),
 		]);
 	}
 
@@ -131,12 +135,58 @@ class CpController extends Controller
 				['label' => MailchimpCommerce::t('None'), 'value' => ''],
 			]
 		);
+		$lightswitchFields = array_reduce(
+			Craft::$app->getFields()->getAllGroups(),
+			function (array $a, FieldGroup $group) {
+				$fields = [];
+
+				/** @var Field $field */
+				foreach ($group->getFields() as $field)
+				{
+					if (!($field instanceof Lightswitch))
+						continue;
+
+					$fields[] = [
+						'label' => $field->name,
+						'value' => $field->uid,
+					];
+				}
+
+				if (empty($fields))
+					return $a;
+
+				$a[] = [
+					'optgroup' => $group->name,
+				];
+
+				return array_merge($a, $fields);
+			},
+			[
+				['label' => MailchimpCommerce::t('None'), 'value' => ''],
+			]
+		);
 
 		return $this->renderTemplate('mailchimp-commerce/_mappings', [
 			'settings' => MailchimpCommerce::$i->getSettings(),
 			'productTypes' => $productTypes,
 			'fields' => $fields,
 			'assetFields' => $assetFields,
+			'lightswitchFields' => $lightswitchFields,
+		]);
+	}
+
+	public function actionSettings ()
+	{
+		$orderStatuses = array_map(function (OrderStatus $orderStatus) {
+			return [
+				'label' => $orderStatus->name,
+				'value' => $orderStatus->handle,
+			];
+		}, Commerce::getInstance()->getOrderStatuses()->getAllOrderStatuses());
+
+		return $this->renderTemplate('mailchimp-commerce/_settings', [
+			'settings' => MailchimpCommerce::$i->getSettings(),
+			'orderStatuses' => $orderStatuses,
 		]);
 	}
 

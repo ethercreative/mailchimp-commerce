@@ -43,6 +43,24 @@ class Settings extends Model
 	 */
 	public $listId;
 
+	/**
+	 * @var string The UID of the field to use for opt-in. MUST be a lightswitch.
+	 */
+	public $optInField;
+
+	// Commerce
+	// -------------------------------------------------------------------------
+
+	/**
+	 * @var string The handle of the status meaning the order has been shipped
+	 */
+	public $shippedStatusHandle = 'shipped';
+
+	/**
+	 * @var string The URI for the completed order. `/customer/order?number={number}`
+	 */
+	public $orderUri;
+
 	// Products
 	// -------------------------------------------------------------------------
 

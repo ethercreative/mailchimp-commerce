@@ -10,6 +10,7 @@ namespace ether\mc;
 
 use Craft;
 use craft\base\Plugin;
+use craft\commerce\elements\Order;
 use craft\commerce\elements\Product;
 use craft\commerce\events\AddressEvent;
 use craft\commerce\services\Addresses;
@@ -18,11 +19,13 @@ use craft\errors\SiteNotFoundException;
 use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\UrlHelper;
 use craft\web\UrlManager;
+use ether\mc\jobs\SyncOrders;
 use ether\mc\jobs\SyncProducts;
 use ether\mc\models\Settings;
 use ether\mc\services\ChimpService;
 use ether\mc\services\FieldsService;
 use ether\mc\services\ListsService;
+use ether\mc\services\OrdersService;
 use ether\mc\services\ProductsService;
 use ether\mc\services\StoreService;
 use Throwable;
@@ -38,9 +41,10 @@ use yii\base\ModelEvent;
  * @package ether\mc
  * @property ChimpService $chimp
  * @property ListsService $lists
+ * @property FieldsService $fields
  * @property StoreService $store
  * @property ProductsService $products
- * @property FieldsService $fields
+ * @property OrdersService $orders
  */
 class MailchimpCommerce extends Plugin
 {
@@ -65,9 +69,10 @@ class MailchimpCommerce extends Plugin
 		$this->setComponents([
 			'chimp' => ChimpService::class,
 			'lists' => ListsService::class,
+			'fields' => FieldsService::class,
 			'store' => StoreService::class,
 			'products' => ProductsService::class,
-			'fields' => FieldsService::class,
+			'orders' => OrdersService::class,
 		]);
 
 		// Events
@@ -104,6 +109,33 @@ class MailchimpCommerce extends Plugin
 			Product::class,
 			Product::EVENT_BEFORE_DELETE,
 			[$this, 'onProductDelete']
+		);
+
+		// Events: Orders
+		// ---------------------------------------------------------------------
+
+		Event::on(
+			Order::class,
+			Order::EVENT_AFTER_SAVE,
+			[$this, 'onOrderSave']
+		);
+
+		Event::on(
+			Order::class,
+			Order::EVENT_BEFORE_RESTORE,
+			[$this, 'onOrderSave']
+		);
+
+		Event::on(
+			Order::class,
+			Order::EVENT_AFTER_COMPLETE_ORDER,
+			[$this, 'onOrderComplete']
+		);
+
+		Event::on(
+			Order::class,
+			Order::EVENT_BEFORE_DELETE,
+			[$this, 'onOrderDelete']
 		);
 
 	}
@@ -166,6 +198,7 @@ class MailchimpCommerce extends Plugin
 		$event->rules['mailchimp-commerce/list'] = 'mailchimp-commerce/cp/list';
 		$event->rules['mailchimp-commerce/sync'] = 'mailchimp-commerce/cp/sync';
 		$event->rules['mailchimp-commerce/mappings'] = 'mailchimp-commerce/cp/mappings';
+		$event->rules['mailchimp-commerce/settings'] = 'mailchimp-commerce/cp/settings';
 	}
 
 	// Events: Commerce
@@ -212,6 +245,45 @@ class MailchimpCommerce extends Plugin
 		$product = $event->sender;
 
 		$this->products->deleteProductById($product->id);
+	}
+
+	// Events: Orders
+	// -------------------------------------------------------------------------
+
+	public function onOrderSave (ModelEvent $event)
+	{
+		/** @var Order $order */
+		$order = $event->sender;
+
+		Craft::$app->getQueue()->push(new SyncOrders([
+			'orderIds' => [$order->id],
+		]));
+	}
+
+	/**
+	 * @param Event $event
+	 *
+	 * @throws \yii\db\Exception
+	 */
+	public function onOrderComplete (Event $event)
+	{
+		/** @var Order $order */
+		$order = $event->sender;
+
+		$this->orders->deleteOrderById($order->id, true);
+	}
+
+	/**
+	 * @param ModelEvent $event
+	 *
+	 * @throws \yii\db\Exception
+	 */
+	public function onOrderDelete (ModelEvent $event)
+	{
+		/** @var Order $order */
+		$order = $event->sender;
+
+		$this->orders->deleteOrderById($order);
 	}
 
 	// Helpers

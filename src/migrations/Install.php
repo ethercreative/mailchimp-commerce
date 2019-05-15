@@ -22,11 +22,13 @@ class Install extends Migration
 	public function safeUp ()
 	{
 		$this->_upProductsSynced();
+		$this->_upOrdersSynced();
 	}
 
 	public function safeDown ()
 	{
 		$this->_downProductsSynced();
+		$this->_downOrdersSynced();
 	}
 
 	// Products Synced
@@ -58,6 +60,38 @@ class Install extends Migration
 	private function _downProductsSynced ()
 	{
 		$this->dropTableIfExists('{{%mc_products_synced}}');
+	}
+
+	// Orders Synced
+	// =========================================================================
+
+	private function _upOrdersSynced ()
+	{
+		$this->createTable('{{%mc_orders_synced}}', [
+			'orderId' => $this->integer(),
+			'isCart' => $this->boolean(),
+			'lastSynced' => $this->dateTime(),
+		]);
+
+		$this->addPrimaryKey(
+			'orderId',
+			'{{%mc_orders_synced}}',
+			['orderId']
+		);
+
+		$this->addForeignKey(
+			null,
+			'{{%mc_orders_synced}}',
+			['orderId'],
+			'{{%commerce_orders}}',
+			['id'],
+			'CASCADE'
+		);
+	}
+
+	private function _downOrdersSynced ()
+	{
+		$this->dropTableIfExists('{{%mc_orders_synced}}');
 	}
 
 }

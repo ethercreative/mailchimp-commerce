@@ -27,13 +27,23 @@
 
 	<h2>{{ 'Carts'|t('commerce') }}</h2>
 
-	<p>[TODO]</p>
+	<p>
+		{{ '{synced} of {total, plural, =1{1 cart} other{# carts}} have been synced.'|t('mailchimp-commerce', {
+			synced: totalCartsSynced,
+			total: craft.orders.isCompleted(false).count(),
+		}) }}
+	</p>
 
 	<hr>
 
 	<h2>{{ 'Orders'|t('commerce') }}</h2>
 
-	<p>[TODO]</p>
+	<p>
+		{{ '{synced} of {total, plural, =1{1 order} other{# orders}} have been synced.'|t('mailchimp-commerce', {
+			synced: totalOrdersSynced,
+			total: craft.orders.isCompleted(true).count(),
+		}) }}
+	</p>
 
 	<hr>
 

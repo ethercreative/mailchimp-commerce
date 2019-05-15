@@ -8,8 +8,14 @@
 	<input type="hidden" name="pluginHandle" value="mailchimp-commerce">
 
 	{% namespace 'settings' %}
-		<h2>{{ 'Products'|t('commerce') }}</h2>
-
+		{{ forms.selectField({
+			first: true,
+			name: 'optInField',
+			label: 'Opt-in Field'|t('mailchimp-commerce'),
+			instructions: 'The field to use to check if the customer has opted in to marketing emails. This can be on the order or user. Must be a lightswitch.'|t('mailchimp-commerce'),
+			value: settings.optInField,
+			options: lightswitchFields,
+		}) }}
 
 		{% set input %}
 			<table class="data fullwidth collapsible">
