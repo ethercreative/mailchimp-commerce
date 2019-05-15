@@ -1,0 +1,149 @@
+{% extends 'mailchimp-commerce/_layout' %}
+{% import '_includes/forms' as forms %}
+{% set title = 'Field Mappings'|t('mailchimp-commerce') %}
+{% set fullPageForm = true %}
+
+{% block content %}
+	<input type="hidden" name="action" value="plugins/save-plugin-settings">
+	<input type="hidden" name="pluginHandle" value="mailchimp-commerce">
+
+	{% namespace 'settings' %}
+		<h2>{{ 'Products'|t('commerce') }}</h2>
+
+
+		{% set input %}
+			<table class="data fullwidth collapsible">
+				<tbody>
+				{% for type in productTypes %}
+					<tr>
+						<td>{{ type.name }}</td>
+						<td>
+							{{ forms.select({
+								name: 'productVendorFields[' ~ type.uid ~ ']',
+								value: settings.productVendorFields[type.uid] ?? null,
+								options: fields,
+							}) }}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		{% endset %}
+		{{ forms.field({
+			label: 'Product Vendor'|t('mailchimp-commerce'),
+			instructions: 'Will fallback to the store name if not set.'|t('mailchimp-commerce'),
+		}, input) }}
+
+		{% set input %}
+			<table class="data fullwidth collapsible">
+				<tbody>
+				{% for type in productTypes %}
+					<tr>
+						<td>{{ type.name }}</td>
+						<td>
+							{{ forms.select({
+								name: 'productDescriptionFields[' ~ type.uid ~ ']',
+								value: settings.productDescriptionFields[type.uid] ?? null,
+								options: fields,
+							}) }}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		{% endset %}
+		{{ forms.field({
+			label: 'Product Description'|t('mailchimp-commerce'),
+		}, input) }}
+
+		{% set input %}
+			<table class="data fullwidth collapsible">
+				<tbody>
+				{% for type in productTypes %}
+					<tr>
+						<td>{{ type.name }}</td>
+						<td>
+							{{ forms.select({
+								name: 'productThumbnailFields[' ~ type.uid ~ ']',
+								value: settings.productThumbnailFields[type.uid] ?? null,
+								options: assetFields,
+							}) }}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		{% endset %}
+		{{ forms.field({
+			label: 'Product Thumbnail'|t('mailchimp-commerce'),
+		}, input) }}
+
+		{% set input %}
+			<table class="data fullwidth collapsible">
+				<tbody>
+				{% for type in productTypes %}
+					<tr>
+						<td>{{ type.name }}</td>
+						<td>
+							{{ forms.select({
+								name: 'productImageFields[' ~ type.uid ~ ']',
+								value: settings.productImageFields[type.uid] ?? null,
+								options: assetFields,
+							}) }}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		{% endset %}
+		{{ forms.field({
+			label: 'Product Images'|t('mailchimp-commerce'),
+		}, input) }}
+
+		{% set input %}
+			<table class="data fullwidth collapsible">
+				<tbody>
+				{% for type in productTypes %}
+					<tr>
+						<td>{{ type.name }}</td>
+						<td>
+							{{ forms.select({
+								name: 'variantThumbnailFields[' ~ type.uid ~ ']',
+								value: settings.variantThumbnailFields[type.uid] ?? null,
+								options: assetFields,
+							}) }}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		{% endset %}
+		{{ forms.field({
+			label: 'Variant Thumbnail'|t('mailchimp-commerce'),
+		}, input) }}
+
+		{% set input %}
+			<table class="data fullwidth collapsible">
+				<tbody>
+				{% for type in productTypes %}
+					<tr>
+						<td>{{ type.name }}</td>
+						<td>
+							{{ forms.select({
+								name: 'variantImageFields[' ~ type.uid ~ ']',
+								value: settings.variantImageFields[type.uid] ?? null,
+								options: assetFields,
+							}) }}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		{% endset %}
+		{{ forms.field({
+			label: 'Variant Images'|t('mailchimp-commerce'),
+		}, input) }}
+
+	{% endnamespace %}
+
+{% endblock %}

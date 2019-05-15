@@ -13,7 +13,7 @@ use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use ether\mc\MailchimpCommerce;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * Class ChimpService
@@ -82,6 +82,7 @@ class ChimpService extends Component
 		}
 
 		try {
+			/** @noinspection PhpUnhandledExceptionInspection */
 			$res = $client->request($method, $uri, [
 				'json' => $body,
 			]);
@@ -97,15 +98,15 @@ class ChimpService extends Component
 				'data' => $data,
 				'error' => null,
 			];
-		} catch (GuzzleException $e) {
+		} catch (ClientException $e) {
 			return [
 				false, // Success
 				null, // Data
-				$e->getMessage(), // Error
+				$e->getResponse()->getBody()->getContents(), // Error
 
 				'success' => false,
 				'data' => null,
-				'error'   => $e->getMessage(),
+				'error'   => $e->getResponse()->getBody()->getContents(),
 			];
 		}
 	}

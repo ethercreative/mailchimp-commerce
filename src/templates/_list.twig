@@ -1,0 +1,27 @@
+{% extends 'mailchimp-commerce/_layout' %}
+{% import '_includes/forms' as forms %}
+{% set title = 'List Settings'|t('mailchimp-commerce') %}
+{% set fullPageForm = true %}
+
+{% block content %}
+	<input type="hidden" name="action" value="mailchimp-commerce/store/create">
+	{% if not settings.listId %}
+		{{ redirectInput('mailchimp-commerce/sync') }}
+	{% endif %}
+
+	{% if settings.listId %}
+		<p>You have already synced your store. You can't change the list ID after a store has been synced.</p>
+	{% endif %}
+
+	{{ forms.selectField({
+		label: 'Store List'|t('mailchimp-commerce'),
+		name: 'listId',
+		instructions: 'Select the Mailchimp list you want this store to be attached to.'|t('mailchimp-commerce'),
+		options: lists,
+		disabled: settings.listId != null,
+		value: settings.listId,
+	}) }}
+
+	<p><code>[TODO: Allow manual syncing of store settings (i.e. domain)]</code></p>
+
+{% endblock %}

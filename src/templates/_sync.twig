@@ -1,0 +1,51 @@
+{% extends 'mailchimp-commerce/_layout' %}
+{% import '_includes/forms' as forms %}
+{% set title = 'Sync'|t('mailchimp-commerce') %}
+
+{% block content %}
+
+	<h2>{{ 'Products'|t('commerce') }}</h2>
+
+	<p>
+		{{ '{synced} of {total, plural, =1{1 product} other{# products}} have been synced.'|t('mailchimp-commerce', {
+			synced: totalProductsSynced,
+			total: craft.products.count(),
+		}) }}
+	</p>
+
+	<form method="post">
+		{{ csrfInput() }}
+		<input type="hidden" name="action" value="mailchimp-commerce/sync/all-products">
+		<input type="submit" class="btn submit" value="{{ 'Sync All Products'|t('mailchimp-commerce') }}">
+	</form>
+
+	<hr>
+
+	<h2>{{ 'Carts'|t('commerce') }}</h2>
+
+	<p>[TODO]</p>
+
+	<hr>
+
+	<h2>{{ 'Orders'|t('commerce') }}</h2>
+
+	<p>[TODO]</p>
+
+	<hr>
+
+	<h2>{{ 'Customers'|t('commerce') }}</h2>
+
+	<p>[TODO]</p>
+
+	<hr>
+
+	<h2>{{ 'Promotions'|t('commerce') }}</h2>
+
+	<p>[TODO]</p>
+
+	<hr>
+
+	<p><code>[TODO: Options to manually re-trigger syncs]</code></p>
+	<p><code>[TODO: Show sync status (i.e. number of products / orders sync'd)]</code></p>
+
+{% endblock %}

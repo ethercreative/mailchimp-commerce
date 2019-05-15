@@ -20,6 +20,11 @@ use ether\mc\MailchimpCommerce;
 class ListsService extends Component
 {
 
+	/**
+	 * Get all available mailchimp lists, formatted for Select fields
+	 *
+	 * @return array
+	 */
 	public function all ()
 	{
 		list($success, $data) = MailchimpCommerce::$i->chimp->get('lists', [

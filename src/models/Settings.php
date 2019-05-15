@@ -22,6 +22,9 @@ class Settings extends Model
 	// Properties
 	// =========================================================================
 
+	// Mailchimp
+	// -------------------------------------------------------------------------
+
 	/**
 	 * @var string Your Mailchimp API key
 	 * @see https://mailchimp.com/help/about-api-keys/
@@ -29,9 +32,52 @@ class Settings extends Model
 	public $apiKey;
 
 	/**
-	 * @var string A unique store ID, this is set on install. DO NOT MODIFY.
+	 * @var string A unique store ID
+	 * @internal Set by the plugin on install, DO NOT MODIFY
 	 */
 	public $storeId;
+
+	/**
+	 * @var string The Mailchimp list ID the store is set to
+	 * @internal Set on initial sync, DO NOT MODIFY.
+	 */
+	public $listId;
+
+	// Products
+	// -------------------------------------------------------------------------
+
+	/**
+	 * @var array An array of [productTypeUid => vendorFieldUid]
+	 */
+	public $productVendorFields = [];
+
+	/**
+	 * @var array An array of [productTypeUid => descriptionFieldUid]
+	 */
+	public $productDescriptionFields = [];
+
+	/**
+	 * @var array An array of [productTypeUid => thumbnailFieldUid]
+	 */
+	public $productThumbnailFields = [];
+
+	/**
+	 * @var array An array of [productTypeUid => imageFieldUid]
+	 */
+	public $productImageFields = [];
+
+	/**
+	 * @var array An array of [productTypeUid => thumbnailFieldUid]
+	 */
+	public $variantThumbnailFields = [];
+
+	/**
+	 * @var array An array of [productTypeUid => imageFieldUid]
+	 */
+	public $variantImageFields = [];
+
+	// Methods
+	// =========================================================================
 
 	/**
 	 * Gets the data center from the api key
