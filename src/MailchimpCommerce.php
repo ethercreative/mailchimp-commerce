@@ -211,7 +211,6 @@ class MailchimpCommerce extends Plugin
 		/** @var Product $product */
 		$product = $event->sender;
 
-		Craft::info('DELETE ' . $product->id, 'mailchimp-commerce');
 		$this->products->deleteProductById($product->id);
 	}
 

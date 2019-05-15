@@ -16,7 +16,11 @@
 	<form method="post">
 		{{ csrfInput() }}
 		<input type="hidden" name="action" value="mailchimp-commerce/sync/all-products">
-		<input type="submit" class="btn submit" value="{{ 'Sync All Products'|t('mailchimp-commerce') }}">
+		{{ forms.select({
+			name: 'typeId',
+			options: productTypes,
+		}) }}
+		<input type="submit" class="btn submit" value="{{ 'Sync Products'|t('mailchimp-commerce') }}">
 	</form>
 
 	<hr>

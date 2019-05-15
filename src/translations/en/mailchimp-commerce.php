@@ -45,6 +45,6 @@ return [
 	// =========================================================================
 
 	'{synced} of {total, plural, =1{1 product} other{# products}} have been synced.' => '{synced} of {total, plural, =1{1 product} other{# products}} have been synced.',
-	'Sync All Products' => 'Sync All Products',
+	'Sync Products' => 'Sync Products',
 
 ];

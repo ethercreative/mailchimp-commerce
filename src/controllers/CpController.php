@@ -10,6 +10,7 @@ namespace ether\mc\controllers;
 
 use Craft;
 use craft\base\Field;
+use craft\commerce\models\ProductType;
 use craft\commerce\Plugin as Commerce;
 use craft\fields\Assets;
 use craft\models\FieldGroup;
@@ -53,10 +54,25 @@ class CpController extends Controller
 	public function actionSync ()
 	{
 		$i = MailchimpCommerce::$i;
+		$productTypes = array_reduce(
+			Commerce::getInstance()->getProductTypes()->getAllProductTypes(),
+			function ($a, ProductType $type) {
+				$a[] = [
+					'label' => $type->name,
+					'value' => $type->id,
+				];
+
+				return $a;
+			},
+			[
+				['label' => 'All Products', 'value' => ''],
+			]
+		);
 
 		return $this->renderTemplate('mailchimp-commerce/_sync', [
 			'settings' => $i->getSettings(),
 			'totalProductsSynced' => $i->products->getTotalProductsSynced(),
+			'productTypes' => $productTypes,
 		]);
 	}
 

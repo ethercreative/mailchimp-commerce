@@ -24,14 +24,17 @@ class SyncController extends Controller
 
 	public function actionAllProducts ()
 	{
-		$productIds = (new Query())
+		$typeId = Craft::$app->getRequest()->getBodyParam('type');
+		$productIdsQuery = (new Query())
 			->select('id')
-			->from('{{%commerce_products}}')
-			->column();
+			->from('{{%commerce_products}}');
+
+		if ($typeId)
+			$productIdsQuery->where(['typeId' => $typeId]);
 
 		Craft::$app->getQueue()->push(
 			new SyncProducts([
-				'productIds' => $productIds,
+				'productIds' => $productIdsQuery->column(),
 			])
 		);
 	}
