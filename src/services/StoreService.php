@@ -86,10 +86,6 @@ class StoreService extends Component
 	/**
 	 * Updates the current store
 	 *
-	 * TODO: Trigger if store name or email changes
-	 * TODO: Allow manual trigger for domain name change
-	 *   (i.e. moving from dev to live)
-	 *
 	 * @return mixed
 	 * @throws ElementNotFoundException
 	 * @throws Exception

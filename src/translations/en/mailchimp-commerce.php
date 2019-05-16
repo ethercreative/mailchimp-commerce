@@ -60,6 +60,12 @@ return [
 	// Sync
 	// =========================================================================
 
+	'You have already synced your store. You can\'t change the list ID after a store has been synced.' =>
+		'You have already synced your store. You can\'t change the list ID after a store has been synced.',
+	'Manually sync the store if your domain or other details have changed.' => 'Manually sync the store if your domain or other details have changed.',
+	'Sync Store' => 'Sync Store',
+	'Store Synced.' => 'Store Synced.',
+
 	'{synced} of {total, plural, =1{1 product} other{# products}} have been synced.' => '{synced} of {total, plural, =1{1 product} other{# products}} have been synced.',
 	'Sync Products' => 'Sync Products',
 

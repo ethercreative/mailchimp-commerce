@@ -10,7 +10,7 @@
 	{% endif %}
 
 	{% if settings.listId %}
-		<p>You have already synced your store. You can't change the list ID after a store has been synced.</p>
+		<p>{{ 'You have already synced your store. You can\'t change the list ID after a store has been synced.'|t('mailchimp-commerce') }}</p>
 	{% endif %}
 
 	{{ forms.selectField({
@@ -21,7 +21,5 @@
 		disabled: settings.listId != null,
 		value: settings.listId,
 	}) }}
-
-	<p><code>[TODO: Allow manual syncing of store settings (i.e. domain)]</code></p>
 
 {% endblock %}

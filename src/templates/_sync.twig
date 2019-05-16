@@ -4,6 +4,18 @@
 
 {% block content %}
 
+	<h2>{{ 'Store'|t('commerce') }}</h2>
+
+	<p>{{ 'Manually sync the store if your domain or other details have changed.'|t('mailchimp-commerce') }}</p>
+
+	<form method="post">
+		{{ csrfInput() }}
+		<input type="hidden" name="action" value="mailchimp-commerce/sync/store">
+		<input type="submit" class="btn submit" value="{{ 'Sync Store'|t('mailchimp-commerce') }}">
+	</form>
+
+	<hr>
+
 	<h2>{{ 'Products'|t('commerce') }}</h2>
 
 	<p>

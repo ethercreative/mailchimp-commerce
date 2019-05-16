@@ -11,9 +11,15 @@ namespace ether\mc\controllers;
 use Craft;
 use craft\commerce\elements\Order;
 use craft\db\Query;
+use craft\errors\ElementNotFoundException;
+use craft\errors\SiteNotFoundException;
 use craft\web\Controller;
 use ether\mc\jobs\SyncOrders;
 use ether\mc\jobs\SyncProducts;
+use ether\mc\MailchimpCommerce;
+use Throwable;
+use yii\base\Exception;
+use yii\base\InvalidConfigException;
 
 /**
  * Class SyncController
@@ -23,6 +29,22 @@ use ether\mc\jobs\SyncProducts;
  */
 class SyncController extends Controller
 {
+
+	/**
+	 * @throws Throwable
+	 * @throws ElementNotFoundException
+	 * @throws SiteNotFoundException
+	 * @throws Exception
+	 * @throws InvalidConfigException
+	 */
+	public function actionStore ()
+	{
+		MailchimpCommerce::$i->store->update();
+
+		Craft::$app->getSession()->setNotice(
+			MailchimpCommerce::t('Store Synced.')
+		);
+	}
 
 	public function actionAllProducts ()
 	{
