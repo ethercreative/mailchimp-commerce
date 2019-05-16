@@ -300,11 +300,15 @@ class ProductsService extends Component
 
 		if ($thumbnail)
 		{
-			// TODO: Allow this to use a custom Craft image transform
-			return $thumbnail->getUrl([
-				'width'  => 1000,
-				'height' => 1000,
-			]);
+			$transform = MailchimpCommerce::$i->getSettings()->thumbnailTransform;
+
+			if ($transform)
+				$transform = Craft::$app->getAssetTransforms()->getTransformByUid($transform);
+
+			if (!$transform)
+				$transform = ['width'  => 1000, 'height' => 1000];
+
+			return $thumbnail->getUrl($transform);
 		}
 
 		return $this->_getThumbnail($fallback);
@@ -329,11 +333,18 @@ class ProductsService extends Component
 		if (!$field)
 			return [];
 
-		return array_map(function (Asset $asset) use ($isVariant, $element) {
+		$transform = MailchimpCommerce::$i->getSettings()->thumbnailTransform;
+
+		if ($transform)
+			$transform = Craft::$app->getAssetTransforms()->getTransformByUid($transform);
+
+		if (!$transform)
+			$transform = ['width' => 1000];
+
+		return array_map(function (Asset $asset) use ($isVariant, $element, $transform) {
 			return [
 				'id' => (string) $asset->id,
-				// TODO: Make this size customizable
-				'url' => $asset->getUrl(['width' => 1000]),
+				'url' => $asset->getUrl($transform),
 				'variant_ids' => $isVariant ? [$element->id] : [],
 			];
 		}, $field->all());

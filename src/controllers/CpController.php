@@ -15,6 +15,7 @@ use craft\commerce\models\ProductType;
 use craft\commerce\Plugin as Commerce;
 use craft\fields\Assets;
 use craft\fields\Lightswitch;
+use craft\models\AssetTransform;
 use craft\models\FieldGroup;
 use craft\web\Controller;
 use ether\mc\MailchimpCommerce;
@@ -184,9 +185,23 @@ class CpController extends Controller
 			];
 		}, Commerce::getInstance()->getOrderStatuses()->getAllOrderStatuses());
 
+		$imageTransforms = array_reduce(
+			Craft::$app->getAssetTransforms()->getAllTransforms(),
+			function ($a, AssetTransform $transform) {
+				$a[] = [
+					'label' => $transform->name,
+					'value' => $transform->uid,
+				];
+
+				return $a;
+			},
+			[['label' => MailchimpCommerce::t('None'), 'value' => '']]
+		);
+
 		return $this->renderTemplate('mailchimp-commerce/_settings', [
 			'settings' => MailchimpCommerce::$i->getSettings(),
 			'orderStatuses' => $orderStatuses,
+			'imageTransforms' => $imageTransforms,
 		]);
 	}
 

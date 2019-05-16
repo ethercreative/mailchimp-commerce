@@ -39,12 +39,17 @@ return [
 	'Shipped Order Status' => 'Shipped Order Status',
 	'The statues that is used to define when an order has been shipped.' => 'The statues that is used to define when an order has been shipped.',
 
-	'Order Complete URI' => 'Order Complete URI',
-	'The URI to view the completed order.' => 'The URI to view the completed order.',
-
 	'Opt-in Field' => 'Opt-in Field',
 	'The field to use to check if the customer has opted in to marketing emails. This can be on the order or user. Must be a lightswitch.' =>
 		'The field to use to check if the customer has opted in to marketing emails. This can be on the order or user. Must be a lightswitch.',
+
+	'Thumbnail Transform' => 'Thumbnail Transform',
+	'What transform to use when transforming the product thumbnails. Defaults to 1000px square.' =>
+		'What transform to use when transforming the product thumbnails. Defaults to 1000px square.',
+
+	'Image Transform' => 'Image Transform',
+	'What transform to use when transforming the product images. Defaults to 1000px wide, automatic height.' =>
+		'What transform to use when transforming the product images. Defaults to 1000px wide, automatic height.',
 
 	// Jobs
 	// =========================================================================
@@ -59,7 +64,11 @@ return [
 	'Sync Products' => 'Sync Products',
 
 	'{synced} of {total, plural, =1{1 cart} other{# carts}} have been synced.' => '{synced} of {total, plural, =1{1 cart} other{# carts}} have been synced.',
+	'Some carts may not appear to sync. This is due to them not having either an email or any line items.' =>
+		'Some carts may not appear to sync. This is due to them not having either an email or any line items.',
+	'Sync All Carts' => 'Sync All Carts',
 
 	'{synced} of {total, plural, =1{1 order} other{# orders}} have been synced.' => '{synced} of {total, plural, =1{1 order} other{# orders}} have been synced.',
+	'Sync All Orders' => 'Sync All Orders',
 
 ];

@@ -9,8 +9,10 @@
 namespace ether\mc\controllers;
 
 use Craft;
+use craft\commerce\elements\Order;
 use craft\db\Query;
 use craft\web\Controller;
+use ether\mc\jobs\SyncOrders;
 use ether\mc\jobs\SyncProducts;
 
 /**
@@ -35,6 +37,24 @@ class SyncController extends Controller
 		Craft::$app->getQueue()->push(
 			new SyncProducts([
 				'productIds' => $productIdsQuery->column(),
+			])
+		);
+	}
+
+	public function actionAllCarts ()
+	{
+		Craft::$app->getQueue()->push(
+			new SyncOrders([
+				'orderIds' => Order::find()->isCompleted(false)->ids()
+			])
+		);
+	}
+
+	public function actionAllOrders ()
+	{
+		Craft::$app->getQueue()->push(
+			new SyncOrders([
+				'orderIds' => Order::find()->isCompleted(true)->ids()
 			])
 		);
 	}

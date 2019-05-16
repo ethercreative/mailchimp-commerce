@@ -57,9 +57,14 @@ class Settings extends Model
 	public $shippedStatusHandle = 'shipped';
 
 	/**
-	 * @var string The URI for the completed order. `/customer/order?number={number}`
+	 * @var string The transform UID to use when transforming thumbnails
 	 */
-	public $orderUri;
+	public $thumbnailTransform;
+
+	/**
+	 * @var string The transform UID to use when transforming images
+	 */
+	public $imageTransform;
 
 	// Products
 	// -------------------------------------------------------------------------

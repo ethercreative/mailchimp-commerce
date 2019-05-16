@@ -19,12 +19,20 @@
 			value: settings.shippedStatusHandle,
 		}) }}
 
-		{{ forms.textField({
-			name: 'orderUri',
-			label: 'Order Complete URI'|t('mailchimp-commerce'),
-			instructions: 'The URI to view the completed order.'|t('mailchimp-commerce'),
-			placeholder: '/customer/order?number={number}',
-			value: settings.orderUri,
+		{{ forms.selectField({
+			name: 'thumbnailTransform',
+			label: 'Thumbnail Transform'|t('mailchimp-commerce'),
+			instructions: 'What transform to use when transforming the product thumbnails. Defaults to 1000px square.'|t('mailchimp-commerce'),
+			options: imageTransforms,
+			value: settings.thumbnailTransform,
+		}) }}
+
+		{{ forms.selectField({
+			name: 'imageTransform',
+			label: 'Image Transform'|t('mailchimp-commerce'),
+			instructions: 'What transform to use when transforming the product images. Defaults to 1000px wide, automatic height.'|t('mailchimp-commerce'),
+			options: imageTransforms,
+			value: settings.imageTransform,
 		}) }}
 
 	{% endnamespace %}

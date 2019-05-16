@@ -14,6 +14,7 @@ use craft\base\Field;
 use craft\commerce\elements\Order;
 use craft\commerce\Plugin as Commerce;
 use craft\helpers\Db;
+use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use DateTime;
 use ether\mc\helpers\AddressHelper;
@@ -47,6 +48,9 @@ class OrdersService extends Component
 	{
 		$hasBeenSynced = $this->_hasOrderBeenSynced($orderId);
 		list($order, $data) = $this->_buildOrderData($orderId);
+
+		if ($data === null)
+			return true;
 
 		if ($hasBeenSynced)
 			return $this->_updateOrder($order, $data);
@@ -83,7 +87,7 @@ class OrdersService extends Component
 		}
 
 		Craft::$app->getDb()->createCommand()
-			->delete('{{%mc_products_synced}}', [
+			->delete('{{%mc_orders_synced}}', [
 				'orderId' => $orderId,
 			])->execute();
 
@@ -129,7 +133,7 @@ class OrdersService extends Component
 
 		if (!$success)
 		{
-			Craft::error($error, 'mailchimp-commerce');
+			Craft::error('Create: ' . $error, 'mailchimp-commerce');
 			return false;
 		}
 
@@ -168,7 +172,7 @@ class OrdersService extends Component
 
 		if (!$success)
 		{
-			Craft::error($error, 'mailchimp-commerce');
+			Craft::error('Update: ' . $error, 'mailchimp-commerce');
 			return false;
 		}
 
@@ -219,20 +223,25 @@ class OrdersService extends Component
 	{
 		$settings = MailchimpCommerce::$i->getSettings();
 		$order = Commerce::getInstance()->getOrders()->getOrderById($orderId);
+
+		if (!$order->email || empty($order->getLineItems()))
+			return [$order, null];
+
 		$data = [
 			'id' => (string) $order->id,
 			'currency_code' => $order->getPaymentCurrency(),
 			'order_total' => $order->getTotalPrice(),
 			'tax_total' => $order->getAdjustmentsTotalByType('tax'),
 			'lines' => [],
+			'promos' => [],
 			'customer' => [
 				'id' => (string) $order->customer->id,
 				'email_address' => $order->customer->email,
 				'opt_in_status' => $this->_hasOptedIn($order),
-				'first_name' => $order->billingAddress->firstName,
-				'last_name' => $order->billingAddress->lastName,
+				'first_name' => $order->billingAddress ? $order->billingAddress->firstName : '',
+				'last_name' => $order->billingAddress ? $order->billingAddress->lastName : '',
 				'orders_count' => Order::find()->customer($order->customer)->isCompleted()->count(),
-				'total_spent' => Order::find()->customer($order->customer)->isCompleted()->sum('totalPaid'),
+				'total_spent' => Order::find()->customer($order->customer)->isCompleted()->sum('[[commerce_orders.totalPaid]]') ?: 0,
 				'address' => AddressHelper::asArray($order->billingAddress),
 			],
 		];
@@ -264,35 +273,26 @@ class OrdersService extends Component
 				'updated_at_foreign' => Db::prepareDateForDb($order->dateUpdated),
 				'shipping_address' => AddressHelper::asArray($order->shippingAddress),
 				'billing_address' => AddressHelper::asArray($order->billingAddress),
+				'order_url' => UrlHelper::siteUrl($order->returnUrl),
 			]);
-
-			if ($settings->orderUri)
-			{
-				$data['order_url'] = Craft::$app->getView()->renderObjectTemplate(
-					$settings->orderUri,
-					$order
-				);
-			}
 
 			if ($this->_isOrderShipped($order))
 				$data['fulfillment_status'] = 'shipped';
 
-			if ($order->couponCode)
+			$promo =
+				$order->couponCode
+					? Commerce::getInstance()->getDiscounts()->getDiscountByCode($order->couponCode)
+					: null;
+
+			foreach ($order->getAdjustments() as $adjustment)
 			{
-				$promo = Commerce::getInstance()->getDiscounts()->getDiscountByCode($order->couponCode);
-				$data['promos'] = [];
+				$isPromoCode = $promo && $promo->name === $adjustment->name;
 
-				foreach ($order->getAdjustments() as $adjustment)
-				{
-					if ($adjustment->name !== $promo->name)
-						continue;
-
-					$data['promos'][] = [
-						'code'              => $order->couponCode,
-						'amount_discounted' => $adjustment->amount,
-						'type'              => 'fixed',
-					];
-				}
+				$data['promos'][] = [
+					'code'              => $isPromoCode ? $order->couponCode : $adjustment->name,
+					'amount_discounted' => $adjustment->amount,
+					'type'              => 'fixed',
+				];
 			}
 		}
 		else
@@ -303,7 +303,7 @@ class OrdersService extends Component
 			);
 		}
 
-		return compact('order', 'data');
+		return [$order, $data];
 	}
 
 	/**

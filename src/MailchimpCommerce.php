@@ -263,6 +263,9 @@ class MailchimpCommerce extends Plugin
 	/**
 	 * @param Event $event
 	 *
+	 * @throws Exception
+	 * @throws InvalidConfigException
+	 * @throws Throwable
 	 * @throws \yii\db\Exception
 	 */
 	public function onOrderComplete (Event $event)
@@ -271,6 +274,7 @@ class MailchimpCommerce extends Plugin
 		$order = $event->sender;
 
 		$this->orders->deleteOrderById($order->id, true);
+		$this->orders->syncOrderById($order->id);
 	}
 
 	/**

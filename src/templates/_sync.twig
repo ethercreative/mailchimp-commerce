@@ -33,6 +33,13 @@
 			total: craft.orders.isCompleted(false).count(),
 		}) }}
 	</p>
+	<p>{{ 'Some carts may not appear to sync. This is due to them not having either an email or any line items.'|t('mailchimp-commerce') }}</p>
+
+	<form method="post">
+		{{ csrfInput() }}
+		<input type="hidden" name="action" value="mailchimp-commerce/sync/all-carts">
+		<input type="submit" class="btn submit" value="{{ 'Sync All Carts'|t('mailchimp-commerce') }}">
+	</form>
 
 	<hr>
 
@@ -45,6 +52,12 @@
 		}) }}
 	</p>
 
+	<form method="post">
+		{{ csrfInput() }}
+		<input type="hidden" name="action" value="mailchimp-commerce/sync/all-orders">
+		<input type="submit" class="btn submit" value="{{ 'Sync All Orders'|t('mailchimp-commerce') }}">
+	</form>
+
 	<hr>
 
 	<h2>{{ 'Customers'|t('commerce') }}</h2>
@@ -56,10 +69,5 @@
 	<h2>{{ 'Promotions'|t('commerce') }}</h2>
 
 	<p>[TODO]</p>
-
-	<hr>
-
-	<p><code>[TODO: Options to manually re-trigger syncs]</code></p>
-	<p><code>[TODO: Show sync status (i.e. number of products / orders sync'd)]</code></p>
 
 {% endblock %}
