@@ -221,7 +221,6 @@ class OrdersService extends Component
 	 */
 	private function _buildOrderData ($orderId)
 	{
-		$settings = MailchimpCommerce::$i->getSettings();
 		$order = Commerce::getInstance()->getOrders()->getOrderById($orderId);
 
 		if (!$order->email || empty($order->getLineItems()))
@@ -269,8 +268,8 @@ class OrdersService extends Component
 				'discount_total' => $order->getAdjustmentsTotalByType('discount'),
 				'tax_total' => $order->getAdjustmentsTotalByType('tax'),
 				'shipping_total' => $order->getAdjustmentsTotalByType('shipping'),
-				'processed_at_foreign' => Db::prepareDateForDb($order->dateOrdered),
-				'updated_at_foreign' => Db::prepareDateForDb($order->dateUpdated),
+				'processed_at_foreign' => $order->dateOrdered->format('c'),
+				'updated_at_foreign' => $order->dateUpdated->format('c'),
 				'shipping_address' => AddressHelper::asArray($order->shippingAddress),
 				'billing_address' => AddressHelper::asArray($order->billingAddress),
 				'order_url' => UrlHelper::siteUrl($order->returnUrl),

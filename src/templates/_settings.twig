@@ -35,6 +35,14 @@
 			value: settings.imageTransform,
 		}) }}
 
+		{{ forms.textField({
+			name: 'promoRedemptionUrl',
+			label: 'Promo Redemption URL'|t('mailchimp-commerce'),
+			instructions: 'The URL that will be used for redeeming a promo code.'|t('mailchimp-commerce'),
+			value: settings.promoRedemptionUrl,
+			placeholder: 'i.e. /cart?discount={code}',
+		}) }}
+
 	{% endnamespace %}
 
 {% endblock %}

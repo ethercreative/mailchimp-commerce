@@ -66,6 +66,12 @@ class Settings extends Model
 	 */
 	public $imageTransform;
 
+	/**
+	 * @var string The URL to use for promo redemption's, i.e.
+	 *             `/cart?discount={code}`, defaults to site index.
+	 */
+	public $promoRedemptionUrl;
+
 	// Products
 	// -------------------------------------------------------------------------
 

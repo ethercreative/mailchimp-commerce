@@ -23,12 +23,14 @@ class Install extends Migration
 	{
 		$this->_upProductsSynced();
 		$this->_upOrdersSynced();
+		$this->_upPromosSynced();
 	}
 
 	public function safeDown ()
 	{
 		$this->_downProductsSynced();
 		$this->_downOrdersSynced();
+		$this->_downPromosSynced();
 	}
 
 	// Products Synced
@@ -92,6 +94,37 @@ class Install extends Migration
 	private function _downOrdersSynced ()
 	{
 		$this->dropTableIfExists('{{%mc_orders_synced}}');
+	}
+
+	// Promos Synced
+	// =========================================================================
+
+	private function _upPromosSynced ()
+	{
+		$this->createTable('{{%mc_promos_synced}}', [
+			'promoId' => $this->integer(),
+			'lastSynced' => $this->dateTime(),
+		]);
+
+		$this->addPrimaryKey(
+			'promoId',
+			'{{%mc_promos_synced}}',
+			['promoId']
+		);
+
+		$this->addForeignKey(
+			null,
+			'{{%mc_promos_synced}}',
+			['promoId'],
+			'{{%commerce_discounts}}',
+			['id'],
+			'CASCADE'
+		);
+	}
+
+	private function _downPromosSynced ()
+	{
+		$this->dropTableIfExists('{{%mc_promos_synced}}');
 	}
 
 }

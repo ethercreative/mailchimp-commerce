@@ -216,7 +216,7 @@ class ProductsService extends Component
 			'image_url' => $this->_getThumbnail($product),
 			'variants' => [],
 			'images' => $this->_getProductImages($product),
-			'published_at_foreign' => Db::prepareDateForDb($product->postDate),
+			'published_at_foreign' => $product->postDate->format('c'),
 		];
 
 		foreach ($product->variants as $variant)

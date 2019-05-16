@@ -13,6 +13,7 @@ use craft\base\Plugin;
 use craft\commerce\elements\Order;
 use craft\commerce\elements\Product;
 use craft\commerce\events\AddressEvent;
+use craft\commerce\records\Discount;
 use craft\commerce\services\Addresses;
 use craft\errors\ElementNotFoundException;
 use craft\errors\SiteNotFoundException;
@@ -21,12 +22,14 @@ use craft\helpers\UrlHelper;
 use craft\web\UrlManager;
 use ether\mc\jobs\SyncOrders;
 use ether\mc\jobs\SyncProducts;
+use ether\mc\jobs\SyncPromos;
 use ether\mc\models\Settings;
 use ether\mc\services\ChimpService;
 use ether\mc\services\FieldsService;
 use ether\mc\services\ListsService;
 use ether\mc\services\OrdersService;
 use ether\mc\services\ProductsService;
+use ether\mc\services\PromosService;
 use ether\mc\services\StoreService;
 use Throwable;
 use yii\base\Event;
@@ -45,6 +48,7 @@ use yii\base\ModelEvent;
  * @property StoreService $store
  * @property ProductsService $products
  * @property OrdersService $orders
+ * @property PromosService $promos
  */
 class MailchimpCommerce extends Plugin
 {
@@ -73,6 +77,7 @@ class MailchimpCommerce extends Plugin
 			'store' => StoreService::class,
 			'products' => ProductsService::class,
 			'orders' => OrdersService::class,
+			'promos' => PromosService::class,
 		]);
 
 		// Events
@@ -136,6 +141,27 @@ class MailchimpCommerce extends Plugin
 			Order::class,
 			Order::EVENT_BEFORE_DELETE,
 			[$this, 'onOrderDelete']
+		);
+
+		// Events: Promos
+		// ---------------------------------------------------------------------
+
+		Event::on(
+			Discount::class,
+			Discount::EVENT_AFTER_INSERT,
+			[$this, 'onDiscountSave']
+		);
+
+		Event::on(
+			Discount::class,
+			Discount::EVENT_AFTER_UPDATE,
+			[$this, 'onDiscountSave']
+		);
+
+		Event::on(
+			Discount::class,
+			Discount::EVENT_BEFORE_DELETE,
+			[$this, 'onDiscountDelete']
 		);
 
 	}
@@ -288,6 +314,32 @@ class MailchimpCommerce extends Plugin
 		$order = $event->sender;
 
 		$this->orders->deleteOrderById($order);
+	}
+
+	// Events: Promos
+	// -------------------------------------------------------------------------
+
+	public function onDiscountSave (Event $event)
+	{
+		/** @var Discount $discount */
+		$discount = $event->sender;
+
+		Craft::$app->getQueue()->push(new SyncPromos([
+			'promoIds' => [$discount->id],
+		]));
+	}
+
+	/**
+	 * @param ModelEvent $event
+	 *
+	 * @throws \yii\db\Exception
+	 */
+	public function onDiscountDelete (ModelEvent $event)
+	{
+		/** @var Discount $discount */
+		$discount = $event->sender;
+
+		$this->promos->deletePromoById($discount->id);
 	}
 
 	// Helpers

@@ -13,6 +13,7 @@ use craft\base\Field;
 use craft\commerce\models\OrderStatus;
 use craft\commerce\models\ProductType;
 use craft\commerce\Plugin as Commerce;
+use craft\commerce\records\Discount;
 use craft\fields\Assets;
 use craft\fields\Lightswitch;
 use craft\models\AssetTransform;
@@ -78,6 +79,8 @@ class CpController extends Controller
 			'productTypes' => $productTypes,
 			'totalCartsSynced' => $i->orders->getTotalOrdersSynced(true),
 			'totalOrdersSynced' => $i->orders->getTotalOrdersSynced(),
+			'totalPromosSynced' => $i->promos->getTotalPromosSynced(),
+			'totalDiscounts' => Discount::find()->count(),
 		]);
 	}
 

@@ -80,6 +80,17 @@
 
 	<h2>{{ 'Promotions'|t('commerce') }}</h2>
 
-	<p class="light"><strong>Coming Soon</strong>.</p>
+	<p>
+		{{ '{synced} of {total, plural, =1{1 promo} other{# promos}} have been synced.'|t('mailchimp-commerce', {
+			synced: totalPromosSynced,
+			total: totalDiscounts,
+		}) }}
+	</p>
+
+	<form method="post">
+		{{ csrfInput() }}
+		<input type="hidden" name="action" value="mailchimp-commerce/sync/all-promos">
+		<input type="submit" class="btn submit" value="{{ 'Sync All Promos'|t('mailchimp-commerce') }}">
+	</form>
 
 {% endblock %}

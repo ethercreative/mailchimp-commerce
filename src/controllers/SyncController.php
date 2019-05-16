@@ -10,12 +10,14 @@ namespace ether\mc\controllers;
 
 use Craft;
 use craft\commerce\elements\Order;
+use craft\commerce\records\Discount;
 use craft\db\Query;
 use craft\errors\ElementNotFoundException;
 use craft\errors\SiteNotFoundException;
 use craft\web\Controller;
 use ether\mc\jobs\SyncOrders;
 use ether\mc\jobs\SyncProducts;
+use ether\mc\jobs\SyncPromos;
 use ether\mc\MailchimpCommerce;
 use Throwable;
 use yii\base\Exception;
@@ -77,6 +79,15 @@ class SyncController extends Controller
 		Craft::$app->getQueue()->push(
 			new SyncOrders([
 				'orderIds' => Order::find()->isCompleted(true)->ids()
+			])
+		);
+	}
+
+	public function actionAllPromos ()
+	{
+		Craft::$app->getQueue()->push(
+			new SyncPromos([
+				'promoIds' => Discount::find()->select('id')->column(),
 			])
 		);
 	}

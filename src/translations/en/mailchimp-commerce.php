@@ -51,11 +51,15 @@ return [
 	'What transform to use when transforming the product images. Defaults to 1000px wide, automatic height.' =>
 		'What transform to use when transforming the product images. Defaults to 1000px wide, automatic height.',
 
+	'Promo Redemption URL' => 'Promo Redemption URL',
+	'The URL that will be used for redeeming a promo code.' => 'The URL that will be used for redeeming a promo code.',
+
 	// Jobs
 	// =========================================================================
 
 	'Syncing Products to Mailchimp' => 'Syncing Products to Mailchimp',
 	'Syncing Orders to Mailchimp' => 'Syncing Orders to Mailchimp',
+	'Syncing Promos to Mailchimp' => 'Syncing Promos to Mailchimp',
 
 	// Sync
 	// =========================================================================
@@ -76,5 +80,8 @@ return [
 
 	'{synced} of {total, plural, =1{1 order} other{# orders}} have been synced.' => '{synced} of {total, plural, =1{1 order} other{# orders}} have been synced.',
 	'Sync All Orders' => 'Sync All Orders',
+
+	'{synced} of {total, plural, =1{1 promo} other{# promos}} have been synced.' => '{synced} of {total, plural, =1{1 promo} other{# promos}} have been synced.',
+	'Sync All Promos' => 'Sync All Promos',
 
 ];
