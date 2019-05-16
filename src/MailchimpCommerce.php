@@ -313,7 +313,7 @@ class MailchimpCommerce extends Plugin
 		/** @var Order $order */
 		$order = $event->sender;
 
-		$this->orders->deleteOrderById($order);
+		$this->orders->deleteOrderById($order->id);
 	}
 
 	// Events: Promos
