@@ -48,8 +48,8 @@ return [
 		'What transform to use when transforming the product thumbnails. Defaults to 1000px square.',
 
 	'Image Transform' => 'Image Transform',
-	'What transform to use when transforming the product images. Defaults to 1000px wide, automatic height.' =>
-		'What transform to use when transforming the product images. Defaults to 1000px wide, automatic height.',
+	'What transform to use when transforming the product images. Defaults to 1000px wide, dynamic height.' =>
+		'What transform to use when transforming the product images. Defaults to 1000px wide, dynamic height.',
 
 	'Promo Redemption URL' => 'Promo Redemption URL',
 	'The URL that will be used for redeeming a promo code.' => 'The URL that will be used for redeeming a promo code.',
