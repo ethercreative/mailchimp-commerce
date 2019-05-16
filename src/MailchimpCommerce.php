@@ -164,6 +164,14 @@ class MailchimpCommerce extends Plugin
 			[$this, 'onDiscountDelete']
 		);
 
+		// Hooks
+		// ---------------------------------------------------------------------
+
+		Craft::$app->getView()->hook(
+			'cp.commerce.product.edit.details',
+			[$this, 'hookProductMeta']
+		);
+
 	}
 
 	// Settings
@@ -344,6 +352,31 @@ class MailchimpCommerce extends Plugin
 		$discount = $event->sender;
 
 		$this->promos->deletePromoById($discount->id);
+	}
+
+	// Hooks
+	// =========================================================================
+
+	/**
+	 * @param array $context
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function hookProductMeta (array &$context)
+	{
+		/** @var Product $product */
+		$product = $context['product'];
+
+		$heading = MailchimpCommerce::t('Last Synced to Mailchimp');
+		$date = $this->products->getLastSyncedById($product->id);
+
+		return <<<HTML
+<div class="data">
+    <h5 class="heading">{$heading}</h5>
+    <div class="value">{$date}</div>
+</div>
+HTML;
 	}
 
 	// Helpers

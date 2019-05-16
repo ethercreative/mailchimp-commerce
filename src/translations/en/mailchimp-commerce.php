@@ -8,6 +8,8 @@
 
 return [
 	'Mailchimp Commerce' => 'Mailchimp Commerce',
+	'Never' => 'Never',
+	'Last Synced to Mailchimp' => 'Last Synced to Mailchimp',
 
 	// Settings
 	// =========================================================================

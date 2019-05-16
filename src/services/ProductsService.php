@@ -99,6 +99,28 @@ class ProductsService extends Component
 			->count();
 	}
 
+	/**
+	 * Gets the last synced date of the given product
+	 *
+	 * @param $productId
+	 *
+	 * @return DateTime|string
+	 * @throws \Exception
+	 */
+	public function getLastSyncedById ($productId)
+	{
+		$date = (new Query())
+			->select('lastSynced')
+			->from('{{%mc_products_synced}}')
+			->where(['productId' => $productId])
+			->scalar();
+
+		if ($date)
+			return Craft::$app->getFormatter()->asDatetime($date, 'short');
+
+		return MailchimpCommerce::t('Never');
+	}
+
 	// Private
 	// =========================================================================
 
