@@ -45,6 +45,9 @@ class OrdersService extends Component
 	 */
 	public function syncOrderById ($orderId)
 	{
+		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
+			return true;
+
 		$hasBeenSynced = $this->_hasOrderBeenSynced($orderId);
 		list($order, $data) = $this->_buildOrderData($orderId);
 
@@ -68,6 +71,9 @@ class OrdersService extends Component
 	 */
 	public function deleteOrderById ($orderId, $asCart = false)
 	{
+		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
+			return;
+
 		if (!$this->_hasOrderBeenSynced($orderId))
 			return;
 

@@ -15,6 +15,25 @@ order status notifications, and more.
 
 ---
 
+### Preventing Syncing
+
+If you want to prevent anything from being synced (i.e. in your staging 
+environment) you can do so by creating a Mailchimp Commerce config file 
+(`mailchimp-commerce.php`) in your `config/` directory, and add the following:
+
+```php
+<?php
+
+return [
+	'staging' => [
+		'disableSyncing' => true,
+	],
+];
+```
+
+You can use the config file to override any of the settings in the plugin. See
+[`Settings.php`](./src/models/Settings.php) for all the settings. Be aware the 
+some settings must not be modified.
 
 ### Local Development
 Please note that Mailchimp requires a valid, publicly accessible URL for some of 

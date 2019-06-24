@@ -23,6 +23,11 @@ class Settings extends Model
 	// Properties
 	// =========================================================================
 
+	/**
+	 * @var bool If true, all syncing will be disabled (useful for staging environments)
+	 */
+	public $disableSyncing = false;
+
 	// Mailchimp
 	// -------------------------------------------------------------------------
 

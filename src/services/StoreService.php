@@ -60,6 +60,9 @@ class StoreService extends Component
 	 */
 	public function create ($listId)
 	{
+		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
+			return true;
+
 		$i = MailchimpCommerce::$i;
 
 		if ($i->getSettings()->listId)
@@ -95,6 +98,9 @@ class StoreService extends Component
 	 */
 	public function update ()
 	{
+		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
+			return true;
+
 		$id = MailchimpCommerce::$i->getSettings()->storeId;
 
 		list($success, $data, $error) = MailchimpCommerce::$i->chimp->patch(
@@ -113,6 +119,9 @@ class StoreService extends Component
 	 */
 	public function delete ()
 	{
+		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
+			return;
+
 		MailchimpCommerce::$i->chimp->delete(
 			'ecommerce/stores/' . MailchimpCommerce::$i->getSettings()->storeId
 		);

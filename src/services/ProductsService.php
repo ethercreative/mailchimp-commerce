@@ -45,6 +45,9 @@ class ProductsService extends Component
 	 */
 	public function syncProductById ($productId)
 	{
+		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
+			return true;
+
 		$hasBeenSynced = $this->_hasProductBeenSynced($productId);
 		$data = $this->_buildProductData($productId);
 
@@ -64,6 +67,9 @@ class ProductsService extends Component
 	 */
 	public function deleteProductById ($productId)
 	{
+		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
+			return;
+
 		if (!$this->_hasProductBeenSynced($productId))
 			return;
 

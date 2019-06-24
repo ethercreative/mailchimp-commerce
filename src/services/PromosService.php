@@ -41,6 +41,9 @@ class PromosService extends Component
 	 */
 	public function syncPromoById ($promoId)
 	{
+		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
+			return true;
+
 		$hasBeenSynced = $this->_hasPromoBeenSynced($promoId);
 		list($data, $code) = $this->_buildPromoData($promoId);
 
@@ -63,6 +66,9 @@ class PromosService extends Component
 	 */
 	public function deletePromoById ($promoId)
 	{
+		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
+			return;
+
 		if (!$this->_hasPromoBeenSynced($promoId))
 			return;
 
