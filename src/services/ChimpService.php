@@ -8,6 +8,7 @@
 
 namespace ether\mc\services;
 
+use Craft;
 use craft\base\Component;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
@@ -118,7 +119,7 @@ class ChimpService extends Component
 
 		$settings = MailchimpCommerce::$i->getSettings();
 
-		$apiKey     = $settings->apiKey;
+		$apiKey     = Craft::parseEnv($settings->apiKey);
 		$dataCenter = $settings->getDataCenter();
 
 		if (!$apiKey)
