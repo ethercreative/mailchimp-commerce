@@ -223,7 +223,7 @@ class OrdersService extends Component
 	{
 		$order = Commerce::getInstance()->getOrders()->getOrderById($orderId);
 
-		if (!$order->email || empty($order->getLineItems()))
+		if (!$order || !$order->email || empty($order->getLineItems()))
 			return [$order, null];
 
 		$data = [
