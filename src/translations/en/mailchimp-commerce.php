@@ -10,6 +10,7 @@ return [
 	'Mailchimp Commerce' => 'Mailchimp Commerce',
 	'Never' => 'Never',
 	'Last Synced to Mailchimp' => 'Last Synced to Mailchimp',
+	'Mailchimp syncing is disabled.' => 'Mailchimp syncing is disabled.',
 
 	// Settings
 	// =========================================================================

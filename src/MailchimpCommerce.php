@@ -17,7 +17,9 @@ use craft\commerce\records\Discount;
 use craft\commerce\services\Addresses;
 use craft\errors\ElementNotFoundException;
 use craft\errors\SiteNotFoundException;
+use craft\events\RegisterCpAlertsEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\helpers\Cp;
 use craft\helpers\UrlHelper;
 use craft\web\UrlManager;
 use ether\mc\jobs\SyncOrders;
@@ -93,6 +95,12 @@ class MailchimpCommerce extends Plugin
 			Addresses::class,
 			Addresses::EVENT_AFTER_SAVE_ADDRESS,
 			[$this, 'onAfterSaveAddress']
+		);
+
+		Event::on(
+			Cp::class,
+			Cp::EVENT_REGISTER_ALERTS,
+			[$this, 'onRegisterAlerts']
 		);
 
 		// Events: Products
@@ -237,6 +245,16 @@ class MailchimpCommerce extends Plugin
 			$event->rules['mailchimp-commerce/mappings'] = 'mailchimp-commerce/cp/mappings';
 			$event->rules['mailchimp-commerce/settings'] = 'mailchimp-commerce/cp/settings';
 		}
+	}
+
+	public function onRegisterAlerts (RegisterCpAlertsEvent $event)
+	{
+		if (
+			strpos(Craft::$app->getRequest()->getFullPath(), 'mailchimp-commerce') === false ||
+			!$this->getSettings()->disableSyncing
+		) return;
+
+		$event->alerts[] = self::t('Mailchimp syncing is disabled.');
 	}
 
 	// Events: Commerce
