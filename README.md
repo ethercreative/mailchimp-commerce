@@ -1,7 +1,9 @@
 ![Mailchimp for Craft Commerce](./resources/banner.jpg)
 
 # Mailchimp for Craft Commerce
-Mailchimp integration with Craft Commerce
+Sync your Store, Products, Carts, Orders, Customers, and Promotions to Mailchimp
+and leverage their full suite of marketing solutions, including abandoned carts,
+order status notifications, and more.
 
 
 ### Local Development
