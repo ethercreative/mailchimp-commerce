@@ -6,6 +6,16 @@ and leverage their full suite of marketing solutions, including abandoned carts,
 order status notifications, and more.
 
 
+![Sync](./resources/sync.png)
+
+![Field Mapping](./resources/field-mappings.png)
+
+![Settings](./resources/settings.png)
+
+
+---
+
+
 ### Local Development
 Please note that Mailchimp requires a valid, publicly accessible URL for some of 
 the data that is sync'd. This means that if you are using the plugin in a local 
