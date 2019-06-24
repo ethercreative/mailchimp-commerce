@@ -8,6 +8,7 @@
 
 namespace ether\mc\models;
 
+use Craft;
 use craft\base\Model;
 
 /**
@@ -118,7 +119,7 @@ class Settings extends Model
 		if (!$this->apiKey)
 			return null;
 
-		$parts = explode('-', $this->apiKey);
+		$parts = explode('-', Craft::parseEnv($this->apiKey));
 		return end($parts);
 	}
 
