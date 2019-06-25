@@ -78,6 +78,11 @@ class Settings extends Model
 	 */
 	public $promoRedemptionUrl;
 
+	/**
+	 * @var string The URL to redirect to after restoring an abandoned cart.
+	 */
+	public $abandonedCartRestoreUrl;
+
 	// Products
 	// -------------------------------------------------------------------------
 

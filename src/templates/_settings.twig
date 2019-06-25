@@ -43,6 +43,14 @@
 			placeholder: 'i.e. /cart?discount={code}',
 		}) }}
 
+		{{ forms.textField({
+			name: 'abandonedCartRestoreUrl',
+			label: 'Abandoned Cart Restore URL'|t('mailchimp-commerce'),
+			instructions: 'The URL that will be redirected to after an abandoned cart is restored.'|t('mailchimp-commerce'),
+			value: settings.abandonedCartRestoreUrl,
+			placeholder: 'i.e. /cart',
+		}) }}
+
 	{% endnamespace %}
 
 {% endblock %}

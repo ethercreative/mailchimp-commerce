@@ -57,6 +57,10 @@ return [
 	'Promo Redemption URL' => 'Promo Redemption URL',
 	'The URL that will be used for redeeming a promo code.' => 'The URL that will be used for redeeming a promo code.',
 
+	'Abandoned Cart Restore URL' => 'Abandoned Cart Restore URL',
+	'The URL that will be redirected to after an abandoned cart is restored.' =>
+		'The URL that will be redirected to after an abandoned cart is restored.',
+
 	// Jobs
 	// =========================================================================
 
