@@ -1,7 +1,7 @@
 {
   "name": "ether/mailchimp-commerce",
   "description": "Mailchimp integration with Craft Commerce",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "type": "craft-plugin",
   "keywords": [
     "mailchimp",
@@ -37,6 +37,7 @@
     "handle": "mailchimp-commerce",
     "name": "Mailchimp Commerce",
     "documentationUrl": "https://github.com/ethercreative/mailchimp-commerce/blob/master/README.md",
-    "class": "ether\\mc\\MailchimpCommerce"
+    "class": "ether\\mc\\MailchimpCommerce",
+    "schemaVersion": "1.0.1"
   }
 }

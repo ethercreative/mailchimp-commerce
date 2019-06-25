@@ -72,6 +72,7 @@ class Install extends Migration
 		$this->createTable('{{%mc_orders_synced}}', [
 			'orderId' => $this->integer(),
 			'isCart' => $this->boolean(),
+			'cid' => $this->string()->null(),
 			'lastSynced' => $this->dateTime(),
 		]);
 

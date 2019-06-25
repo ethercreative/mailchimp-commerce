@@ -250,6 +250,15 @@ class OrdersService extends Component
 			],
 		];
 
+		$cid = (new Query())
+			->select('cid')
+			->from('{{%mc_orders_synced}}')
+			->where(['orderId' => $order->id])
+			->scalar();
+
+		if ($cid)
+			$data['campaign_id'] = $cid;
+
 		foreach ($order->lineItems as $item)
 		{
 			$li = [
