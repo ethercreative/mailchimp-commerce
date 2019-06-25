@@ -240,7 +240,7 @@ class OrdersService extends Component
 			'promos' => [],
 			'customer' => [
 				'id' => (string) $order->customer->id,
-				'email_address' => $order->customer->email,
+				'email_address' => $order->customer->email ?: $order->email,
 				'opt_in_status' => $this->_hasOptedIn($order),
 				'first_name' => $order->billingAddress ? $order->billingAddress->firstName : '',
 				'last_name' => $order->billingAddress ? $order->billingAddress->lastName : '',
