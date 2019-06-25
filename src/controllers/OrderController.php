@@ -40,7 +40,7 @@ class OrderController extends Controller
 		$settings = MailchimpCommerce::getInstance()->getSettings();
 		$session = Craft::$app->getSession();
 
-		$number = Craft::$app->getRequest()->getRequiredBodyParam('number');
+		$number = Craft::$app->getRequest()->getRequiredQueryParam('number');
 		$order = $commerce->getOrders()->getOrderByNumber($number);
 
 		if (!$order)

@@ -1,6 +1,7 @@
-## [Unreleased] 1.0.6
+## 1.0.6 - 2019-06-25
 ### Fixed
 - Fix missing customer email for guest customers
+- Fix abandoned cart restore URL requiring admin login
 
 ## 1.0.5 - 2019-06-25
 ### Added

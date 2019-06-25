@@ -301,8 +301,8 @@ class OrdersService extends Component
 		}
 		else
 		{
-			$data['checkout_url'] = UrlHelper::actionUrl(
-				'mailchimp-commerce/order/restore',
+			$data['checkout_url'] = UrlHelper::siteUrl(
+				Craft::$app->getConfig()->getGeneral()->actionTrigger . '/mailchimp-commerce/order/restore',
 				['number' => $order->number]
 			);
 		}
