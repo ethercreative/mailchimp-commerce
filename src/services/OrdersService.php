@@ -170,7 +170,7 @@ class OrdersService extends Component
 		$storeId = MailchimpCommerce::$i->getSettings()->storeId;
 		$type    = $order->isCompleted ? 'orders' : 'carts';
 
-		list($success, $data, $error) = MailchimpCommerce::$i->chimp->post(
+		list($success, $data, $error) = MailchimpCommerce::$i->chimp->patch(
 			'ecommerce/stores/' . $storeId . '/' . $type . '/' . $order->id,
 			$data
 		);

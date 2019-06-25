@@ -1,3 +1,7 @@
+## 1.0.7 - 2019-06-25
+### Fixed
+- Fix incorrect request method error when updating an order 
+
 ## 1.0.6 - 2019-06-25
 ### Fixed
 - Fix missing customer email for guest customers
