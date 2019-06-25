@@ -1,3 +1,7 @@
+## [Unreleased] 1.0.6
+### Fixed
+- Fix missing customer email for guest customers
+
 ## 1.0.5 - 2019-06-25
 ### Added
 - Actually add cart restore functionality (oops).
