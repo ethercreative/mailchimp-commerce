@@ -83,6 +83,22 @@ class Settings extends Model
 	 */
 	public $abandonedCartRestoreUrl;
 
+	/**
+	 * @var string The error notice sent when an abandoned cart has expired.
+	 */
+	public $expiredCartError = 'Your cart has expired!';
+
+	/**
+	 * @var string The error notice sent when an abandoned cart that has
+	 *             already been completed is attempted to be restored.
+	 */
+	public $completedCartError = 'You\'ve already completed this order!';
+
+	/**
+	 * @var string The success notice sent when an abandoned cart is restored.
+	 */
+	public $cartRestoredNotice = 'Your cart has been restored!';
+
 	// Products
 	// -------------------------------------------------------------------------
 

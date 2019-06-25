@@ -51,6 +51,27 @@
 			placeholder: 'i.e. /cart',
 		}) }}
 
+		{{ forms.textField({
+			name: 'expiredCartError',
+			label: 'Expired Cart Error'|t('mailchimp-commerce'),
+			instructions: 'The error notice sent when an abandoned cart has expired.'|t('mailchimp-commerce'),
+			value: settings.expiredCartError,
+		}) }}
+
+		{{ forms.textField({
+			name: 'completedCartError',
+			label: 'Completed Cart Error'|t('mailchimp-commerce'),
+			instructions: 'The error notice sent when an abandoned cart that has already been completed is attempted to be restored.'|t('mailchimp-commerce'),
+			value: settings.completedCartError,
+		}) }}
+
+		{{ forms.textField({
+			name: 'cartRestoredNotice',
+			label: 'Cart Restored Notice'|t('mailchimp-commerce'),
+			instructions: 'The success notice sent when an abandoned cart is restored.'|t('mailchimp-commerce'),
+			value: settings.cartRestoredNotice,
+		}) }}
+
 	{% endnamespace %}
 
 {% endblock %}

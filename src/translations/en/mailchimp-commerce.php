@@ -61,6 +61,17 @@ return [
 	'The URL that will be redirected to after an abandoned cart is restored.' =>
 		'The URL that will be redirected to after an abandoned cart is restored.',
 
+	'Expired Cart Error' => 'Expired Cart Error',
+	'The error notice sent when an abandoned cart has expired.' => 'The error notice sent when an abandoned cart has expired.',
+
+	'Completed Cart Error' => 'Completed Cart Error',
+	'The error notice sent when an abandoned cart that has already been completed is attempted to be restored.' =>
+		'The error notice sent when an abandoned cart that has already been completed is attempted to be restored.',
+
+	'Cart Restored Notice' => 'Cart Restored Notice',
+	'The success notice sent when an abandoned cart is restored.' => 'The success notice sent when an abandoned cart is restored.',
+
+
 	// Jobs
 	// =========================================================================
 

@@ -1,3 +1,7 @@
+## 1.0.5 - 2019-06-25
+### Added
+- Actually add cart restore functionality (oops).
+
 ## 1.0.4 - 2019-06-24
 ### Added
 - Added alert to the Mailchimp CP section telling the user that syncing is disabled (if it is).
