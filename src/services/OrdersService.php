@@ -289,8 +289,10 @@ class OrdersService extends Component
 				'updated_at_foreign' => $order->dateUpdated->format('c'),
 				'shipping_address' => AddressHelper::asArray($order->shippingAddress),
 				'billing_address' => AddressHelper::asArray($order->billingAddress),
-				'order_url' => UrlHelper::siteUrl($order->returnUrl),
 			]);
+
+			if ($order->returnUrl)
+				$data['order_url'] = UrlHelper::siteUrl($order->returnUrl);
 
 			if ($this->_isOrderShipped($order))
 				$data['fulfillment_status'] = 'shipped';

@@ -1,3 +1,7 @@
+## 1.1.1 - 2019-06-28
+### Fixed
+- Fix error when syncing an order with no return URL (Fixes #3)
+
 ## 1.1.0 - 2019-06-28
 ### Added
 - Add support for 3rd party product and purchasable types
