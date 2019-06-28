@@ -50,18 +50,25 @@ class SyncController extends Controller
 
 	public function actionAllProducts ()
 	{
+		$productClass = Craft::$app->getRequest()->getRequiredBodyParam('class');
 		$typeId = Craft::$app->getRequest()->getBodyParam('type');
-		$productIdsQuery = (new Query())
-			->select('id')
-			->from('{{%commerce_products}}');
 
-		if ($typeId)
-			$productIdsQuery->where(['typeId' => $typeId]);
+		$mailchimpProducts = MailchimpCommerce::getInstance()->chimp->getProducts();
+		$productIds = [];
+		$productName = 'Products';
+
+		foreach ($mailchimpProducts as $product)
+		{
+			if ($product->productClass !== $productClass)
+				continue;
+
+			$callable = $product->getProductIds;
+			$productIds = $callable($typeId);
+			$productName = $product->productName;
+		}
 
 		Craft::$app->getQueue()->push(
-			new SyncProducts([
-				'productIds' => $productIdsQuery->column(),
-			])
+			new SyncProducts(compact('productIds', 'productName'))
 		);
 	}
 

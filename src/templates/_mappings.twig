@@ -3,6 +3,24 @@
 {% set title = 'Field Mappings'|t('mailchimp-commerce') %}
 {% set fullPageForm = true %}
 
+{% macro rows(products, handle, settings, fields) %}
+	{% for product in products %}
+		{% for type in product.types %}
+			<tr>
+				<td>{{ type.name }} ({{ product.name }})</td>
+				<td>
+					{{ forms.select({
+						name: handle ~ '[' ~ type.uid ~ ']',
+						value: settings[handle][type.uid] ?? null,
+						options: fields,
+					}) }}
+				</td>
+			</tr>
+		{% endfor %}
+	{% endfor %}
+{% endmacro %}
+{% from _self import rows %}
+
 {% block content %}
 	<input type="hidden" name="action" value="plugins/save-plugin-settings">
 	<input type="hidden" name="pluginHandle" value="mailchimp-commerce">
@@ -20,18 +38,7 @@
 		{% set input %}
 			<table class="data fullwidth collapsible">
 				<tbody>
-				{% for type in productTypes %}
-					<tr>
-						<td>{{ type.name }}</td>
-						<td>
-							{{ forms.select({
-								name: 'productVendorFields[' ~ type.uid ~ ']',
-								value: settings.productVendorFields[type.uid] ?? null,
-								options: fields,
-							}) }}
-						</td>
-					</tr>
-				{% endfor %}
+					{{ rows(products, 'productVendorFields', settings, fields) }}
 				</tbody>
 			</table>
 		{% endset %}
@@ -43,18 +50,7 @@
 		{% set input %}
 			<table class="data fullwidth collapsible">
 				<tbody>
-				{% for type in productTypes %}
-					<tr>
-						<td>{{ type.name }}</td>
-						<td>
-							{{ forms.select({
-								name: 'productDescriptionFields[' ~ type.uid ~ ']',
-								value: settings.productDescriptionFields[type.uid] ?? null,
-								options: fields,
-							}) }}
-						</td>
-					</tr>
-				{% endfor %}
+					{{ rows(products, 'productDescriptionFields', settings, fields) }}
 				</tbody>
 			</table>
 		{% endset %}
@@ -65,18 +61,7 @@
 		{% set input %}
 			<table class="data fullwidth collapsible">
 				<tbody>
-				{% for type in productTypes %}
-					<tr>
-						<td>{{ type.name }}</td>
-						<td>
-							{{ forms.select({
-								name: 'productThumbnailFields[' ~ type.uid ~ ']',
-								value: settings.productThumbnailFields[type.uid] ?? null,
-								options: assetFields,
-							}) }}
-						</td>
-					</tr>
-				{% endfor %}
+					{{ rows(products, 'productThumbnailFields', settings, assetFields) }}
 				</tbody>
 			</table>
 		{% endset %}
@@ -87,18 +72,7 @@
 		{% set input %}
 			<table class="data fullwidth collapsible">
 				<tbody>
-				{% for type in productTypes %}
-					<tr>
-						<td>{{ type.name }}</td>
-						<td>
-							{{ forms.select({
-								name: 'productImageFields[' ~ type.uid ~ ']',
-								value: settings.productImageFields[type.uid] ?? null,
-								options: assetFields,
-							}) }}
-						</td>
-					</tr>
-				{% endfor %}
+					{{ rows(products, 'productImageFields', settings, assetFields) }}
 				</tbody>
 			</table>
 		{% endset %}
@@ -109,18 +83,7 @@
 		{% set input %}
 			<table class="data fullwidth collapsible">
 				<tbody>
-				{% for type in productTypes %}
-					<tr>
-						<td>{{ type.name }}</td>
-						<td>
-							{{ forms.select({
-								name: 'variantThumbnailFields[' ~ type.uid ~ ']',
-								value: settings.variantThumbnailFields[type.uid] ?? null,
-								options: assetFields,
-							}) }}
-						</td>
-					</tr>
-				{% endfor %}
+					{{ rows(products, 'variantThumbnailFields', settings, assetFields) }}
 				</tbody>
 			</table>
 		{% endset %}
@@ -131,18 +94,7 @@
 		{% set input %}
 			<table class="data fullwidth collapsible">
 				<tbody>
-				{% for type in productTypes %}
-					<tr>
-						<td>{{ type.name }}</td>
-						<td>
-							{{ forms.select({
-								name: 'variantImageFields[' ~ type.uid ~ ']',
-								value: settings.variantImageFields[type.uid] ?? null,
-								options: assetFields,
-							}) }}
-						</td>
-					</tr>
-				{% endfor %}
+					{{ rows(products, 'variantImageFields', settings, assetFields) }}
 				</tbody>
 			</table>
 		{% endset %}

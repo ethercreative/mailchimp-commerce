@@ -9,6 +9,7 @@
 namespace ether\mc;
 
 use Craft;
+use craft\base\Element;
 use craft\base\Plugin;
 use craft\commerce\elements\Order;
 use craft\commerce\elements\Product;
@@ -106,23 +107,26 @@ class MailchimpCommerce extends Plugin
 		// Events: Products
 		// ---------------------------------------------------------------------
 
-		Event::on(
-			Product::class,
-			Product::EVENT_AFTER_SAVE,
-			[$this, 'onProductSave']
-		);
+		foreach ($this->chimp->getProducts() as $product)
+		{
+			Event::on(
+				$product->productClass,
+				Element::EVENT_AFTER_SAVE,
+				[$this, 'onProductSave']
+			);
 
-		Event::on(
-			Product::class,
-			Product::EVENT_BEFORE_RESTORE,
-			[$this, 'onProductSave']
-		);
+			Event::on(
+				$product->productClass,
+				Element::EVENT_BEFORE_RESTORE,
+				[$this, 'onProductSave']
+			);
 
-		Event::on(
-			Product::class,
-			Product::EVENT_BEFORE_DELETE,
-			[$this, 'onProductDelete']
-		);
+			Event::on(
+				$product->productClass,
+				Element::EVENT_BEFORE_DELETE,
+				[$this, 'onProductDelete']
+			);
+		}
 
 		// Events: Orders
 		// ---------------------------------------------------------------------

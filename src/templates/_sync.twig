@@ -19,21 +19,26 @@
 	<h2>{{ 'Products'|t('commerce') }}</h2>
 
 	<p>
-		{{ '{synced} of {total, plural, =1{1 product} other{# products}} have been synced.'|t('mailchimp-commerce', {
+		{{ '{synced, plural, =1{1 product} other{# products}} have been synced.'|t('mailchimp-commerce', {
 			synced: totalProductsSynced,
-			total: craft.products.count(),
 		}) }}
 	</p>
 
-	<form method="post">
-		{{ csrfInput() }}
-		<input type="hidden" name="action" value="mailchimp-commerce/sync/all-products">
-		{{ forms.select({
-			name: 'typeId',
-			options: productTypes,
-		}) }}
-		<input type="submit" class="btn submit" value="{{ 'Sync Products'|t('mailchimp-commerce') }}">
-	</form>
+	{% for product in products %}
+		<form method="post">
+			{{ csrfInput() }}
+			<input type="hidden" name="action" value="mailchimp-commerce/sync/all-products">
+			<input type="hidden" name="class" value="{{ product.class }}">
+			{{ forms.select({
+				name: 'typeId',
+				options: product.typeOptions,
+			}) }}
+			<input type="submit" class="btn submit" value="{{ 'Sync'|t('mailchimp-commerce') ~ ' ' ~ product.name }}">
+		</form>
+		{% if not loop.last %}
+			<br>
+		{% endif %}
+	{% endfor %}
 
 	<hr>
 

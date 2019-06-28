@@ -1,3 +1,8 @@
+## 1.1.0 - 2019-06-28
+### Added
+- Add support for 3rd party product and purchasable types
+- Add support for Verbb Events (Fixes #3)
+
 ## 1.0.8 - 2019-06-26
 ### Added
 - Restored carts now track their email campaign ID and sync it back to the order

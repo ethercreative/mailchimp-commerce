@@ -53,7 +53,7 @@ class Install extends Migration
 			null,
 			'{{%mc_products_synced}}',
 			['productId'],
-			'{{%commerce_products}}',
+			'{{%elements}}',
 			['id'],
 			'CASCADE'
 		);

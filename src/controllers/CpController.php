@@ -58,25 +58,11 @@ class CpController extends Controller
 	public function actionSync ()
 	{
 		$i = MailchimpCommerce::$i;
-		$productTypes = array_reduce(
-			Commerce::getInstance()->getProductTypes()->getAllProductTypes(),
-			function ($a, ProductType $type) {
-				$a[] = [
-					'label' => $type->name,
-					'value' => $type->id,
-				];
-
-				return $a;
-			},
-			[
-				['label' => 'All Products', 'value' => ''],
-			]
-		);
 
 		return $this->renderTemplate('mailchimp-commerce/_sync', [
 			'settings' => $i->getSettings(),
 			'totalProductsSynced' => $i->products->getTotalProductsSynced(),
-			'productTypes' => $productTypes,
+			'products' => $this->_getProducts(),
 			'totalCartsSynced' => $i->orders->getTotalOrdersSynced(true),
 			'totalOrdersSynced' => $i->orders->getTotalOrdersSynced(),
 			'totalPromosSynced' => $i->promos->getTotalPromosSynced(),
@@ -86,7 +72,6 @@ class CpController extends Controller
 
 	public function actionMappings ()
 	{
-		$productTypes = Commerce::getInstance()->getProductTypes()->getAllProductTypes();
 		$fields = array_reduce(
 			Craft::$app->getFields()->getAllGroups(),
 			function (array $a, FieldGroup $group) {
@@ -172,7 +157,7 @@ class CpController extends Controller
 
 		return $this->renderTemplate('mailchimp-commerce/_mappings', [
 			'settings' => MailchimpCommerce::$i->getSettings(),
-			'productTypes' => $productTypes,
+			'products' => $this->_getProducts(),
 			'fields' => $fields,
 			'assetFields' => $assetFields,
 			'lightswitchFields' => $lightswitchFields,
@@ -206,6 +191,48 @@ class CpController extends Controller
 			'orderStatuses' => $orderStatuses,
 			'imageTransforms' => $imageTransforms,
 		]);
+	}
+
+	// Helpers
+	// =========================================================================
+
+	private function _getProducts ()
+	{
+		$products          = [];
+		$mailchimpProducts =
+			MailchimpCommerce::getInstance()->chimp->getProducts();
+
+		foreach ($mailchimpProducts as $mcProduct)
+		{
+			$types = $mcProduct->getProductTypes;
+			$types = $types();
+			$productTypes = array_reduce(
+				$types,
+				function ($a, $type) {
+					$a[] = [
+						'label' => $type->name,
+						'value' => $type->id,
+					];
+
+					return $a;
+				},
+				[
+					[
+						'label' => MailchimpCommerce::t('All') . ' ' . $mcProduct->productName,
+						'value' => '',
+					]
+				]
+			);
+
+			$products[] = [
+				'name'  => $mcProduct->productName,
+				'class' => $mcProduct->productClass,
+				'types' => $types,
+				'typeOptions' => $productTypes,
+			];
+		}
+
+		return $products;
 	}
 
 }

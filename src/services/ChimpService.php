@@ -12,6 +12,8 @@ use Craft;
 use craft\base\Component;
 use craft\commerce\elements\Product;
 use craft\commerce\elements\Variant;
+use craft\commerce\Plugin as Commerce;
+use craft\db\Query;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use ether\mc\base\MailchimpProduct;
@@ -19,8 +21,6 @@ use ether\mc\events\RegisterMailchimpProductsEvent;
 use ether\mc\MailchimpCommerce;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use verbb\events\elements\Event;
-use verbb\events\elements\Ticket;
 
 /**
  * Class ChimpService
@@ -37,6 +37,20 @@ class ChimpService extends Component
 	// Constants
 	// -------------------------------------------------------------------------
 
+	/**
+	 * @event RegisterMailchimpProductsEvent The event that is triggered when
+	 *   registering new Mailchimp products
+	 *
+	 * Event::on(
+	 *     \ether\mc\services\ChimpService::class,
+	 *     \ether\mc\services\ChimpService::EVENT_REGISTER_MAILCHIMP_PRODUCTS,
+	 *     function (RegisterMailchimpProductsEvent $event) {
+	 *         $event->products[] = new \ether\mc\base\MailchimpProduct([
+	 *             // See ChimpService::getProducts() for examples
+	 *         ]);
+	 *     }
+	 * );
+	 */
 	const EVENT_REGISTER_MAILCHIMP_PRODUCTS = 'mcRegisterProducts';
 
 	// Methods
@@ -44,26 +58,68 @@ class ChimpService extends Component
 
 	public function getProducts ()
 	{
+		static $products;
+
+		if ($products)
+			return $products;
+
 		$products = [
 			new MailchimpProduct([
-				'productName'            => Craft::t('commerce', 'Product'),
-				'variantName'            => Craft::t('commerce', 'Variant'),
-				'productClass'           => Product::class,
-				'variantClass'           => Variant::class,
-				'variantToProductMethod' => 'getProduct',
-				'productToVariantMethod' => 'getVariants',
+				'productName'                   => Craft::t('commerce', 'Products'),
+				'variantName'                   => Craft::t('commerce', 'Variants'),
+				'productClass'                  => Product::class,
+				'variantClass'                  => Variant::class,
+				'variantToProductMethod'        => 'getProduct',
+				'productToVariantMethod'        => 'getVariants',
+				'variantStockProperty'          => 'stock',
+				'variantUnlimitedStockProperty' => 'hasUnlimitedStock',
+				'productToTypeMethod'           => 'getType',
+				'getProductTypes'               => function () {
+					return Commerce::getInstance()->getProductTypes()->getAllProductTypes();
+				},
+				'getProductIds'                 => function ($typeId) {
+					$productIdsQuery = (new Query())
+						->select('id')
+						->from('{{%commerce_products}}');
+
+					if ($typeId)
+						$productIdsQuery->where(['typeId' => $typeId]);
+
+					return $productIdsQuery->column();
+				},
 			]),
 		];
 
-		if (class_exists(Event::class))
+		/** @noinspection PhpFullyQualifiedNameUsageInspection */
+		if (class_exists(\verbb\events\elements\Event::class))
 		{
+			/** @noinspection PhpFullyQualifiedNameUsageInspection */
 			$products[] = new MailchimpProduct([
-				'productName'            => Craft::t('events', 'Event'),
-				'variantName'            => Craft::t('events', 'Ticket'),
-				'productClass'           => Event::class,
-				'variantClass'           => Ticket::class,
-				'variantToProductMethod' => 'getEvent',
-				'productToVariantMethod' => 'getTickets',
+				'productName'                   => Craft::t('events', 'Events'),
+				'variantName'                   => Craft::t('events', 'Tickets'),
+				'productClass'                  => \verbb\events\elements\Event::class,
+				'variantClass'                  => \verbb\events\elements\Ticket::class,
+				'variantToProductMethod'        => 'getEvent',
+				'productToVariantMethod'        => 'getTickets',
+				'variantStockProperty'          => 'quantity',
+				'variantUnlimitedStockProperty' => null,
+				'productToTypeMethod'           => 'getType',
+				'getProductTypes'               => function () {
+					/** @noinspection PhpFullyQualifiedNameUsageInspection */
+					/** @var \verbb\events\services\EventTypes $service */
+					$service = \verbb\events\Events::getInstance()->getEventTypes();
+					return $service->getAllEventTypes();
+				},
+				'getProductIds'                 => function ($typeId) {
+					$productIdsQuery = (new Query())
+						->select('id')
+						->from('{{%events_events}}');
+
+					if ($typeId)
+						$productIdsQuery->where(['typeId' => $typeId]);
+
+					return $productIdsQuery->column();
+				},
 			]);
 		}
 
@@ -72,7 +128,7 @@ class ChimpService extends Component
 		]);
 		$this->trigger(self::EVENT_REGISTER_MAILCHIMP_PRODUCTS, $event);
 
-		return $event->products;
+		return $products = $event->products;
 	}
 
 	// Request

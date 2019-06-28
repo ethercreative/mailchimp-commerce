@@ -11,7 +11,10 @@ namespace ether\mc\services;
 use Craft;
 use craft\base\Component;
 use craft\base\Field;
+use craft\commerce\base\Purchasable;
 use craft\commerce\elements\Order;
+use craft\commerce\elements\Product;
+use craft\commerce\elements\Variant;
 use craft\commerce\Plugin as Commerce;
 use craft\helpers\Db;
 use craft\helpers\UrlHelper;
@@ -263,7 +266,7 @@ class OrdersService extends Component
 		{
 			$li = [
 				'id' => (string) $item->id,
-				'product_id' => (string) $item->purchasable->product->id,
+				'product_id' => (string) $this->_getProduct($item->purchasable)->id,
 				'product_variant_id' => (string) $item->purchasable->id,
 				'quantity' => $item->qty,
 				'price' => $item->price,
@@ -363,6 +366,32 @@ class OrdersService extends Component
 			return true;
 
 		return false;
+	}
+
+	/**
+	 * Gets the product for the given purchasable
+	 *
+	 * @param $purchasable
+	 *
+	 * @return Product|null
+	 * @throws InvalidConfigException
+	 */
+	private function _getProduct ($purchasable)
+	{
+		$mailchimpProducts = MailchimpCommerce::getInstance()->chimp->getProducts();
+
+		foreach ($mailchimpProducts as $product)
+		{
+			if ($purchasable instanceof $product->variantClass)
+			{
+				$callable = [$purchasable, $product->variantToProductMethod];
+
+				return $callable();
+			}
+		}
+
+		/** @var Variant $purchasable */
+		return $purchasable->getProduct();
 	}
 
 }

@@ -13,6 +13,7 @@ use craft\errors\SiteNotFoundException;
 use craft\queue\BaseJob;
 use craft\queue\QueueInterface;
 use ether\mc\MailchimpCommerce;
+use yii\base\InvalidConfigException;
 use yii\db\Exception;
 use yii\queue\Queue;
 
@@ -29,6 +30,7 @@ class SyncProducts extends BaseJob
 	// =========================================================================
 
 	public $productIds = [];
+	public $productName = 'Products';
 
 	// Methods
 	// =========================================================================
@@ -39,6 +41,7 @@ class SyncProducts extends BaseJob
 	 * @throws Exception
 	 * @throws QueryAbortedException
 	 * @throws SiteNotFoundException
+	 * @throws InvalidConfigException
 	 */
 	public function execute ($queue)
 	{
@@ -57,7 +60,9 @@ class SyncProducts extends BaseJob
 
 	protected function defaultDescription ()
 	{
-		return MailchimpCommerce::t('Syncing Products to Mailchimp');
+		return MailchimpCommerce::t('Syncing {name} to Mailchimp', [
+			'name' => $this->productName,
+		]);
 	}
 
 }

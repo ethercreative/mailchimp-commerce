@@ -75,7 +75,7 @@ return [
 	// Jobs
 	// =========================================================================
 
-	'Syncing Products to Mailchimp' => 'Syncing Products to Mailchimp',
+	'Syncing {name} to Mailchimp' => 'Syncing {name} to Mailchimp',
 	'Syncing Orders to Mailchimp' => 'Syncing Orders to Mailchimp',
 	'Syncing Promos to Mailchimp' => 'Syncing Promos to Mailchimp',
 
@@ -87,8 +87,9 @@ return [
 	'Manually sync the store if your domain or other details have changed.' => 'Manually sync the store if your domain or other details have changed.',
 	'Sync Store' => 'Sync Store',
 	'Store Synced.' => 'Store Synced.',
+	'All' => 'All',
 
-	'{synced} of {total, plural, =1{1 product} other{# products}} have been synced.' => '{synced} of {total, plural, =1{1 product} other{# products}} have been synced.',
+	'{synced, plural, =1{1 product} other{# products}} have been synced.' => '{synced, plural, =1{1 product} other{# products}} have been synced.',
 	'Sync Products' => 'Sync Products',
 
 	'{synced} of {total, plural, =1{1 cart} other{# carts}} have been synced.' => '{synced} of {total, plural, =1{1 cart} other{# carts}} have been synced.',

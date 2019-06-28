@@ -13,13 +13,13 @@ use craft\base\Component;
 use craft\base\Element;
 use craft\commerce\elements\Product;
 use craft\commerce\elements\Variant;
-use craft\commerce\Plugin as Commerce;
 use craft\db\Query;
 use craft\elements\Asset;
 use craft\errors\SiteNotFoundException;
 use craft\helpers\Db;
 use DateTime;
 use ether\mc\MailchimpCommerce;
+use yii\base\InvalidConfigException;
 use yii\db\Exception;
 
 /**
@@ -42,6 +42,7 @@ class ProductsService extends Component
 	 * @return bool
 	 * @throws Exception
 	 * @throws SiteNotFoundException
+	 * @throws InvalidConfigException
 	 */
 	public function syncProductById ($productId)
 	{
@@ -228,10 +229,16 @@ class ProductsService extends Component
 	 *
 	 * @return array
 	 * @throws SiteNotFoundException
+	 * @throws InvalidConfigException
 	 */
 	private function _buildProductData ($productId)
 	{
-		$product = Commerce::getInstance()->getProducts()->getProductById($productId);
+		/** @var Element $product */
+		$product = Craft::$app->getElements()->getElementById($productId);
+
+		// TODO: Tidy up all helper functions by getting and storing the correct
+		//  product and variant types, and using them later (rather that
+		//  re-checking in every function for every variant).
 
 		$data = [
 			'id' => (string) $product->id,
@@ -239,23 +246,26 @@ class ProductsService extends Component
 			'handle' => $product->slug,
 			'url' => $product->url,
 			'description' => $this->_getProductDescription($product),
-			'type' => $product->type->name,
+			'type' => $this->_getType($product)->name,
 			'vendor' => $this->_getProductVendor($product),
 			'image_url' => $this->_getThumbnail($product),
 			'variants' => [],
 			'images' => $this->_getProductImages($product),
-			'published_at_foreign' => $product->postDate->format('c'),
+			'published_at_foreign' => $product->dateCreated->format('c'),
 		];
 
-		foreach ($product->variants as $variant)
+		foreach ($this->_getVariants($product) as $variant)
 		{
+			$unlimited = $this->_getUnlimitedStock($variant);
+			$stock = $this->_getStock($variant);
+
 			$data['variants'][] = [
 				'id' => (string) $variant->id,
 				'title' => $variant->title,
 				'url' => $variant->url ?: $product->url,
 				'sku' => $variant->sku,
 				'price' => $variant->price,
-				'inventory_quantity' => $variant->hasUnlimitedStock ? PHP_INT_MAX : $variant->stock,
+				'inventory_quantity' => $unlimited ? PHP_INT_MAX : $stock,
 				'image_url' => $this->_getThumbnail($variant, $product),
 				'visibility' => (string) $variant->enabled,
 			];
@@ -265,36 +275,49 @@ class ProductsService extends Component
 	}
 
 	/**
-	 * @param Product $product
+	 * @param Element $product
 	 *
 	 * @return string|null
 	 * @throws SiteNotFoundException
+	 * @throws InvalidConfigException
 	 */
-	private function _getProductVendor (Product $product)
+	private function _getProductVendor (Element $product)
 	{
 		return MailchimpCommerce::$i->fields->getMappedFieldValue(
 			'productVendorFields',
 			$product,
-			$product->type->uid,
+			$this->_getType($product)->uid,
 			MailchimpCommerce::$i->store->getStoreName()
 		);
 	}
 
-	private function _getProductDescription (Product $product)
+	/**
+	 * @param Element $product
+	 *
+	 * @return string|null
+	 * @throws InvalidConfigException
+	 */
+	private function _getProductDescription (Element $product)
 	{
 		return MailchimpCommerce::$i->fields->getMappedFieldValue(
 			'productDescriptionFields',
 			$product,
-			$product->type->uid,
+			$this->_getType($product)->uid,
 			''
 		);
 	}
 
-	private function _getProductImages (Product $product)
+	/**
+	 * @param Element $product
+	 *
+	 * @return array
+	 * @throws InvalidConfigException
+	 */
+	private function _getProductImages (Element $product)
 	{
 		$images = $this->_getImages($product);
 
-		foreach ($product->variants as $variant)
+		foreach ($this->_getVariants($product) as $variant)
 			$images = array_merge($images, $this->_getImages($variant));
 
 		return $images;
@@ -304,20 +327,21 @@ class ProductsService extends Component
 	 * Gets the thumbnail for the given element
 	 *
 	 * @param Element      $element
-	 * @param Product|null $fallback
+	 * @param Element|null $fallback
 	 *
 	 * @return string|null
+	 * @throws InvalidConfigException
 	 */
-	private function _getThumbnail (Element $element = null, Product $fallback = null)
+	private function _getThumbnail (Element $element = null, Element $fallback = null)
 	{
 		if ($element === null)
 			return '';
 
-		$isVariant = $element instanceof Variant;
+		$isVariant = $this->_getIsVariant($element);
 		$field = MailchimpCommerce::$i->fields->getMappedFieldRelation(
 			$isVariant ? 'variantThumbnailFields' : 'productThumbnailFields',
 			$element,
-			$isVariant ? $element->product->type->uid : $element->type->uid
+			$this->_getType($element, $isVariant)->uid
 		);
 
 		if (!$field)
@@ -348,14 +372,15 @@ class ProductsService extends Component
 	 * @param Element $element
 	 *
 	 * @return array
+	 * @throws InvalidConfigException
 	 */
 	private function _getImages (Element $element)
 	{
-		$isVariant = $element instanceof Variant;
+		$isVariant = $this->_getIsVariant($element);
 		$field = MailchimpCommerce::$i->fields->getMappedFieldRelation(
 			$isVariant ? 'variantImageFields' : 'productImageFields',
 			$element,
-			$isVariant ? $element->product->type->uid : $element->type->uid
+			$this->_getType($element, $isVariant)->uid
 		);
 
 		if (!$field)
@@ -376,6 +401,130 @@ class ProductsService extends Component
 				'variant_ids' => $isVariant ? [$element->id] : [],
 			];
 		}, $field->all());
+	}
+
+	/**
+	 * @param $product
+	 *
+	 * @return array|Variant[]
+	 */
+	private function _getVariants ($product)
+	{
+		$mailchimpProducts = MailchimpCommerce::getInstance()->chimp->getProducts();
+
+		foreach ($mailchimpProducts as $mcProduct)
+		{
+			if ($product instanceof $mcProduct->productClass)
+			{
+				$callable = [$product, $mcProduct->productToVariantMethod];
+
+				return $callable();
+			}
+		}
+
+		/** @var Product $product */
+		return [];
+	}
+
+	/**
+	 * @param $purchasable
+	 *
+	 * @return Product|null
+	 * @throws InvalidConfigException
+	 */
+	private function _getProductFromVariant ($purchasable)
+	{
+		$mailchimpProducts = MailchimpCommerce::getInstance()->chimp->getProducts();
+
+		foreach ($mailchimpProducts as $product)
+		{
+			if ($purchasable instanceof $product->variantClass)
+			{
+				$callable = [$purchasable, $product->variantToProductMethod];
+
+				return $callable();
+			}
+		}
+
+		/** @var Variant $purchasable */
+		return $purchasable->getProduct();
+	}
+
+	/**
+	 * @param $variant
+	 *
+	 * @return int
+	 */
+	private function _getStock ($variant)
+	{
+		$mailchimpProducts = MailchimpCommerce::getInstance()->chimp->getProducts();
+
+		foreach ($mailchimpProducts as $mcProduct)
+			if ($variant instanceof $mcProduct->variantClass)
+				return $variant->{$mcProduct->variantStockProperty};
+
+		return 0;
+	}
+
+	/**
+	 * @param $variant
+	 *
+	 * @return int
+	 */
+	private function _getUnlimitedStock ($variant)
+	{
+		$mailchimpProducts = MailchimpCommerce::getInstance()->chimp->getProducts();
+
+		foreach ($mailchimpProducts as $mcProduct)
+			if ($variant instanceof $mcProduct->variantClass)
+				if ($mcProduct->variantUnlimitedStockProperty !== null)
+					return $variant->{$mcProduct->variantUnlimitedStockProperty};
+
+		return false;
+	}
+
+	/**
+	 * @param $element
+	 *
+	 * @return bool
+	 */
+	private function _getIsVariant ($element)
+	{
+		$mailchimpProducts = MailchimpCommerce::getInstance()->chimp->getProducts();
+
+		foreach ($mailchimpProducts as $product)
+			if ($element instanceof $product->variantClass)
+				return true;
+
+		return false;
+	}
+
+	/**
+	 * @param $element
+	 * @param $isVariant
+	 *
+	 * @return mixed
+	 * @throws InvalidConfigException
+	 */
+	private function _getType ($element, $isVariant = false)
+	{
+		if ($isVariant)
+			$element = $this->_getProductFromVariant($element);
+
+		$mailchimpProducts = MailchimpCommerce::getInstance()->chimp->getProducts();
+
+		foreach ($mailchimpProducts as $product)
+		{
+			if ($element instanceof $product->variantClass)
+			{
+				$callable = [$element, $product->productToTypeMethod];
+
+				return $callable();
+			}
+		}
+
+		/** @var Product $element */
+		return $element->getType();
 	}
 
 }

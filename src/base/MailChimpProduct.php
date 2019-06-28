@@ -23,14 +23,14 @@ class MailchimpProduct
 	// =========================================================================
 
 	/**
-	 * @var string What this "product" should be called (i.e. product, event)
+	 * @var string What this "product" should be called (i.e. products, events)
 	 */
-	public $productName = 'Product';
+	public $productName = 'Products';
 
 	/**
-	 * @var string What this "variant" should be called (i.e. variant, ticket)
+	 * @var string What this "variant" should be called (i.e. variants, tickets)
 	 */
-	public $variantName = 'Variant';
+	public $variantName = 'Variants';
 
 	/**
 	 * @var string A valid class reference to the product class
@@ -52,8 +52,33 @@ class MailchimpProduct
 	 */
 	public $productToVariantMethod;
 
-	// TODO: How do we get product types?
-	// TODO: What happens if the purchasable IS the product?
+	/**
+	 * @var string The name of the property used to get a variants stock
+	 */
+	public $variantStockProperty;
+
+	/**
+	 * @var string|null The name of the property used to check whether the
+	 *   variant has unlimited stock
+	 */
+	public $variantUnlimitedStockProperty = null;
+
+	/**
+	 * @var string The method to use to get the type of the product
+	 */
+	public $productToTypeMethod;
+
+	/**
+	 * @var callable A function that returns all the available types for this
+	 *   product
+	 */
+	public $getProductTypes;
+
+	/**
+	 * @var callable A function that will return an array of IDs based off the
+	 *               type ID passed (can be an empty string)
+	 */
+	public $getProductIds;
 
 	// Methods
 	// =========================================================================
