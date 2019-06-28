@@ -230,11 +230,15 @@ class ProductsService extends Component
 	 * @return array
 	 * @throws SiteNotFoundException
 	 * @throws InvalidConfigException
+	 * @throws \Exception
 	 */
 	private function _buildProductData ($productId)
 	{
 		/** @var Element $product */
 		$product = Craft::$app->getElements()->getElementById($productId);
+
+		if (!$product)
+			throw new \Exception('Unable to find element with ID: ' . $productId);
 
 		// TODO: Tidy up all helper functions by getting and storing the correct
 		//  product and variant types, and using them later (rather that
