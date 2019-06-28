@@ -237,8 +237,8 @@ class OrdersService extends Component
 		$data = [
 			'id' => (string) $order->id,
 			'currency_code' => $order->getPaymentCurrency(),
-			'order_total' => $order->getTotalPrice(),
-			'tax_total' => $order->getAdjustmentsTotalByType('tax'),
+			'order_total' => (float) $order->getTotalPrice(),
+			'tax_total' => (float) $order->getAdjustmentsTotalByType('tax'),
 			'lines' => [],
 			'promos' => [],
 			'customer' => [
@@ -247,8 +247,8 @@ class OrdersService extends Component
 				'opt_in_status' => $this->_hasOptedIn($order),
 				'first_name' => $order->billingAddress ? $order->billingAddress->firstName : '',
 				'last_name' => $order->billingAddress ? $order->billingAddress->lastName : '',
-				'orders_count' => Order::find()->customer($order->customer)->isCompleted()->count(),
-				'total_spent' => Order::find()->customer($order->customer)->isCompleted()->sum('[[commerce_orders.totalPaid]]') ?: 0,
+				'orders_count' => (int) Order::find()->customer($order->customer)->isCompleted()->count(),
+				'total_spent' => (float) Order::find()->customer($order->customer)->isCompleted()->sum('[[commerce_orders.totalPaid]]') ?: 0,
 				'address' => AddressHelper::asArray($order->billingAddress),
 			],
 		];
@@ -268,12 +268,12 @@ class OrdersService extends Component
 				'id' => (string) $item->id,
 				'product_id' => (string) $this->_getProduct($item->purchasable)->id,
 				'product_variant_id' => (string) $item->purchasable->id,
-				'quantity' => $item->qty,
-				'price' => $item->price,
+				'quantity' => (int) $item->qty,
+				'price' => (float) $item->price,
 			];
 
 			if ($order->isCompleted)
-				$li['discount'] = $item->getAdjustmentsTotalByType('discount');
+				$li['discount'] = (float) $item->getAdjustmentsTotalByType('discount');
 
 			$data['lines'][] = $li;
 		}
@@ -282,9 +282,9 @@ class OrdersService extends Component
 		{
 			$data = array_merge($data, [
 				'financial_status' => $order->lastTransaction ? $order->lastTransaction->status : 'paid',
-				'discount_total' => $order->getAdjustmentsTotalByType('discount'),
-				'tax_total' => $order->getAdjustmentsTotalByType('tax'),
-				'shipping_total' => $order->getAdjustmentsTotalByType('shipping'),
+				'discount_total' => (float) $order->getAdjustmentsTotalByType('discount'),
+				'tax_total' => (float) $order->getAdjustmentsTotalByType('tax'),
+				'shipping_total' => (float) $order->getAdjustmentsTotalByType('shipping'),
 				'processed_at_foreign' => $order->dateOrdered->format('c'),
 				'updated_at_foreign' => $order->dateUpdated->format('c'),
 				'shipping_address' => AddressHelper::asArray($order->shippingAddress),
@@ -308,7 +308,7 @@ class OrdersService extends Component
 
 				$data['promos'][] = [
 					'code'              => $isPromoCode ? $order->couponCode : $adjustment->name,
-					'amount_discounted' => $adjustment->amount,
+					'amount_discounted' => (float) $adjustment->amount,
 					'type'              => 'fixed',
 				];
 			}

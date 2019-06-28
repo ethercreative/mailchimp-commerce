@@ -264,8 +264,8 @@ class ProductsService extends Component
 				'title' => $variant->title,
 				'url' => $variant->url ?: $product->url,
 				'sku' => $variant->sku,
-				'price' => $variant->price,
-				'inventory_quantity' => $unlimited ? PHP_INT_MAX : $stock,
+				'price' => (float) $variant->price,
+				'inventory_quantity' => (int) ($unlimited ? PHP_INT_MAX : $stock),
 				'image_url' => $this->_getThumbnail($variant, $product),
 				'visibility' => (string) $variant->enabled,
 			];
