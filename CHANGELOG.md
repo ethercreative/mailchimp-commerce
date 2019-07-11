@@ -1,3 +1,7 @@
+## 1.1.3 - 2019-07-11
+### Fixed
+- Fix product sync error when some products are soft deleted (Fixes #3 again)
+
 ## 1.1.2 - 2019-06-28
 ### Fixed
 - Fix casting issue on some properties

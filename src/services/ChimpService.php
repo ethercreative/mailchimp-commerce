@@ -79,11 +79,13 @@ class ChimpService extends Component
 				},
 				'getProductIds'                 => function ($typeId) {
 					$productIdsQuery = (new Query())
-						->select('id')
-						->from('{{%commerce_products}}');
+						->select('[[p.id]]')
+						->leftJoin('{{%elements}} e', '[[e.id]] = [[p.id]]')
+						->where(['e.dateDeleted' => null])
+						->from('{{%commerce_products}} p');
 
 					if ($typeId)
-						$productIdsQuery->where(['typeId' => $typeId]);
+						$productIdsQuery->andWhere(['p.typeId' => $typeId]);
 
 					return $productIdsQuery->column();
 				},
@@ -112,11 +114,13 @@ class ChimpService extends Component
 				},
 				'getProductIds'                 => function ($typeId) {
 					$productIdsQuery = (new Query())
-						->select('id')
-						->from('{{%events_events}}');
+						->select('[[p.id]]')
+						->leftJoin('{{%elements}} e', '[[e.id]] = [[p.id]]')
+						->where(['e.dateDeleted' => null])
+						->from('{{%events_events}} p');
 
 					if ($typeId)
-						$productIdsQuery->where(['typeId' => $typeId]);
+						$productIdsQuery->where(['p.typeId' => $typeId]);
 
 					return $productIdsQuery->column();
 				},
