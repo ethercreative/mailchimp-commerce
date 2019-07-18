@@ -1,6 +1,9 @@
-## [Unreleased] 1.1.4
+## 1.1.4 - 2019-07-18
 ### Added
 - Add section showing all synced products
+
+### Changed
+- Product / variant images crop using mode fit
 
 ## 1.1.3 - 2019-07-11
 ### Fixed

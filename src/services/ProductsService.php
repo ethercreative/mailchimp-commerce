@@ -153,7 +153,10 @@ class ProductsService extends Component
 		{
 			Craft::error($error, 'mailchimp-commerce');
 			Craft::$app->getSession()->setError('An error occurred, please check the log');
-			return [];
+			return [
+				'items' => [],
+				'total' => 0,
+			];
 		}
 
 		return [
@@ -430,7 +433,7 @@ class ProductsService extends Component
 			$transform = Craft::$app->getAssetTransforms()->getTransformByUid($transform);
 
 		if (!$transform)
-			$transform = ['width' => 1000];
+			$transform = ['width' => 1000, 'mode' => 'fit'];
 
 		return array_map(function (Asset $asset) use ($isVariant, $element, $transform) {
 			return [
