@@ -1,0 +1,160 @@
+{% extends 'mailchimp-commerce/_layout' %}
+{% set title = 'Synced Products'|t('mailchimp-commerce') %}
+
+{% css %}
+.mc-product-list li {
+	display: flex;
+	align-items: flex-start;
+	margin-bottom: 24px;
+}
+
+.mc-product-list li > div {
+	flex-grow: 1;
+}
+
+.mc-product-list img {
+	width: 100px;
+	height: auto;
+	vertical-align: middle;
+	margin-right: 24px;
+}
+
+.mc-product-list .no-img {
+	position: relative;
+
+	display: inline-block;
+	width: 100px;
+	height: 100px;
+	margin-right: 24px;
+
+	border: 1px solid #ccc;
+	border-radius: 3px;
+}
+
+.mc-product-list small {
+	color: #666;
+	font-size: 12px;
+}
+
+.mc-product-list h2,
+.mc-product-list h3,
+.mc-product-list p {
+	margin: 0;
+}
+
+.mc-product-list .muted {
+	color: #ccc;
+}
+
+.mc-variant-list {
+	width: 100%;
+	margin-top: 24px;
+	padding-top: 24px;
+
+	border-top: 1px solid #ccc;
+}
+
+.mc-images-list li {
+	display: inline-block;
+	margin: 0 12px 12px 0;
+}
+
+.mc-images-list img {
+	width: auto;
+	height: 100px;
+	vertical-align: middle;
+}
+
+.mc-footer {
+	display: flex;
+	justify-content: space-between;
+}
+
+.mc-footer span:not(:nth-child(2)) {
+	opacity: 0.25;
+}
+{% endcss %}
+
+{% block content %}
+
+	<ul class="mc-product-list">
+	{% for item in items %}
+		<li>
+			{% if item.image_url %}
+				<img src="{{ item.image_url }}" alt="{{ item.title }}">
+			{% else %}
+				<span class="no-img"></span>
+			{% endif %}
+			<div>
+				<small>#{{ item.id }}</small>
+				<h2>{{ item.title }} <small>({{ item.handle }}, {{ item.type }}, {{ item.vendor ?: 'No vendor' }})</small></h2>
+				<p><a href="{{ item.url }}">{{ item.url }}</a></p>
+				{% if item.description %}
+					<p>{{ item.description }}</p>
+				{% else %}
+					<p class="muted">No description</p>
+				{% endif %}
+
+				<ul class="mc-images-list">
+					{% for image in item.images if image.variant_ids is empty %}
+						<li><img src="{{ image.url }}" alt=""></li>
+					{% endfor %}
+				</ul>
+
+				<ul class="mc-variant-list">
+					{% for variant in item.variants %}
+						<li>
+							{% if variant.image_url %}
+								<img src="{{ variant.image_url }}" alt="{{ variant.title }}">
+							{% else %}
+								<span class="no-img"></span>
+							{% endif %}
+							<div>
+								<small>#{{ variant.id }}</small>
+								<h3>{{ variant.title }} <small>({{ variant.sku }})</small></h3>
+								<p><a href="{{ variant.url }}">{{ variant.url }}</a></p>
+								<p>{{ variant.price|currency }} (Stock: {{ variant.inventory_quantity == '2147483647' ? 'Unlimited' : variant.inventory_quantity }})</p>
+
+								<ul class="mc-images-list">
+									{% for image in item.images if variant.id in image.variant_ids %}
+										<li><img src="{{ image.url }}" alt=""></li>
+									{% endfor %}
+								</ul>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</li>
+	{% endfor %}
+	</ul>
+
+	<footer class="mc-footer">
+		{% if offset > 0 %}
+			<a href="{{ cpUrl('mailchimp-commerce/synced/products', {
+				offset: offset - offsetLimit,
+			}) }}">
+				&laquo; Previous
+			</a>
+		{% else %}
+			<span>&laquo; Previous</span>
+		{% endif %}
+
+		<span>
+			{{ (offset / offsetLimit)|round(0, 'ceil') + 1 }}
+			of
+			{{ (total / offsetLimit)|round(0, 'ceil') }}
+		</span>
+
+		{% if offset + offsetLimit < total and total > offsetLimit %}
+			<a href="{{ cpUrl('mailchimp-commerce/synced/products', {
+				offset: offset + offsetLimit,
+			}) }}">
+				Next &raquo;
+			</a>
+		{% else %}
+			<span>Next &raquo;</span>
+		{% endif %}
+	</footer>
+
+{% endblock %}

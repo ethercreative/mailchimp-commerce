@@ -103,4 +103,7 @@ return [
 	'{synced} of {total, plural, =1{1 promo} other{# promos}} have been synced.' => '{synced} of {total, plural, =1{1 promo} other{# promos}} have been synced.',
 	'Sync All Promos' => 'Sync All Promos',
 
+	'View Synced' => 'View Synced',
+	'Synced Products' => 'Synced Products',
+
 ];

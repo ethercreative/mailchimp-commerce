@@ -1,3 +1,7 @@
+## [Unreleased] 1.1.4
+### Added
+- Add section showing all synced products
+
 ## 1.1.3 - 2019-07-11
 ### Fixed
 - Fix product sync error when some products are soft deleted (Fixes #3 again)

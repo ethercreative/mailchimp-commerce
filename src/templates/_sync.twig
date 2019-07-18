@@ -16,7 +16,12 @@
 
 	<hr>
 
-	<h2>{{ 'Products'|t('commerce') }}</h2>
+	<div style="display: flex;justify-content: space-between">
+		<h2>{{ 'Products'|t('commerce') }}</h2>
+		<a href="{{ cpUrl('mailchimp-commerce/synced/products') }}">
+			{{ 'View Synced'|t('mailchimp-commerce') }}
+		</a>
+	</div>
 
 	<p>
 		{{ '{synced, plural, =1{1 product} other{# products}} have been synced.'|t('mailchimp-commerce', {

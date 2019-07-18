@@ -15,6 +15,7 @@ use craft\commerce\elements\Product;
 use craft\commerce\elements\Variant;
 use craft\db\Query;
 use craft\elements\Asset;
+use craft\errors\MissingComponentException;
 use craft\errors\SiteNotFoundException;
 use craft\helpers\Db;
 use DateTime;
@@ -126,6 +127,39 @@ class ProductsService extends Component
 			return Craft::$app->getFormatter()->asDatetime($date, 'short');
 
 		return MailchimpCommerce::t('Never');
+	}
+
+	/**
+	 * Will return the products from Mailchimp
+	 *
+	 * @param int $offset
+	 *
+	 * @return array
+	 * @throws MissingComponentException
+	 */
+	public function getSyncedFromMailchimp ($offset = 0)
+	{
+		$storeId = MailchimpCommerce::$i->getSettings()->storeId;
+
+		list($success, $data, $error) = MailchimpCommerce::$i->chimp->get(
+			'ecommerce/stores/' . $storeId . '/products',
+			[
+				'count' => MailchimpCommerce::OFFSET_LIMIT,
+				'offset' => $offset,
+			]
+		);
+
+		if (!$success)
+		{
+			Craft::error($error, 'mailchimp-commerce');
+			Craft::$app->getSession()->setError('An error occurred, please check the log');
+			return [];
+		}
+
+		return [
+			'items' => $data['products'],
+			'total' => $data['total_items'],
+		];
 	}
 
 	// Private

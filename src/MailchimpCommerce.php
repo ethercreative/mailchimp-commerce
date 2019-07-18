@@ -59,6 +59,8 @@ class MailchimpCommerce extends Plugin
 	// Properties
 	// =========================================================================
 
+	const OFFSET_LIMIT = 50;
+
 	/** @var self */
 	public static $i;
 
@@ -249,6 +251,8 @@ class MailchimpCommerce extends Plugin
 			$event->rules['mailchimp-commerce/mappings'] = 'mailchimp-commerce/cp/mappings';
 			$event->rules['mailchimp-commerce/settings'] = 'mailchimp-commerce/cp/settings';
 		}
+
+		$event->rules['mailchimp-commerce/synced/products'] = 'mailchimp-commerce/synced/products';
 	}
 
 	public function onRegisterAlerts (RegisterCpAlertsEvent $event)
