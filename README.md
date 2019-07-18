@@ -15,6 +15,13 @@ order status notifications, and more.
 
 ---
 
+### Abandoned Carts emails aren't sending!
+
+If you have an abandoned carts campaign setup but no emails are sending, it 
+probably means you created the campaign before connecting your Craft site. 
+You'll need to re-create the campaign via the "Connected Sites" section under 
+your account menu in Mailchimp.
+
 ### Preventing Syncing
 
 If you want to prevent anything from being synced (i.e. in your staging 
@@ -36,6 +43,7 @@ You can use the config file to override any of the settings in the plugin. See
 some settings must not be modified.
 
 ### Local Development
+
 Please note that Mailchimp requires a valid, publicly accessible URL for some of 
 the data that is sync'd. This means that if you are using the plugin in a local 
 environment that isn't externally accessible some sync tasks will fail. We 
