@@ -18,6 +18,7 @@ use craft\elements\Asset;
 use craft\errors\MissingComponentException;
 use craft\errors\SiteNotFoundException;
 use craft\helpers\Db;
+use craft\helpers\UrlHelper;
 use DateTime;
 use ether\mc\MailchimpCommerce;
 use yii\base\InvalidConfigException;
@@ -372,6 +373,7 @@ class ProductsService extends Component
 	 *
 	 * @return string|null
 	 * @throws InvalidConfigException
+	 * @throws \yii\base\Exception
 	 */
 	private function _getThumbnail (Element $element = null, Element $fallback = null)
 	{
@@ -401,7 +403,7 @@ class ProductsService extends Component
 			if (!$transform)
 				$transform = ['width'  => 1000, 'height' => 1000];
 
-			return $thumbnail->getUrl($transform);
+			return UrlHelper::siteUrl($thumbnail->getUrl($transform));
 		}
 
 		return $this->_getThumbnail($fallback);
@@ -438,7 +440,7 @@ class ProductsService extends Component
 		return array_map(function (Asset $asset) use ($isVariant, $element, $transform) {
 			return [
 				'id' => (string) $asset->id,
-				'url' => $asset->getUrl($transform),
+				'url' => UrlHelper::siteUrl($asset->getUrl($transform)),
 				'variant_ids' => $isVariant ? [$element->id] : [],
 			];
 		}, $field->all());

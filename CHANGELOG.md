@@ -1,3 +1,7 @@
+## 1.1.5 - 2019-07-23
+### Fixed
+- Fix product image urls being relative, not absolute to the site
+
 ## 1.1.4 - 2019-07-18
 ### Added
 - Add section showing all synced products
