@@ -1,6 +1,6 @@
 ## [Unreleased] 1.1.7
 ### Changed
-- Product syncing will now throw if no variants are available
+- Products without variants will no longer sync
 
 ### Fixed
 - Fix issue when using aliases in product urls

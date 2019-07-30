@@ -54,6 +54,9 @@ class ProductsService extends Component
 		$hasBeenSynced = $this->_hasProductBeenSynced($productId);
 		$data = $this->_buildProductData($productId);
 
+		if ($data === false)
+			return true; // skip this entry
+
 		if ($hasBeenSynced)
 			return $this->_updateProduct($productId, $data);
 		else
@@ -265,7 +268,7 @@ class ProductsService extends Component
 	 *
 	 * @param $productId
 	 *
-	 * @return array
+	 * @return array|false
 	 * @throws SiteNotFoundException
 	 * @throws InvalidConfigException
 	 * @throws \Exception
@@ -299,7 +302,13 @@ class ProductsService extends Component
 		$variants = $this->_getVariants($product);
 
 		if (empty($variants))
-			throw new \Exception('Tried to sync "' . $product->title . '" without variants (or it\'s equivalent)!');
+		{
+			Craft::debug(
+				'Tried to sync "' . $product->title . '" without variants (or it\'s equivalent)!',
+				'mailchimp-commerce'
+			);
+			return false;
+		}
 
 		foreach ($variants as $variant)
 		{
