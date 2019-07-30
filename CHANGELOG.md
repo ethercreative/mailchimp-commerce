@@ -1,4 +1,4 @@
-## [Unreleased] 1.1.7
+## 1.1.7 - 2019-07-30
 ### Changed
 - Products without variants will no longer sync
 
