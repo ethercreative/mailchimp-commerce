@@ -71,6 +71,22 @@ return [
 	'Cart Restored Notice' => 'Cart Restored Notice',
 	'The success notice sent when an abandoned cart is restored.' => 'The success notice sent when an abandoned cart is restored.',
 
+	'Danger Zone' => 'Danger Zone',
+	'Disconnect your store' => 'Disconnect your store',
+	'Use the button below to disconnect your store. This will remove it from Mailchimp, and purge any data the plugin has stored locally.' =>
+		'Use the button below to disconnect your store. This will remove it from Mailchimp, and purge any data the plugin has stored locally.',
+
+	// Purge
+	// =========================================================================
+
+	'Disconnect your store from Mailchimp' => 'Disconnect your store from Mailchimp',
+	'Disconnect your Store' => 'Disconnect your Store',
+	'Yes, Disconnect' => 'Yes, Disconnect',
+	'No, Cancel' => 'No, Cancel',
+	'Are you sure you want to disconnect your store from Mailchimp?' => 'Are you sure you want to disconnect your store from Mailchimp?',
+	'This will remove all synced data between your store and Mailchimp, including Orders, Products, Customers, etc.' =>
+		'This will remove all synced data between your store and Mailchimp, including Orders, Products, Customers, etc.',
+	'The original Commerce data will not be touched.' => 'The original Commerce data will not be touched.',
 
 	// Jobs
 	// =========================================================================
@@ -84,6 +100,8 @@ return [
 
 	'You have already synced your store. You can\'t change the list ID after a store has been synced.' =>
 		'You have already synced your store. You can\'t change the list ID after a store has been synced.',
+	'You need to [set your store\'s address](/admin/commerce/store-settings/location) before you can sync!' =>
+		'You need to [set your store\'s address](/admin/commerce/store-settings/location) before you can sync!',
 	'Manually sync the store if your domain or other details have changed.' => 'Manually sync the store if your domain or other details have changed.',
 	'Sync Store' => 'Sync Store',
 	'Store Synced.' => 'Store Synced.',

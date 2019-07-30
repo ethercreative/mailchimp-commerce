@@ -1,3 +1,14 @@
+## 1.1.6 - 2019-07-30
+### Added
+- Added checks for required data before store can be synced (Closes #6)
+- Added Disconnect button to settings
+
+### Improved
+- More details about the request will be logged when an error is encountered
+
+### Fixed
+- Fix issue when syncing products that share images (Fixes #3)
+
 ## 1.1.5 - 2019-07-23
 ### Fixed
 - Fix product image urls being relative, not absolute to the site

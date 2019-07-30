@@ -439,7 +439,7 @@ class ProductsService extends Component
 
 		return array_map(function (Asset $asset) use ($isVariant, $element, $transform) {
 			return [
-				'id' => (string) $asset->id,
+				'id' => $asset->id . '-' . $element->id,
 				'url' => UrlHelper::siteUrl($asset->getUrl($transform)),
 				'variant_ids' => $isVariant ? [$element->id] : [],
 			];

@@ -213,14 +213,18 @@ class ChimpService extends Component
 				'error' => null,
 			];
 		} catch (ClientException $e) {
+			$err = $e->getResponse()->getBody()->getContents();
+
+			Craft::debug(compact('method', 'uri', 'body'));
+
 			return [
 				false, // Success
 				null, // Data
-				$e->getResponse()->getBody()->getContents(), // Error
+				$err, // Error
 
 				'success' => false,
 				'data' => null,
-				'error'   => $e->getResponse()->getBody()->getContents(),
+				'error'   => $err,
 			];
 		}
 	}

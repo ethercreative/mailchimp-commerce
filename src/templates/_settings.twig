@@ -3,6 +3,35 @@
 {% set title = 'Settings'|t('app') %}
 {% set fullPageForm = true %}
 
+{% css %}
+.danger-zone {
+	position: relative;
+	z-index: 2;
+	margin: 0 -24px;
+	padding: 24px;
+}
+.danger-zone:before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+
+	display: block;
+	width: 100%;
+	height: 100px;
+
+	background-image: linear-gradient(
+		0deg,
+		rgba(255, 0, 0, 0) 0%,
+		rgba(255, 0, 0, 0.02) 40%,
+		rgba(255, 0, 0, 0.03) 65%,
+		rgba(255, 0, 0, 0.1) 100%
+	);
+	border-top: 2px dashed rgba(255, 0, 0, 0.1);
+}
+{% endcss %}
+
 {% block content %}
 	<input type="hidden" name="action" value="plugins/save-plugin-settings">
 	<input type="hidden" name="pluginHandle" value="mailchimp-commerce">
@@ -71,6 +100,15 @@
 			instructions: 'The success notice sent when an abandoned cart is restored.'|t('mailchimp-commerce'),
 			value: settings.cartRestoredNotice,
 		}) }}
+
+		<div class="danger-zone">
+			<h2>{{ 'Danger Zone'|t('mailchimp-commerce') }}</h2>
+
+			<p>{{ 'Use the button below to disconnect your store. This will remove it from Mailchimp, and purge any data the plugin has stored locally.'|t('mailchimp-commerce') }}</p>
+			<a href="{{ cpUrl('mailchimp-commerce/purge') }}" class="btn submit">
+				{{ 'Disconnect your store'|t('mailchimp-commerce') }}
+			</a>
+		</div>
 
 	{% endnamespace %}
 

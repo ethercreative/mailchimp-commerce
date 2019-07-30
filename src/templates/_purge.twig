@@ -1,0 +1,24 @@
+{% extends '_layouts/message' %}
+{% set title = 'Disconnect your store from Mailchimp'|t('mailchimp-commerce') %}
+
+{% block message %}
+
+	<form method="post">
+		{{ csrfInput() }}
+		<input type="hidden" name="action" value="mailchimp-commerce/store/disconnect">
+
+		<h2>{{ 'Disconnect your Store'|t('mailchimp-commerce') }}</h2>
+
+		<p>{{ 'Are you sure you want to disconnect your store from Mailchimp?'|t('mailchimp-commerce') }}</p>
+		<p>{{ 'This will remove all synced data between your store and Mailchimp, including Orders, Products, Customers, etc.'|t('mailchimp-commerce') }}</p>
+		<p>{{ 'The original Commerce data will not be touched.'|t('mailchimp-commerce') }}</p>
+
+		<div class="buttons">
+			<input type="submit" class="btn submit" value="{{ 'Yes, Disconnect'|t('mailchimp-commerce') }}" />
+			<a href="{{ cpUrl('mailchimp-commerce/settings') }}" class="btn secondary">
+				{{ 'No, Cancel'|t('mailchimp-commerce') }}
+			</a>
+		</div>
+	</form>
+
+{% endblock %}

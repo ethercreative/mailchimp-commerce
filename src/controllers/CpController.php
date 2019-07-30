@@ -49,9 +49,13 @@ class CpController extends Controller
 
 	public function actionList ()
 	{
+		$storeLocation = Commerce::getInstance()->getAddresses()->getStoreLocationAddress();
+		$hasCountry = $storeLocation && $storeLocation->countryId;
+
 		return $this->renderTemplate('mailchimp-commerce/_list', [
 			'settings' => MailchimpCommerce::$i->getSettings(),
 			'lists' => MailchimpCommerce::$i->lists->all(),
+			'hasCountry' => $hasCountry,
 		]);
 	}
 
@@ -191,6 +195,11 @@ class CpController extends Controller
 			'orderStatuses' => $orderStatuses,
 			'imageTransforms' => $imageTransforms,
 		]);
+	}
+
+	public function actionPurge ()
+	{
+		return $this->renderTemplate('mailchimp-commerce/_purge');
 	}
 
 	// Helpers

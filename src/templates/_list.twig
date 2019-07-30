@@ -3,14 +3,21 @@
 {% set title = 'List Settings'|t('mailchimp-commerce') %}
 {% set fullPageForm = true %}
 
+{% set isDisabled = settings.listId or not hasCountry %}
+
 {% block content %}
 	<input type="hidden" name="action" value="mailchimp-commerce/store/create">
 	{% if not settings.listId %}
 		{{ redirectInput('mailchimp-commerce/sync') }}
 	{% endif %}
 
-	{% if settings.listId %}
-		<p>{{ 'You have already synced your store. You can\'t change the list ID after a store has been synced.'|t('mailchimp-commerce') }}</p>
+	{% if isDisabled %}
+		{% if not hasCountry %}
+			<p>{{ 'You need to [set your store\'s address](/admin/commerce/store-settings/location) before you can sync!'|t('mailchimp-commerce')|md }}</p>
+		{% else %}
+			<p>{{ 'You have already synced your store. You can\'t change the list ID after a store has been synced.'|t('mailchimp-commerce') }}</p>
+		{% endif %}
+		<div style="opacity:0.5">
 	{% endif %}
 
 	{{ forms.selectField({
@@ -21,5 +28,9 @@
 		disabled: settings.listId != null,
 		value: settings.listId,
 	}) }}
+
+	{% if isDisabled %}
+		</div>
+	{% endif %}
 
 {% endblock %}

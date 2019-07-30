@@ -16,6 +16,7 @@ use craft\errors\SiteNotFoundException;
 use craft\helpers\App;
 use ether\mc\helpers\AddressHelper;
 use ether\mc\MailchimpCommerce;
+use ether\mc\migrations\Install;
 use Throwable;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
@@ -71,17 +72,20 @@ class StoreService extends Component
 			return false;
 		}
 
-		Craft::$app->getPlugins()->savePluginSettings($i, [
-			'listId' => $listId,
-		]);
-
 		list($success, $data, $error) = MailchimpCommerce::$i->chimp->post(
 			'ecommerce/stores',
 			$this->_buildStoreData($listId)
 		);
 
 		if ($error)
+		{
 			Craft::error($error, 'mailchimp-commerce');
+			return $success;
+		}
+
+		Craft::$app->getPlugins()->savePluginSettings($i, [
+			'listId' => $listId,
+		]);
 
 		return $success;
 	}
@@ -115,16 +119,34 @@ class StoreService extends Component
 	}
 
 	/**
-	 * Deletes the store from Mailchimp (include all synced products, orders, etc.)
+	 * Deletes the store from Mailchimp (include all synced products, orders,
+	 * etc.)
+	 *
+	 * @throws Exception
 	 */
 	public function delete ()
 	{
 		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
 			return;
 
-		MailchimpCommerce::$i->chimp->delete(
-			'ecommerce/stores/' . MailchimpCommerce::$i->getSettings()->storeId
-		);
+		try {
+			MailchimpCommerce::$i->chimp->delete(
+				'ecommerce/stores/' .
+				MailchimpCommerce::$i->getSettings()->storeId
+			);
+		} catch (\Exception $e) {}
+
+		Craft::$app->getPlugins()->savePluginSettings(MailchimpCommerce::$i, [
+			'storeId' => null,
+			'listId' => null,
+		]);
+
+		MailchimpCommerce::$i->store->setStoreId();
+
+		ob_start();
+		(new Install())->safeDown();
+		(new Install())->safeUp();
+		ob_end_clean();
 	}
 
 	// Helpers
@@ -165,7 +187,7 @@ class StoreService extends Component
 
 		if ($storeLocation)
 		{
-			$storeData['address'] = AddressHelper::asArray($storeLocation);
+			$storeData['address'] = @AddressHelper::asArray($storeLocation);
 			$storeData['phone'] = $storeLocation->phone;
 		}
 

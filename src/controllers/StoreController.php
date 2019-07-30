@@ -32,7 +32,7 @@ class StoreController extends Controller
 	/**
 	 * Creates the Mailchimp store
 	 *
-	 * @return Response
+	 * @return Response|null
 	 * @throws Throwable
 	 * @throws ElementNotFoundException
 	 * @throws SiteNotFoundException
@@ -48,9 +48,29 @@ class StoreController extends Controller
 
 		$listId = Craft::$app->getRequest()->getRequiredBodyParam('listId');
 
-		MailchimpCommerce::$i->store->create($listId);
+		$success = MailchimpCommerce::$i->store->create($listId);
 
-		return $this->redirectToPostedUrl();
+		if ($success)
+			return $this->redirectToPostedUrl();
+
+		Craft::$app->getSession()->setError('Unable to connect store, please check the logs');
+
+		return null;
+	}
+
+	/**
+	 * @return Response
+	 * @throws BadRequestHttpException
+	 * @throws ForbiddenHttpException
+	 */
+	public function actionDisconnect ()
+	{
+		$this->requireAdmin();
+		$this->requirePostRequest();
+
+		MailchimpCommerce::$i->store->delete();
+
+		return $this->redirect('mailchimp-commerce/connect');
 	}
 
 }

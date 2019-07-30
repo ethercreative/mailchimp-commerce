@@ -49,3 +49,6 @@ the data that is sync'd. This means that if you are using the plugin in a local
 environment that isn't externally accessible some sync tasks will fail. We 
 recommend testing the plugin in a staging environment, or using a service like
 [ngrok](https://ngrok.com/) to make your local environment public.
+
+Check out our [blog post](https://ethercreative.co.uk/journal/ngrok-and-craft-cms)
+on how to setup ngrok for Craft.
