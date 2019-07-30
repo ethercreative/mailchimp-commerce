@@ -296,7 +296,12 @@ class ProductsService extends Component
 			'published_at_foreign' => $product->dateCreated->format('c'),
 		];
 
-		foreach ($this->_getVariants($product) as $variant)
+		$variants = $this->_getVariants($product);
+
+		if (empty($variants))
+			throw new \Exception('Tried to sync "' . $product->title . '" without variants (or it\'s equivalent)!');
+
+		foreach ($variants as $variant)
 		{
 			$unlimited = $this->_getUnlimitedStock($variant);
 			$stock = $this->_getStock($variant);

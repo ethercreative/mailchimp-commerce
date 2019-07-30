@@ -1,4 +1,7 @@
 ## [Unreleased] 1.1.7
+### Changed
+- Product syncing will now throw if no variants are available
+
 ### Fixed
 - Fix issue when using aliases in product urls
 - Fix store address sending null values (Fixes #7)
