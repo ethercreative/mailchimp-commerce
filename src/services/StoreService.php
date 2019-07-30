@@ -187,7 +187,7 @@ class StoreService extends Component
 
 		if ($storeLocation)
 		{
-			$storeData['address'] = @AddressHelper::asArray($storeLocation);
+			$storeData['address'] = array_filter(@AddressHelper::asArray($storeLocation));
 			$storeData['phone'] = $storeLocation->phone;
 		}
 

@@ -1,6 +1,7 @@
 ## [Unreleased] 1.1.7
 ### Fixed
 - Fix issue when using aliases in product urls
+- Fix store address sending null values (Fixes #7)
 
 ## 1.1.6 - 2019-07-30
 ### Added
