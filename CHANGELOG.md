@@ -1,3 +1,7 @@
+## [Unreleased] 1.1.7
+### Fixed
+- Fix issue when using aliases in product urls
+
 ## 1.1.6 - 2019-07-30
 ### Added
 - Added checks for required data before store can be synced (Closes #6)

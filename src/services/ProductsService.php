@@ -286,7 +286,7 @@ class ProductsService extends Component
 			'id' => (string) $product->id,
 			'title' => $product->title,
 			'handle' => $product->slug,
-			'url' => $product->url,
+			'url' => Craft::getAlias($product->url),
 			'description' => $this->_getProductDescription($product),
 			'type' => $this->_getType($product)->name,
 			'vendor' => $this->_getProductVendor($product),
@@ -304,7 +304,7 @@ class ProductsService extends Component
 			$data['variants'][] = [
 				'id' => (string) $variant->id,
 				'title' => $variant->title,
-				'url' => $variant->url ?: $product->url,
+				'url' => Craft::getAlias($variant->url ?: $product->url),
 				'sku' => $variant->sku,
 				'price' => (float) $variant->price,
 				'inventory_quantity' => (int) ($unlimited ? PHP_INT_MAX : $stock),
@@ -439,7 +439,7 @@ class ProductsService extends Component
 
 		return array_map(function (Asset $asset) use ($isVariant, $element, $transform) {
 			return [
-				'id' => $asset->id . '-' . $element->id,
+				'id' => $asset->id . '-' . $element->id . '-' . implode('-', array_values($transform)),
 				'url' => UrlHelper::siteUrl($asset->getUrl($transform)),
 				'variant_ids' => $isVariant ? [$element->id] : [],
 			];
