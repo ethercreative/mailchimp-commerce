@@ -234,11 +234,6 @@ class MailchimpCommerce extends Plugin
 		}
 	}
 
-	protected function afterUninstall ()
-	{
-		$this->store->delete();
-	}
-
 	public function onRegisterCpUrlRules (RegisterUrlRulesEvent $event)
 	{
 		$event->rules['mailchimp-commerce'] = 'mailchimp-commerce/cp/index';

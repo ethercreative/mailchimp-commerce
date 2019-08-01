@@ -19,6 +19,7 @@ use craft\helpers\UrlHelper;
 use ether\mc\base\MailchimpProduct;
 use ether\mc\events\RegisterMailchimpProductsEvent;
 use ether\mc\MailchimpCommerce;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 
@@ -63,68 +64,89 @@ class ChimpService extends Component
 		if ($products)
 			return $products;
 
-		$products = [
-			new MailchimpProduct([
-				'productName'                   => Craft::t('commerce', 'Products'),
-				'variantName'                   => Craft::t('commerce', 'Variants'),
-				'productClass'                  => Product::class,
-				'variantClass'                  => Variant::class,
-				'variantToProductMethod'        => 'getProduct',
-				'productToVariantMethod'        => 'getVariants',
-				'variantStockProperty'          => 'stock',
-				'variantUnlimitedStockProperty' => 'hasUnlimitedStock',
-				'productToTypeMethod'           => 'getType',
-				'getProductTypes'               => function () {
-					return Commerce::getInstance()->getProductTypes()->getAllProductTypes();
-				},
-				'getProductIds'                 => function ($typeId) {
-					$productIdsQuery = (new Query())
-						->select('[[p.id]]')
-						->leftJoin('{{%elements}} e', '[[e.id]] = [[p.id]]')
-						->where(['e.dateDeleted' => null])
-						->from('{{%commerce_products}} p');
+		$products = [];
 
-					if ($typeId)
-						$productIdsQuery->andWhere(['p.typeId' => $typeId]);
+		$plugins = Craft::$app->getPlugins();
 
-					return $productIdsQuery->column();
-				},
-			]),
-		];
-
-		/** @noinspection PhpFullyQualifiedNameUsageInspection */
-		if (class_exists(\verbb\events\elements\Event::class))
+		try
 		{
+			if (class_exists(Commerce::class) && $plugins->isPluginEnabled('commerce'))
+			{
+				$products[] = new MailchimpProduct([
+					'productName'                   => Craft::t('commerce', 'Products'),
+					'variantName'                   => Craft::t('commerce', 'Variants'),
+					'productClass'                  => Product::class,
+					'variantClass'                  => Variant::class,
+					'variantToProductMethod'        => 'getProduct',
+					'productToVariantMethod'        => 'getVariants',
+					'variantStockProperty'          => 'stock',
+					'variantUnlimitedStockProperty' => 'hasUnlimitedStock',
+					'productToTypeMethod'           => 'getType',
+					'getProductTypes'               => function () {
+						return Commerce::getInstance()->getProductTypes()
+						               ->getAllProductTypes();
+					},
+					'getProductIds'                 => function ($typeId) {
+						$productIdsQuery = (new Query())
+							->select('[[p.id]]')
+							->leftJoin(
+								'{{%elements}} e', '[[e.id]] = [[p.id]]'
+							)
+							->where(['e.dateDeleted' => null])
+							->from('{{%commerce_products}} p');
+
+						if ($typeId)
+							$productIdsQuery->andWhere(
+								['p.typeId' => $typeId]
+							);
+
+						return $productIdsQuery->column();
+					},
+				]);
+			}
+
 			/** @noinspection PhpFullyQualifiedNameUsageInspection */
-			$products[] = new MailchimpProduct([
-				'productName'                   => Craft::t('events', 'Events'),
-				'variantName'                   => Craft::t('events', 'Tickets'),
-				'productClass'                  => \verbb\events\elements\Event::class,
-				'variantClass'                  => \verbb\events\elements\Ticket::class,
-				'variantToProductMethod'        => 'getEvent',
-				'productToVariantMethod'        => 'getTickets',
-				'variantStockProperty'          => 'quantity',
-				'variantUnlimitedStockProperty' => null,
-				'productToTypeMethod'           => 'getType',
-				'getProductTypes'               => function () {
-					/** @noinspection PhpFullyQualifiedNameUsageInspection */
-					/** @var \verbb\events\services\EventTypes $service */
-					$service = \verbb\events\Events::getInstance()->getEventTypes();
-					return $service->getAllEventTypes();
-				},
-				'getProductIds'                 => function ($typeId) {
-					$productIdsQuery = (new Query())
-						->select('[[p.id]]')
-						->leftJoin('{{%elements}} e', '[[e.id]] = [[p.id]]')
-						->where(['e.dateDeleted' => null])
-						->from('{{%events_events}} p');
+			if (class_exists(\verbb\events\elements\Event::class) && $plugins->isPluginEnabled('events'))
+			{
+				/** @noinspection PhpFullyQualifiedNameUsageInspection */
+				$products[] = new MailchimpProduct([
+					'productName'                   => Craft::t('events', 'Events'),
+					'variantName'                   => Craft::t('events', 'Tickets'),
+					'productClass'                  => \verbb\events\elements\Event::class,
+					'variantClass'                  => \verbb\events\elements\Ticket::class,
+					'variantToProductMethod'        => 'getEvent',
+					'productToVariantMethod'        => 'getTickets',
+					'variantStockProperty'          => 'quantity',
+					'variantUnlimitedStockProperty' => null,
+					'productToTypeMethod'           => 'getType',
+					'getProductTypes'               => function () {
+						/** @noinspection PhpFullyQualifiedNameUsageInspection */
+						/** @var \verbb\events\services\EventTypes $service */
+						$service = \verbb\events\Events::getInstance()
+						                               ->getEventTypes();
 
-					if ($typeId)
-						$productIdsQuery->where(['p.typeId' => $typeId]);
+						return $service->getAllEventTypes();
+					},
+					'getProductIds'                 => function ($typeId) {
+							$productIdsQuery = (new Query())
+								->select('[[p.id]]')
+								->leftJoin(
+									'{{%elements}} e', '[[e.id]] = [[p.id]]'
+								)
+								->where(['e.dateDeleted' => null])
+								->from('{{%events_events}} p');
 
-					return $productIdsQuery->column();
-				},
-			]);
+							if ($typeId)
+								$productIdsQuery->where(
+									['p.typeId' => $typeId]
+								);
+
+							return $productIdsQuery->column();
+						},
+				]);
+			}
+		} catch (Exception $e) {
+			Craft::error($e->getMessage(), 'mailchimp-commerce');
 		}
 
 		$event = new RegisterMailchimpProductsEvent([
