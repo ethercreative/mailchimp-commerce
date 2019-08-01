@@ -15,6 +15,7 @@ use craft\commerce\base\Purchasable;
 use craft\commerce\elements\Order;
 use craft\commerce\elements\Product;
 use craft\commerce\elements\Variant;
+use craft\commerce\models\Address;
 use craft\commerce\Plugin as Commerce;
 use craft\helpers\Db;
 use craft\helpers\UrlHelper;
@@ -249,7 +250,7 @@ class OrdersService extends Component
 				'last_name' => $order->billingAddress ? $order->billingAddress->lastName : '',
 				'orders_count' => (int) Order::find()->customer($order->customer)->isCompleted()->count(),
 				'total_spent' => (float) Order::find()->customer($order->customer)->isCompleted()->sum('[[commerce_orders.totalPaid]]') ?: 0,
-				'address' => AddressHelper::asArray($order->billingAddress),
+				'address' => self::_address($order->billingAddress),
 			],
 		];
 
@@ -287,8 +288,8 @@ class OrdersService extends Component
 				'shipping_total' => (float) $order->getAdjustmentsTotalByType('shipping'),
 				'processed_at_foreign' => $order->dateOrdered->format('c'),
 				'updated_at_foreign' => $order->dateUpdated->format('c'),
-				'shipping_address' => AddressHelper::asArray($order->shippingAddress),
-				'billing_address' => AddressHelper::asArray($order->billingAddress),
+				'shipping_address' => self::_address($order->shippingAddress),
+				'billing_address' => self::_address($order->billingAddress),
 			]);
 
 			if ($order->returnUrl)
@@ -394,6 +395,18 @@ class OrdersService extends Component
 
 		/** @var Variant $purchasable */
 		return $purchasable->getProduct();
+	}
+
+	/**
+	 * Converts an address to an array
+	 *
+	 * @param Address $address
+	 *
+	 * @return array
+	 */
+	private static function _address (Address $address)
+	{
+		return array_filter(@AddressHelper::asArray($address));
 	}
 
 }

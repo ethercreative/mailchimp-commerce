@@ -1,3 +1,7 @@
+## [Unreleased] 1.1.8
+### Fixed
+- Fix order sync error when address 2 isn't set (Fixes #7)
+
 ## 1.1.7 - 2019-07-30
 ### Changed
 - Products without variants will no longer sync
