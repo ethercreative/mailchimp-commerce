@@ -1,4 +1,4 @@
-## [Unreleased] 1.1.8
+## 1.1.8 - 2019-08-01
 ### Fixed
 - Fix order sync error when address 2 isn't set (Fixes #7)
 - Fix DB tables not being removed after uninstall (Fixes #8)
