@@ -289,7 +289,7 @@ class ProductsService extends Component
 			'id' => (string) $product->id,
 			'title' => $product->title,
 			'handle' => $product->slug,
-			'url' => Craft::getAlias($product->url),
+			'url' => Craft::getAlias($product->url ?? ''),
 			'description' => $this->_getProductDescription($product),
 			'type' => $this->_getType($product)->name,
 			'vendor' => $this->_getProductVendor($product),
