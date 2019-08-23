@@ -318,7 +318,7 @@ class ProductsService extends Component
 			$data['variants'][] = [
 				'id' => (string) $variant->id,
 				'title' => $variant->title,
-				'url' => Craft::getAlias($variant->url ?: $product->url),
+				'url' => Craft::getAlias(($variant->url ?: $product->url) ?? ''),
 				'sku' => $variant->sku,
 				'price' => (float) $variant->price,
 				'inventory_quantity' => (int) ($unlimited ? PHP_INT_MAX : $stock),

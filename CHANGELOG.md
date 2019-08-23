@@ -1,3 +1,7 @@
+## 1.1.10 - 2019-08-23
+### Fixed
+- Fix issue when syncing variants without public urls
+
 ## 1.1.9 - 2019-08-23
 ### Fixed
 - Fix error when syncing products without public urls (Fixes #9)
