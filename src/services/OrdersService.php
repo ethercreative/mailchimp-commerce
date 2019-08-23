@@ -250,9 +250,11 @@ class OrdersService extends Component
 				'last_name' => $order->billingAddress ? $order->billingAddress->lastName : '',
 				'orders_count' => (int) Order::find()->customer($order->customer)->isCompleted()->count(),
 				'total_spent' => (float) Order::find()->customer($order->customer)->isCompleted()->sum('[[commerce_orders.totalPaid]]') ?: 0,
-				'address' => self::_address($order->billingAddress),
 			],
 		];
+
+		if ($order->billingAddress)
+			$data['customer']['address'] = self::_address($order->billingAddress);
 
 		$cid = (new Query())
 			->select('cid')
@@ -281,16 +283,22 @@ class OrdersService extends Component
 
 		if ($order->isCompleted)
 		{
-			$data = array_merge($data, [
+			$completeData = [
 				'financial_status' => $order->lastTransaction ? $order->lastTransaction->status : 'paid',
 				'discount_total' => (float) $order->getAdjustmentsTotalByType('discount'),
 				'tax_total' => (float) $order->getAdjustmentsTotalByType('tax'),
 				'shipping_total' => (float) $order->getAdjustmentsTotalByType('shipping'),
 				'processed_at_foreign' => $order->dateOrdered->format('c'),
 				'updated_at_foreign' => $order->dateUpdated->format('c'),
-				'shipping_address' => self::_address($order->shippingAddress),
-				'billing_address' => self::_address($order->billingAddress),
-			]);
+			];
+
+			if ($order->shippingAddress)
+				$completeData['shipping_address'] = self::_address($order->shippingAddress);
+
+			if ($order->billingAddress)
+				$completeData['billing_address'] = self::_address($order->billingAddress);
+
+			$data = array_merge($data, $completeData);
 
 			if ($order->returnUrl)
 				$data['order_url'] = UrlHelper::siteUrl($order->returnUrl);

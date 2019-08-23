@@ -1,3 +1,8 @@
+## [Unreleased] 1.1.9
+### Fixed
+- Fix error when syncing products without public urls (Fixes #9)
+- Fix issue syncing orders or carts that are missing addresses
+
 ## 1.1.8 - 2019-08-01
 ### Fixed
 - Fix order sync error when address 2 isn't set (Fixes #7)
