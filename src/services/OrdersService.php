@@ -267,19 +267,26 @@ class OrdersService extends Component
 
 		foreach ($order->lineItems as $item)
 		{
-			$li = [
-				'id' => (string) $item->id,
-				'product_id' => (string) $this->_getProduct($item->purchasable)->id,
-				'product_variant_id' => (string) $item->purchasable->id,
-				'quantity' => (int) $item->qty,
-				'price' => (float) $item->price,
-			];
+			// Check if purchasable exist, it might be a product that has been deleted in the store
+			if ($item->purchasable) {
+				$li = [
+					'id' => (string)$item->id,
+					'product_id' => (string)$this->_getProduct($item->purchasable)->id,
+					'product_variant_id' => (string)$item->purchasable->id,
+					'quantity' => (int)$item->qty,
+					'price' => (float)$item->price,
+				];
 
-			if ($order->isCompleted)
-				$li['discount'] = (float) $item->getAdjustmentsTotalByType('discount');
+				if ($order->isCompleted)
+					$li['discount'] = (float)$item->getAdjustmentsTotalByType('discount');
 
-			$data['lines'][] = $li;
+				$data['lines'][] = $li;
+			}
 		}
+
+		// Don't sync the order if there are no line items
+		if (count($data['lines']) === 0)
+			return [$order, null];
 
 		if ($order->isCompleted)
 		{
