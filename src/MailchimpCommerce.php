@@ -22,6 +22,7 @@ use craft\events\RegisterCpAlertsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\Cp;
 use craft\helpers\UrlHelper;
+use craft\services\Plugins;
 use craft\web\UrlManager;
 use ether\mc\jobs\SyncOrders;
 use ether\mc\jobs\SyncProducts;
@@ -109,26 +110,32 @@ class MailchimpCommerce extends Plugin
 		// Events: Products
 		// ---------------------------------------------------------------------
 
-		foreach ($this->chimp->getProducts() as $product)
-		{
-			Event::on(
-				$product->productClass,
-				Element::EVENT_AFTER_SAVE,
-				[$this, 'onProductSave']
-			);
+		Event::on(
+			Plugins::class,
+			Plugins::EVENT_AFTER_LOAD_PLUGINS,
+			function () {
+				foreach ($this->chimp->getProducts() as $product)
+				{
+					Event::on(
+						$product->productClass,
+						Element::EVENT_AFTER_SAVE,
+						[$this, 'onProductSave']
+					);
 
-			Event::on(
-				$product->productClass,
-				Element::EVENT_BEFORE_RESTORE,
-				[$this, 'onProductSave']
-			);
+					Event::on(
+						$product->productClass,
+						Element::EVENT_BEFORE_RESTORE,
+						[$this, 'onProductSave']
+					);
 
-			Event::on(
-				$product->productClass,
-				Element::EVENT_BEFORE_DELETE,
-				[$this, 'onProductDelete']
-			);
-		}
+					Event::on(
+						$product->productClass,
+						Element::EVENT_BEFORE_DELETE,
+						[$this, 'onProductDelete']
+					);
+				}
+			}
+		);
 
 		// Events: Orders
 		// ---------------------------------------------------------------------
