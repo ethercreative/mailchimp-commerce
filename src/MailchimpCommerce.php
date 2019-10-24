@@ -238,15 +238,11 @@ class MailchimpCommerce extends Plugin
 	{
 		$event->rules['mailchimp-commerce'] = 'mailchimp-commerce/cp/index';
 		$event->rules['mailchimp-commerce/sync'] = 'mailchimp-commerce/cp/sync';
-
-		if (Craft::$app->getConfig()->getGeneral()->allowAdminChanges)
-		{
-			$event->rules['mailchimp-commerce/connect']  = 'mailchimp-commerce/cp/connect';
-			$event->rules['mailchimp-commerce/list'] = 'mailchimp-commerce/cp/list';
-			$event->rules['mailchimp-commerce/mappings'] = 'mailchimp-commerce/cp/mappings';
-			$event->rules['mailchimp-commerce/settings'] = 'mailchimp-commerce/cp/settings';
-			$event->rules['mailchimp-commerce/purge'] = 'mailchimp-commerce/cp/purge';
-		}
+		$event->rules['mailchimp-commerce/connect']  = 'mailchimp-commerce/cp/connect';
+		$event->rules['mailchimp-commerce/list'] = 'mailchimp-commerce/cp/list';
+		$event->rules['mailchimp-commerce/mappings'] = 'mailchimp-commerce/cp/mappings';
+		$event->rules['mailchimp-commerce/settings'] = 'mailchimp-commerce/cp/settings';
+		$event->rules['mailchimp-commerce/purge'] = 'mailchimp-commerce/cp/purge';
 
 		$event->rules['mailchimp-commerce/synced/products'] = 'mailchimp-commerce/synced/products';
 	}

@@ -42,6 +42,8 @@ class CpController extends Controller
 
 	public function actionConnect ()
 	{
+		$this->requireAdmin();
+
 		return $this->renderTemplate('mailchimp-commerce/_connect', [
 			'settings' => MailchimpCommerce::$i->getSettings(),
 		]);
@@ -49,6 +51,8 @@ class CpController extends Controller
 
 	public function actionList ()
 	{
+		$this->requireAdmin();
+
 		$storeLocation = Commerce::getInstance()->getAddresses()->getStoreLocationAddress();
 		$hasCountry = $storeLocation && $storeLocation->countryId;
 
@@ -76,6 +80,8 @@ class CpController extends Controller
 
 	public function actionMappings ()
 	{
+		$this->requireAdmin();
+
 		$fields = array_reduce(
 			Craft::$app->getFields()->getAllGroups(),
 			function (array $a, FieldGroup $group) {
@@ -170,6 +176,8 @@ class CpController extends Controller
 
 	public function actionSettings ()
 	{
+		$this->requireAdmin();
+
 		$orderStatuses = array_map(function (OrderStatus $orderStatus) {
 			return [
 				'label' => $orderStatus->name,
@@ -199,6 +207,8 @@ class CpController extends Controller
 
 	public function actionPurge ()
 	{
+		$this->requireAdmin();
+
 		return $this->renderTemplate('mailchimp-commerce/_purge');
 	}
 
