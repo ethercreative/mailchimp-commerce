@@ -1,3 +1,7 @@
+## [Unreleased] 1.1.11
+### Fixed
+- Fix order sync failing if purchasable had been deleted (Fixes #14 via [@stenvdb](https://github.com/stenvdb))
+
 ## 1.1.10 - 2019-08-23
 ### Fixed
 - Fix issue when syncing variants without public urls
