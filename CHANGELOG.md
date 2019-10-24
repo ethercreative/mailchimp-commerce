@@ -4,6 +4,7 @@
 - Fix list help text link being incorrect if admin path had changed (Fixes #15)
 - Throw appropriate error when trying to access pages requiring admin changes (Fixes #13)
 - Wait for all plugins to be loaded before getting product types (Fixes #17)
+- Bump schema version to account for mismatch with previous plugin versions (Fixes #20)
 
 ## 1.1.10 - 2019-08-23
 ### Fixed
