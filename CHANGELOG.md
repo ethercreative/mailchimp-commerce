@@ -1,4 +1,4 @@
-## [Unreleased] 1.1.11
+## 1.1.11 - 2019-11-18
 ### Fixed
 - Fix order sync failing if purchasable had been deleted (Fixes #14 via [@stenvdb](https://github.com/stenvdb))
 - Fix list help text link being incorrect if admin path had changed (Fixes #15)
