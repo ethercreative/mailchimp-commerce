@@ -1,4 +1,4 @@
-## [Unreleased] 1.1.12
+## 1.1.12 - 2019-12-17
 ### Changed
 - Bumped schema version
 
