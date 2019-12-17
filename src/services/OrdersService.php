@@ -11,7 +11,6 @@ namespace ether\mc\services;
 use Craft;
 use craft\base\Component;
 use craft\base\Field;
-use craft\commerce\base\Purchasable;
 use craft\commerce\elements\Order;
 use craft\commerce\elements\Product;
 use craft\commerce\elements\Variant;
@@ -239,7 +238,7 @@ class OrdersService extends Component
 			'id' => (string) $order->id,
 			'currency_code' => $order->getPaymentCurrency(),
 			'order_total' => (float) $order->getTotalPrice(),
-			'tax_total' => (float) $order->getAdjustmentsTotalByType('tax'),
+			'tax_total' => (float) $order->getTotalTax(),
 			'lines' => [],
 			'promos' => [],
 			'customer' => [
@@ -279,7 +278,7 @@ class OrdersService extends Component
 			];
 
 			if ($order->isCompleted)
-				$li['discount'] = (float)$item->getAdjustmentsTotalByType('discount');
+				$li['discount'] = (float)$item->getDiscount();
 
 			$data['lines'][] = $li;
 		}
@@ -292,9 +291,9 @@ class OrdersService extends Component
 		{
 			$completeData = [
 				'financial_status' => $order->lastTransaction ? $order->lastTransaction->status : 'paid',
-				'discount_total' => (float) $order->getAdjustmentsTotalByType('discount'),
-				'tax_total' => (float) $order->getAdjustmentsTotalByType('tax'),
-				'shipping_total' => (float) $order->getAdjustmentsTotalByType('shipping'),
+				'discount_total' => (float) $order->getTotalDiscount(),
+				'tax_total' => (float) $order->getTotalTax(),
+				'shipping_total' => (float) $order->getTotalShippingCost(),
 				'processed_at_foreign' => $order->dateOrdered->format('c'),
 				'updated_at_foreign' => $order->dateUpdated->format('c'),
 			];

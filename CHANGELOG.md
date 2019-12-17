@@ -1,3 +1,7 @@
+## [Unreleased] 1.1.12
+### Fixed
+- Fix deprecation errors when using Commerce ~2.2 (Fixes #21)
+
 ## 1.1.11 - 2019-11-18
 ### Fixed
 - Fix order sync failing if purchasable had been deleted (Fixes #14 via [@stenvdb](https://github.com/stenvdb))
