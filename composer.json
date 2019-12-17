@@ -38,6 +38,6 @@
     "name": "Mailchimp Commerce",
     "documentationUrl": "https://github.com/ethercreative/mailchimp-commerce/blob/master/README.md",
     "class": "ether\\mc\\MailchimpCommerce",
-    "schemaVersion": "1.1.2"
+    "schemaVersion": "1.1.12"
   }
 }

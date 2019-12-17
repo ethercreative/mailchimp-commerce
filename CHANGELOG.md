@@ -1,4 +1,7 @@
 ## [Unreleased] 1.1.12
+### Changed
+- Bumped schema version
+
 ### Fixed
 - Fix deprecation errors when using Commerce ~2.2 (Fixes #21)
 
