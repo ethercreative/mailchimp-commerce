@@ -452,8 +452,13 @@ class ProductsService extends Component
 			$transform = ['width' => 1000, 'mode' => 'fit'];
 
 		return array_map(function (Asset $asset) use ($isVariant, $element, $transform) {
+			$transformId =
+				is_object($transform)
+					? spl_object_hash($transform)
+					: implode('-', array_values($transform));
+
 			return [
-				'id' => $asset->id . '-' . $element->id . '-' . implode('-', array_values($transform)),
+				'id' => $asset->id . '-' . $element->id . '-' . $transformId,
 				'url' => UrlHelper::siteUrl($asset->getUrl($transform)),
 				'variant_ids' => $isVariant ? [$element->id] : [],
 			];

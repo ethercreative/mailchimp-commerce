@@ -280,8 +280,8 @@ class PromosService extends Component
 			$data['ends_at'] = $promo->dateTo->format('c');
 
 		$useLimitEnabled =
-			$promo->totalUseLimit > 0
-				? $promo->totalUses < $promo->totalUseLimit
+			$promo->totalDiscountUseLimit > 0
+				? $promo->totalDiscountUses < $promo->totalDiscountUseLimit
 				: true;
 
 		$redemptionUrl = Craft::$app->getView()->renderObjectTemplate(
@@ -293,7 +293,7 @@ class PromosService extends Component
 			'id' => (string) $promo->id,
 			'code' => $promo->code,
 			'redemption_url' => UrlHelper::siteUrl($redemptionUrl),
-			'usage_count' => (int) $promo->totalUses,
+			'usage_count' => (int) $promo->totalDiscountUses,
 			'enabled' => $promo->enabled && $useLimitEnabled,
 			'created_at_foreign' => $promo->dateCreated->format('c'),
 			'updated_at_foreign' => $promo->dateUpdated->format('c'),
