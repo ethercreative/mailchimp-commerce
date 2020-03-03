@@ -1,6 +1,9 @@
 ## 1.2.0 - 2020-03-03
 ### Changed
-- Now requires Commerce 3
+- Now requires Commerce 3 (Closes #27)
+
+### Fixed
+- Fix error when using custom image transform (Fixes #26)
 
 ## 1.1.12 - 2019-12-17
 ### Changed
