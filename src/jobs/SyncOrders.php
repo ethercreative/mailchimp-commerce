@@ -8,6 +8,7 @@
 
 namespace ether\mc\jobs;
 
+use Craft;
 use craft\db\QueryAbortedException;
 use craft\queue\BaseJob;
 use craft\queue\QueueInterface;
@@ -48,13 +49,24 @@ class SyncOrders extends BaseJob
 		$i = 0;
 		$total = count($this->orderIds);
 
+		$hasFailure = false;
+
 		foreach ($this->orderIds as $id)
 		{
 			if (!$orders->syncOrderById($id))
-				throw new QueryAbortedException('Failed to sync order');
+			{
+				$hasFailure = true;
+				Craft::error(
+					'Failed to sync order ' . $id,
+					'mailchimp-commerce'
+				);
+			}
 
 			$this->setProgress($queue, $i++ / $total);
 		}
+
+		if ($hasFailure)
+			throw new QueryAbortedException('Failed to sync order');
 	}
 
 	protected function defaultDescription ()

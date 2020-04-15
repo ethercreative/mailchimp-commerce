@@ -8,6 +8,7 @@
 
 namespace ether\mc\jobs;
 
+use Craft;
 use craft\db\QueryAbortedException;
 use craft\errors\SiteNotFoundException;
 use craft\queue\BaseJob;
@@ -49,13 +50,24 @@ class SyncProducts extends BaseJob
 		$i = 0;
 		$total = count($this->productIds);
 
+		$hasFailure = false;
+
 		foreach ($this->productIds as $id)
 		{
 			if (!$products->syncProductById($id))
-				throw new QueryAbortedException('Failed to sync product');
+			{
+				$hasFailure = true;
+				Craft::error(
+					'Failed to sync product ' . $id,
+					'mailchimp-commerce'
+				);
+			}
 
 			$this->setProgress($queue, $i++ / $total);
 		}
+
+		if ($hasFailure)
+			throw new QueryAbortedException('Failed to sync product');
 	}
 
 	protected function defaultDescription ()

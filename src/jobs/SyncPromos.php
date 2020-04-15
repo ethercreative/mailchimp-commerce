@@ -8,6 +8,7 @@
 
 namespace ether\mc\jobs;
 
+use Craft;
 use craft\db\QueryAbortedException;
 use craft\queue\BaseJob;
 use craft\queue\QueueInterface;
@@ -47,13 +48,24 @@ class SyncPromos extends BaseJob
 		$i = 0;
 		$total = count($this->promoIds);
 
+		$hasFailure = false;
+
 		foreach ($this->promoIds as $id)
 		{
 			if (!$promos->syncPromoById($id))
-				throw new QueryAbortedException('Failed to sync promo');
+			{
+				$hasFailure = true;
+				Craft::error(
+					'Failed to sync promo ' . $id,
+					'mailchimp-commerce'
+				);
+			}
 
 			$this->setProgress($queue, $i++ / $total);
 		}
+
+		if ($hasFailure)
+			throw new QueryAbortedException('Failed to sync promo');
 	}
 
 	protected function defaultDescription ()

@@ -1,3 +1,8 @@
+## [Unreleased] 1.2.1
+### Changed
+- Sync jobs will no longer fail if one element errors (but will fail after all other elements have finished syncing) (Fixes #24)
+- Add a clear error log when an element fails to sync
+
 ## 1.2.0 - 2020-03-03
 ### Changed
 - Now requires Commerce 3 (Closes #27)
