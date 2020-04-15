@@ -52,3 +52,22 @@ recommend testing the plugin in a staging environment, or using a service like
 
 Check out our [blog post](https://ethercreative.co.uk/journal/ngrok-and-craft-cms)
 on how to setup ngrok for Craft.
+
+### Modifying Product Sync Data
+
+You can modify the product data that is synced to Mailchimp using the "After 
+build sync data" event.
+
+```php
+Event::on(
+    \ether\mc\services\ProductsService::class,
+    \ether\mc\services\ProductsService::EVENT_AFTER_BUILD_SYNC_DATA,
+    function (\ether\mc\events\BuildSyncDataEvent $event) {
+        $event->element; // The element being synced
+        $event->data; // The resulting data to sync
+
+        // For example, to modify the product description
+        $event->data->description = $event->element->alternateDescriptionField;
+    }
+);
+```

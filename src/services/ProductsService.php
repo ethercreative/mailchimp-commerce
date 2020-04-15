@@ -44,7 +44,7 @@ class ProductsService extends Component
 	 * Event::on(
 	 *     \ether\mc\services\ProductsService::class,
 	 *     \ether\mc\services\ProductsService::EVENT_AFTER_BUILD_SYNC_DATA,
-	 *     function (BuildSyncDataEvent $event) {
+	 *     function (\ether\mc\events\BuildSyncDataEvent $event) {
 	 *         $event->element; // The element being synced
 	 *         $event->data; // The resulting data to sync
 	 *     }
