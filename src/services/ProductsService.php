@@ -20,6 +20,7 @@ use craft\errors\SiteNotFoundException;
 use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use DateTime;
+use ether\mc\events\BuildSyncDataEvent;
 use ether\mc\MailchimpCommerce;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
@@ -32,6 +33,24 @@ use yii\db\Exception;
  */
 class ProductsService extends Component
 {
+
+	// Events
+	// =========================================================================
+
+	/**
+	 * @event BuildSyncDataEvent The event that is triggered after an elements
+	 *        data has been built ready for syncing
+	 *
+	 * Event::on(
+	 *     \ether\mc\services\ProductsService::class,
+	 *     \ether\mc\services\ProductsService::EVENT_AFTER_BUILD_SYNC_DATA,
+	 *     function (BuildSyncDataEvent $event) {
+	 *         $event->element; // The element being synced
+	 *         $event->data; // The resulting data to sync
+	 *     }
+	 * );
+	 */
+	const EVENT_AFTER_BUILD_SYNC_DATA = 'mcAfterBuildProductSyncData';
 
 	// Public
 	// =========================================================================
@@ -327,7 +346,13 @@ class ProductsService extends Component
 			];
 		}
 
-		return $data;
+		$event = new BuildSyncDataEvent([
+			'element' => $product,
+			'data' => $data,
+		]);
+		$this->trigger(self::EVENT_AFTER_BUILD_SYNC_DATA, $event);
+
+		return $event->data;
 	}
 
 	/**

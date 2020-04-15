@@ -1,4 +1,7 @@
 ## [Unreleased] 1.2.1
+### Added
+- Add "After build sync data" event to products, allowing for the manipulation of the data that is synced to Mailchimp (Closes #22)
+
 ### Changed
 - Sync jobs will no longer fail if one element errors (but will fail after all other elements have finished syncing) (Fixes #24)
 - Add a clear error log when an element fails to sync
