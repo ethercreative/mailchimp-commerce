@@ -24,6 +24,6 @@ class BuildSyncDataEvent extends Event
 	public $element;
 
 	/** @var array */
-	public $syncdata;
+	public $syncData;
 
 }

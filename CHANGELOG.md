@@ -1,3 +1,7 @@
+## 1.2.2 - 2020-06-15
+### Fixed
+- Fix sync all products' data being null (via @PieterxJan)
+
 ## 1.2.1 - 2020-04-15
 ### Added
 - Add "After build sync data" event to products, allowing for the manipulation of the data that is synced to Mailchimp (Closes #22)
