@@ -64,10 +64,10 @@ Event::on(
     \ether\mc\services\ProductsService::EVENT_AFTER_BUILD_SYNC_DATA,
     function (\ether\mc\events\BuildSyncDataEvent $event) {
         $event->element; // The element being synced
-        $event->data; // The resulting data to sync
+        $event->syncdata; // The resulting data to sync
 
         // For example, to modify the product description
-        $event->data->description = $event->element->alternateDescriptionField;
+        $event->syncdata->description = $event->element->alternateDescriptionField;
     }
 );
 ```
