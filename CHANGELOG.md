@@ -1,3 +1,7 @@
+## 1.2.3 - 2020-11-12
+### Fixed
+- Fix Composer 2 compatibility (Fixes #39, via @brandonkelly)
+
 ## 1.2.2 - 2020-06-15
 ### Fixed
 - Fix sync all products' data being null (via @PieterxJan)
