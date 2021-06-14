@@ -1,3 +1,7 @@
+## 1.2.4 - 2021-06-14
+### Fixed
+- Fix Guzzle 7 support (via @Diewy)
+
 ## 1.2.3 - 2020-11-12
 ### Fixed
 - Fix Composer 2 compatibility (Fixes #39, via @brandonkelly)
