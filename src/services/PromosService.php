@@ -268,7 +268,7 @@ class PromosService extends Component
 			'amount' => (float) $amount,
 			'type' => $type,
 			'target' => $target,
-			'enabled' => $promo->enabled,
+			'enabled' => (int)$promo->enabled == 1 ? true : false,
 			'created_at_foreign' => $promo->dateCreated->format('c'),
 			'updated_at_foreign' => $promo->dateUpdated->format('c'),
 		];
