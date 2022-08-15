@@ -43,7 +43,7 @@ class SyncOrders extends BaseJob
 	 * @throws Exception
 	 * @throws InvalidConfigException
 	 */
-	public function execute ($queue)
+	public function execute ($queue): void
 	{
 		$orders = MailchimpCommerce::$i->orders;
 		$i = 0;
@@ -69,7 +69,7 @@ class SyncOrders extends BaseJob
 			throw new QueryAbortedException('Failed to sync order');
 	}
 
-	protected function defaultDescription ()
+	protected function defaultDescription (): ?string
 	{
 		return MailchimpCommerce::t('Syncing Orders to Mailchimp');
 	}

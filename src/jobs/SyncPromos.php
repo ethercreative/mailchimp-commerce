@@ -42,7 +42,7 @@ class SyncPromos extends BaseJob
 	 * @throws \yii\base\Exception
 	 * @throws Exception
 	 */
-	public function execute ($queue)
+	public function execute ($queue): void
 	{
 		$promos = MailchimpCommerce::$i->promos;
 		$i = 0;
@@ -68,7 +68,7 @@ class SyncPromos extends BaseJob
 			throw new QueryAbortedException('Failed to sync promo');
 	}
 
-	protected function defaultDescription ()
+	protected function defaultDescription (): ?string
 	{
 		return MailchimpCommerce::t('Syncing Promos to Mailchimp');
 	}
