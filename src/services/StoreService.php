@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
@@ -35,14 +36,13 @@ class StoreService extends Component
 	 *
 	 * @throws Exception
 	 */
-	public function setStoreId ()
+	public function setStoreId()
 	{
 		$i = MailchimpCommerce::$i;
-
 		if ($i->getSettings()->storeId)
 			return;
 
-		Craft::$app->getPlugins()->savePluginSettings($i, [
+		Craft::$app->getPlugins()->savePluginSettings(MailchimpCommerce::$i, [
 			'storeId' => Craft::$app->getSecurity()->generateRandomString(),
 		]);
 	}
@@ -59,31 +59,31 @@ class StoreService extends Component
 	 * @throws SiteNotFoundException
 	 * @throws Throwable
 	 */
-	public function create ($listId)
+	public function create($listId)
 	{
 		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
 			return true;
 
 		$i = MailchimpCommerce::$i;
 
-		if ($i->getSettings()->listId)
-		{
+		if ($i->getSettings()->listId) {
 			Craft::error('You can\'t change the list ID', 'mailchimp-commerce');
 			return false;
 		}
+
+		// dd($this->_buildStoreData($listId));
 
 		list($success, $data, $error) = MailchimpCommerce::$i->chimp->post(
 			'ecommerce/stores',
 			$this->_buildStoreData($listId)
 		);
 
-		if ($error)
-		{
+		if ($error) {
 			Craft::error($error, 'mailchimp-commerce');
 			return $success;
 		}
 
-		Craft::$app->getPlugins()->savePluginSettings($i, [
+		Craft::$app->getPlugins()->savePluginSettings(MailchimpCommerce::$i, [
 			'listId' => $listId,
 		]);
 
@@ -100,7 +100,7 @@ class StoreService extends Component
 	 * @throws SiteNotFoundException
 	 * @throws Throwable
 	 */
-	public function update ()
+	public function update()
 	{
 		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
 			return true;
@@ -124,7 +124,7 @@ class StoreService extends Component
 	 *
 	 * @throws Exception
 	 */
-	public function delete ()
+	public function delete()
 	{
 		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
 			return;
@@ -132,9 +132,10 @@ class StoreService extends Component
 		try {
 			MailchimpCommerce::$i->chimp->delete(
 				'ecommerce/stores/' .
-				MailchimpCommerce::$i->getSettings()->storeId
+					MailchimpCommerce::$i->getSettings()->storeId
 			);
-		} catch (\Exception $e) {}
+		} catch (\Exception $e) {
+		}
 
 		Craft::$app->getPlugins()->savePluginSettings(MailchimpCommerce::$i, [
 			'storeId' => null,
@@ -164,12 +165,17 @@ class StoreService extends Component
 	 * @throws Exception
 	 * @throws InvalidConfigException
 	 */
-	private function _buildStoreData ($listId = null)
+	private function _buildStoreData($listId = null)
 	{
 		$primarySite = Craft::$app->getSites()->getPrimarySite();
 		$dummyCart   = Commerce::getInstance()->getCarts()->getCart();
 
 		$id = MailchimpCommerce::$i->getSettings()->storeId;
+
+		// if id null this setStoreId
+		if (!$id) {
+			$id = MailchimpCommerce::$i->store->setStoreId();
+		}
 
 		$storeData = [
 			'id'            => $id,
@@ -185,8 +191,7 @@ class StoreService extends Component
 
 		$storeLocation = Commerce::getInstance()->getAddresses()->getStoreLocationAddress();
 
-		if ($storeLocation)
-		{
+		if ($storeLocation) {
 			$storeData['address'] = array_filter(@AddressHelper::asArray($storeLocation));
 			$storeData['phone'] = $storeLocation->phone;
 		}
@@ -200,7 +205,7 @@ class StoreService extends Component
 	 * @return string|null
 	 * @throws SiteNotFoundException
 	 */
-	public function getStoreName ()
+	public function getStoreName()
 	{
 		$commerceSettings = Commerce::getInstance()->getSettings();
 		$primarySite = Craft::$app->getSites()->getPrimarySite();
@@ -215,7 +220,7 @@ class StoreService extends Component
 	 *
 	 * @return string|null
 	 */
-	private function _getStoreEmail ()
+	private function _getStoreEmail()
 	{
 		$commerceSettings = Commerce::getInstance()->getSettings();
 
@@ -223,5 +228,4 @@ class StoreService extends Component
 			?: $commerceSettings->emailSenderAddressPlaceholder
 			?: App::mailSettings()->fromEmail;
 	}
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
@@ -41,12 +42,17 @@ class StoreController extends Controller
 	 * @throws BadRequestHttpException
 	 * @throws ForbiddenHttpException
 	 */
-	public function actionCreate ()
+	public function actionCreate()
 	{
 		$this->requireAdmin();
 		$this->requirePostRequest();
 
 		$listId = Craft::$app->getRequest()->getRequiredBodyParam('listId');
+
+		$listId = "192fc81395";
+
+		// $id = MailchimpCommerce::$i->getSettings();
+		// dd($id);
 
 		$success = MailchimpCommerce::$i->store->create($listId);
 
@@ -63,7 +69,7 @@ class StoreController extends Controller
 	 * @throws BadRequestHttpException
 	 * @throws ForbiddenHttpException
 	 */
-	public function actionDisconnect ()
+	public function actionDisconnect()
 	{
 		$this->requireAdmin();
 		$this->requirePostRequest();
@@ -72,5 +78,4 @@ class StoreController extends Controller
 
 		return $this->redirect('mailchimp-commerce/connect');
 	}
-
 }
