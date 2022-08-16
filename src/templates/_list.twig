@@ -13,7 +13,7 @@
 
 	{% if isDisabled %}
 		{% if not hasCountry %}
-			{% set u = cpUrl('commerce/store-settings/location') %}
+			{% set u = cpUrl('commerce/store-settings/store') %}
 			<p>{{ ('You need to [set your store\'s address](' ~ u ~ ') before you can sync!')|t('mailchimp-commerce')|md }}</p>
 		{% else %}
 			<p>{{ 'You have already synced your store. You can\'t change the list ID after a store has been synced.'|t('mailchimp-commerce') }}</p>

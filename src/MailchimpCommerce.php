@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
@@ -9,37 +10,38 @@
 namespace ether\mc;
 
 use Craft;
-use craft\base\Element;
+use Throwable;
+use yii\base\Event;
+use craft\base\Model;
+use craft\helpers\Cp;
 use craft\base\Plugin;
+use craft\base\Element;
+use yii\base\Exception;
+use yii\base\ModelEvent;
+use craft\web\UrlManager;
+use craft\elements\Address;
+use craft\services\Plugins;
+use craft\helpers\UrlHelper;
+use craft\services\Addresses;
+use ether\mc\jobs\SyncOrders;
+use ether\mc\jobs\SyncPromos;
+use ether\mc\models\Settings;
+use ether\mc\jobs\SyncProducts;
 use craft\commerce\elements\Order;
+use ether\mc\services\ChimpService;
+use ether\mc\services\ListsService;
+use ether\mc\services\StoreService;
 use craft\commerce\elements\Product;
-use craft\commerce\events\AddressEvent;
 use craft\commerce\records\Discount;
-use craft\commerce\services\Addresses;
-use craft\errors\ElementNotFoundException;
+use ether\mc\services\FieldsService;
+use ether\mc\services\OrdersService;
+use ether\mc\services\PromosService;
+use yii\base\InvalidConfigException;
+use ether\mc\services\ProductsService;
 use craft\errors\SiteNotFoundException;
 use craft\events\RegisterCpAlertsEvent;
 use craft\events\RegisterUrlRulesEvent;
-use craft\helpers\Cp;
-use craft\helpers\UrlHelper;
-use craft\services\Plugins;
-use craft\web\UrlManager;
-use ether\mc\jobs\SyncOrders;
-use ether\mc\jobs\SyncProducts;
-use ether\mc\jobs\SyncPromos;
-use ether\mc\models\Settings;
-use ether\mc\services\ChimpService;
-use ether\mc\services\FieldsService;
-use ether\mc\services\ListsService;
-use ether\mc\services\OrdersService;
-use ether\mc\services\ProductsService;
-use ether\mc\services\PromosService;
-use ether\mc\services\StoreService;
-use Throwable;
-use yii\base\Event;
-use yii\base\Exception;
-use yii\base\InvalidConfigException;
-use yii\base\ModelEvent;
+use craft\errors\ElementNotFoundException;
 
 /**
  * Class MailchimpCommerce
@@ -65,13 +67,13 @@ class MailchimpCommerce extends Plugin
 	/** @var self */
 	public static $i;
 
-	public $hasCpSettings = true;
-	public $hasCpSection  = true;
+	public bool $hasCpSettings = true;
+	public bool $hasCpSection  = true;
 
 	// Craft
 	// =========================================================================
 
-	public function init ()
+	public function init()
 	{
 		parent::init();
 		self::$i = $this;
@@ -97,7 +99,7 @@ class MailchimpCommerce extends Plugin
 
 		Event::on(
 			Addresses::class,
-			Addresses::EVENT_AFTER_SAVE_ADDRESS,
+			Element::EVENT_AFTER_SAVE,
 			[$this, 'onAfterSaveAddress']
 		);
 
@@ -114,8 +116,7 @@ class MailchimpCommerce extends Plugin
 			Plugins::class,
 			Plugins::EVENT_AFTER_LOAD_PLUGINS,
 			function () {
-				foreach ($this->chimp->getProducts() as $product)
-				{
+				foreach ($this->chimp->getProducts() as $product) {
 					Event::on(
 						$product->productClass,
 						Element::EVENT_AFTER_SAVE,
@@ -192,18 +193,17 @@ class MailchimpCommerce extends Plugin
 			'cp.commerce.product.edit.details',
 			[$this, 'hookProductMeta']
 		);
-
 	}
 
 	// Settings
 	// =========================================================================
 
-	protected function createSettingsModel ()
+	protected function createSettingsModel(): Model
 	{
 		return new Settings();
 	}
 
-	public function getSettingsResponse ()
+	public function getSettingsResponse(): mixed
 	{
 		return Craft::$app->controller->redirect(
 			UrlHelper::cpUrl('mailchimp-commerce/connect')
@@ -213,7 +213,7 @@ class MailchimpCommerce extends Plugin
 	/**
 	 * @return bool|Settings|null
 	 */
-	public function getSettings ()
+	public function getSettings(): Model
 	{
 		return parent::getSettings();
 	}
@@ -227,21 +227,18 @@ class MailchimpCommerce extends Plugin
 	/**
 	 * @throws Exception
 	 */
-	protected function afterInstall ()
+	protected function afterInstall(): void
 	{
 		$this->store->setStoreId();
 
-		Craft::$app->getPlugins()->enablePlugin('mailchimp-commerce');
-
-		if (Craft::$app->getRequest()->getIsCpRequest())
-		{
+		if (Craft::$app->getRequest()->getIsCpRequest()) {
 			Craft::$app->getResponse()->redirect(
 				UrlHelper::cpUrl('mailchimp-commerce/connect')
 			)->send();
 		}
 	}
 
-	public function onRegisterCpUrlRules (RegisterUrlRulesEvent $event)
+	public function onRegisterCpUrlRules(RegisterUrlRulesEvent $event)
 	{
 		$event->rules['mailchimp-commerce'] = 'mailchimp-commerce/cp/index';
 		$event->rules['mailchimp-commerce/sync'] = 'mailchimp-commerce/cp/sync';
@@ -254,7 +251,7 @@ class MailchimpCommerce extends Plugin
 		$event->rules['mailchimp-commerce/synced/products'] = 'mailchimp-commerce/synced/products';
 	}
 
-	public function onRegisterAlerts (RegisterCpAlertsEvent $event)
+	public function onRegisterAlerts(RegisterCpAlertsEvent $event)
 	{
 		if (
 			strpos(Craft::$app->getRequest()->getFullPath(), 'mailchimp-commerce') === false ||
@@ -268,7 +265,7 @@ class MailchimpCommerce extends Plugin
 	// -------------------------------------------------------------------------
 
 	/**
-	 * @param AddressEvent $event
+	 * @param Event $event
 	 *
 	 * @throws Exception
 	 * @throws Throwable
@@ -276,7 +273,7 @@ class MailchimpCommerce extends Plugin
 	 * @throws SiteNotFoundException
 	 * @throws InvalidConfigException
 	 */
-	public function onAfterSaveAddress (AddressEvent $event)
+	public function onAfterSaveAddress(Event $event)
 	{
 		if (!$event->address->isStoreLocation)
 			return;
@@ -287,7 +284,7 @@ class MailchimpCommerce extends Plugin
 	// Events: Products
 	// -------------------------------------------------------------------------
 
-	public function onProductSave (ModelEvent $event)
+	public function onProductSave(ModelEvent $event)
 	{
 		/** @var Product $product */
 		$product = $event->sender;
@@ -302,7 +299,7 @@ class MailchimpCommerce extends Plugin
 	 *
 	 * @throws \yii\db\Exception
 	 */
-	public function onProductDelete (ModelEvent $event)
+	public function onProductDelete(ModelEvent $event)
 	{
 		/** @var Product $product */
 		$product = $event->sender;
@@ -313,7 +310,7 @@ class MailchimpCommerce extends Plugin
 	// Events: Orders
 	// -------------------------------------------------------------------------
 
-	public function onOrderSave (ModelEvent $event)
+	public function onOrderSave(ModelEvent $event)
 	{
 		/** @var Order $order */
 		$order = $event->sender;
@@ -331,7 +328,7 @@ class MailchimpCommerce extends Plugin
 	 * @throws Throwable
 	 * @throws \yii\db\Exception
 	 */
-	public function onOrderComplete (Event $event)
+	public function onOrderComplete(Event $event)
 	{
 		/** @var Order $order */
 		$order = $event->sender;
@@ -345,7 +342,7 @@ class MailchimpCommerce extends Plugin
 	 *
 	 * @throws \yii\db\Exception
 	 */
-	public function onOrderDelete (ModelEvent $event)
+	public function onOrderDelete(ModelEvent $event)
 	{
 		/** @var Order $order */
 		$order = $event->sender;
@@ -356,7 +353,7 @@ class MailchimpCommerce extends Plugin
 	// Events: Promos
 	// -------------------------------------------------------------------------
 
-	public function onDiscountSave (Event $event)
+	public function onDiscountSave(Event $event)
 	{
 		/** @var Discount $discount */
 		$discount = $event->sender;
@@ -371,7 +368,7 @@ class MailchimpCommerce extends Plugin
 	 *
 	 * @throws \yii\db\Exception
 	 */
-	public function onDiscountDelete (ModelEvent $event)
+	public function onDiscountDelete(ModelEvent $event)
 	{
 		/** @var Discount $discount */
 		$discount = $event->sender;
@@ -388,7 +385,7 @@ class MailchimpCommerce extends Plugin
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function hookProductMeta (array &$context)
+	public function hookProductMeta(array &$context)
 	{
 		/** @var Product $product */
 		$product = $context['product'];
@@ -407,9 +404,8 @@ HTML;
 	// Helpers
 	// =========================================================================
 
-	public static function t ($message, $params = [])
+	public static function t($message, $params = [])
 	{
 		return Craft::t('mailchimp-commerce', $message, $params);
 	}
-
 }

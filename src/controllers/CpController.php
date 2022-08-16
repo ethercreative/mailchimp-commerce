@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
@@ -10,16 +11,18 @@ namespace ether\mc\controllers;
 
 use Craft;
 use craft\base\Field;
+use craft\fields\Assets;
+use craft\web\Controller;
+use craft\elements\Address;
+use craft\models\FieldGroup;
+use craft\fields\Lightswitch;
+use ether\mc\MailchimpCommerce;
+use craft\models\AssetTransform;
+use craft\commerce\records\Discount;
 use craft\commerce\models\OrderStatus;
 use craft\commerce\models\ProductType;
 use craft\commerce\Plugin as Commerce;
-use craft\commerce\records\Discount;
-use craft\fields\Assets;
-use craft\fields\Lightswitch;
-use craft\models\AssetTransform;
-use craft\models\FieldGroup;
-use craft\web\Controller;
-use ether\mc\MailchimpCommerce;
+use craft\models\ImageTransform;
 
 /**
  * Class CpController
@@ -30,9 +33,10 @@ use ether\mc\MailchimpCommerce;
 class CpController extends Controller
 {
 
-	public function actionIndex ()
+	public function actionIndex()
 	{
 		$settings = MailchimpCommerce::$i->getSettings();
+
 
 		if ($settings->apiKey && $settings->listId)
 			return $this->redirect('mailchimp-commerce/sync');
@@ -40,7 +44,7 @@ class CpController extends Controller
 		return $this->redirect('mailchimp-commerce/connect');
 	}
 
-	public function actionConnect ()
+	public function actionConnect()
 	{
 		$this->requireAdmin();
 
@@ -49,12 +53,13 @@ class CpController extends Controller
 		]);
 	}
 
-	public function actionList ()
+	public function actionList()
 	{
 		$this->requireAdmin();
 
-		$storeLocation = Commerce::getInstance()->getAddresses()->getStoreLocationAddress();
-		$hasCountry = $storeLocation && $storeLocation->countryId;
+		$storeLocation = Address::find()->all();
+
+		$hasCountry = $storeLocation && $storeLocation[0]->countryCode;
 
 		return $this->renderTemplate('mailchimp-commerce/_list', [
 			'settings' => MailchimpCommerce::$i->getSettings(),
@@ -63,7 +68,7 @@ class CpController extends Controller
 		]);
 	}
 
-	public function actionSync ()
+	public function actionSync()
 	{
 		$i = MailchimpCommerce::$i;
 
@@ -78,7 +83,7 @@ class CpController extends Controller
 		]);
 	}
 
-	public function actionMappings ()
+	public function actionMappings()
 	{
 		$this->requireAdmin();
 
@@ -90,8 +95,7 @@ class CpController extends Controller
 				];
 
 				/** @var Field $field */
-				foreach ($group->getFields() as $field)
-				{
+				foreach ($group->getFields() as $field) {
 					$a[] = [
 						'label' => $field->name,
 						'value' => $field->uid,
@@ -110,8 +114,7 @@ class CpController extends Controller
 				$fields = [];
 
 				/** @var Field $field */
-				foreach ($group->getFields() as $field)
-				{
+				foreach ($group->getFields() as $field) {
 					if (!($field instanceof Assets))
 						continue;
 
@@ -140,8 +143,7 @@ class CpController extends Controller
 				$fields = [];
 
 				/** @var Field $field */
-				foreach ($group->getFields() as $field)
-				{
+				foreach ($group->getFields() as $field) {
 					if (!($field instanceof Lightswitch))
 						continue;
 
@@ -174,7 +176,7 @@ class CpController extends Controller
 		]);
 	}
 
-	public function actionSettings ()
+	public function actionSettings()
 	{
 		$this->requireAdmin();
 
@@ -186,8 +188,8 @@ class CpController extends Controller
 		}, Commerce::getInstance()->getOrderStatuses()->getAllOrderStatuses());
 
 		$imageTransforms = array_reduce(
-			Craft::$app->getAssetTransforms()->getAllTransforms(),
-			function ($a, AssetTransform $transform) {
+			Craft::$app->getImageTransforms()->getAllTransforms(),
+			function ($a, ImageTransform $transform) {
 				$a[] = [
 					'label' => $transform->name,
 					'value' => $transform->uid,
@@ -205,7 +207,7 @@ class CpController extends Controller
 		]);
 	}
 
-	public function actionPurge ()
+	public function actionPurge()
 	{
 		$this->requireAdmin();
 
@@ -215,14 +217,13 @@ class CpController extends Controller
 	// Helpers
 	// =========================================================================
 
-	private function _getProducts ()
+	private function _getProducts()
 	{
 		$products          = [];
 		$mailchimpProducts =
 			MailchimpCommerce::getInstance()->chimp->getProducts();
 
-		foreach ($mailchimpProducts as $mcProduct)
-		{
+		foreach ($mailchimpProducts as $mcProduct) {
 			$types = $mcProduct->getProductTypes;
 			$types = $types();
 			$productTypes = array_reduce(
@@ -253,5 +254,4 @@ class CpController extends Controller
 
 		return $products;
 	}
-
 }

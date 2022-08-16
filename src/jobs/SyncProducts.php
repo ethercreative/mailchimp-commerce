@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
@@ -44,7 +45,7 @@ class SyncProducts extends BaseJob
 	 * @throws SiteNotFoundException
 	 * @throws InvalidConfigException
 	 */
-	public function execute ($queue)
+	public function execute($queue): void
 	{
 		$products = MailchimpCommerce::$i->products;
 		$i = 0;
@@ -52,10 +53,8 @@ class SyncProducts extends BaseJob
 
 		$hasFailure = false;
 
-		foreach ($this->productIds as $id)
-		{
-			if (!$products->syncProductById($id))
-			{
+		foreach ($this->productIds as $id) {
+			if (!$products->syncProductById($id)) {
 				$hasFailure = true;
 				Craft::error(
 					'Failed to sync product ' . $id,
@@ -70,11 +69,10 @@ class SyncProducts extends BaseJob
 			throw new QueryAbortedException('Failed to sync product');
 	}
 
-	protected function defaultDescription ()
+	protected function defaultDescription(): ?string
 	{
 		return MailchimpCommerce::t('Syncing {name} to Mailchimp', [
 			'name' => $this->productName,
 		]);
 	}
-
 }

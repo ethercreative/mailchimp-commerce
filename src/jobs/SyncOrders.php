@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
@@ -43,7 +44,7 @@ class SyncOrders extends BaseJob
 	 * @throws Exception
 	 * @throws InvalidConfigException
 	 */
-	public function execute ($queue)
+	public function execute($queue): void
 	{
 		$orders = MailchimpCommerce::$i->orders;
 		$i = 0;
@@ -51,10 +52,8 @@ class SyncOrders extends BaseJob
 
 		$hasFailure = false;
 
-		foreach ($this->orderIds as $id)
-		{
-			if (!$orders->syncOrderById($id))
-			{
+		foreach ($this->orderIds as $id) {
+			if (!$orders->syncOrderById($id)) {
 				$hasFailure = true;
 				Craft::error(
 					'Failed to sync order ' . $id,
@@ -69,9 +68,8 @@ class SyncOrders extends BaseJob
 			throw new QueryAbortedException('Failed to sync order');
 	}
 
-	protected function defaultDescription ()
+	protected function defaultDescription(): ?string
 	{
 		return MailchimpCommerce::t('Syncing Orders to Mailchimp');
 	}
-
 }

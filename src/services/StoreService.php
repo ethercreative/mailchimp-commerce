@@ -10,17 +10,18 @@
 namespace ether\mc\services;
 
 use Craft;
-use craft\base\Component;
-use craft\commerce\Plugin as Commerce;
-use craft\errors\ElementNotFoundException;
-use craft\errors\SiteNotFoundException;
+use Throwable;
 use craft\helpers\App;
-use ether\mc\helpers\AddressHelper;
+use yii\base\Exception;
+use craft\base\Component;
+use craft\elements\Address;
 use ether\mc\MailchimpCommerce;
 use ether\mc\migrations\Install;
-use Throwable;
-use yii\base\Exception;
+use ether\mc\helpers\AddressHelper;
 use yii\base\InvalidConfigException;
+use craft\commerce\Plugin as Commerce;
+use craft\errors\SiteNotFoundException;
+use craft\errors\ElementNotFoundException;
 
 /**
  * Class StoreService
@@ -189,11 +190,14 @@ class StoreService extends Component
 		if ($listId)
 			$storeData['list_id'] = $listId;
 
-		$storeLocation = Commerce::getInstance()->getAddresses()->getStoreLocationAddress();
+		$storeLocation = Address::find()->all();
+
+		// Craft::dd($storeLocation);
+
+		// $storeLocation = Commerce::getInstance()->getAddresses()->getStoreLocationAddress();
 
 		if ($storeLocation) {
-			$storeData['address'] = array_filter(@AddressHelper::asArray($storeLocation));
-			$storeData['phone'] = $storeLocation->phone;
+			$storeData['address'] = array_filter(@AddressHelper::asArray($storeLocation[0]));
 		}
 
 		return $storeData;
