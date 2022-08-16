@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
@@ -26,7 +27,7 @@ use yii\web\Response;
 class OrderController extends Controller
 {
 
-	protected $allowAnonymous = true;
+	// protected array|int|bool $allowAnonymous = true;
 
 	/**
 	 * Attempts to restore an abandoned cart
@@ -35,7 +36,7 @@ class OrderController extends Controller
 	 * @throws MissingComponentException
 	 * @throws BadRequestHttpException
 	 */
-	public function actionRestore ()
+	public function actionRestore()
 	{
 		$commerce = Commerce::getInstance();
 		$settings = MailchimpCommerce::getInstance()->getSettings();
@@ -45,22 +46,18 @@ class OrderController extends Controller
 		$cid = Craft::$app->getRequest()->getQueryParam('mc_cid');
 		$order = $commerce->getOrders()->getOrderByNumber($number);
 
-		if (!$order)
-		{
+		if (!$order) {
 			$session->setError($settings->expiredCartError);
 			return $this->redirect($settings->abandonedCartRestoreUrl);
 		}
 
-		if ($order->isCompleted)
-		{
+		if ($order->isCompleted) {
 			$session->setError($settings->completedCartError);
 			return $this->redirect($settings->abandonedCartRestoreUrl);
 		}
 
-		if ($cid)
-		{
-			try
-			{
+		if ($cid) {
+			try {
 				Craft::$app->getDb()->createCommand()
 					->update(
 						'{{%mc_orders_synced}}',
@@ -69,9 +66,7 @@ class OrderController extends Controller
 						[],
 						false
 					)->execute();
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				Craft::error($e, 'mailchimp-commerce');
 			}
 		}
@@ -82,5 +77,4 @@ class OrderController extends Controller
 		$session->setNotice($settings->cartRestoredNotice);
 		return $this->redirect($settings->abandonedCartRestoreUrl);
 	}
-
 }
