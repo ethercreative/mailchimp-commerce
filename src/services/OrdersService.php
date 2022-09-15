@@ -14,7 +14,7 @@ use craft\base\Field;
 use craft\commerce\elements\Order;
 use craft\commerce\elements\Product;
 use craft\commerce\elements\Variant;
-use craft\commerce\models\Address;
+use craft\elements\Address;
 use craft\commerce\Plugin as Commerce;
 use craft\helpers\Db;
 use craft\helpers\UrlHelper;
