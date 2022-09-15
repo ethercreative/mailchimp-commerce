@@ -22,6 +22,7 @@ use craft\commerce\records\Discount;
 use craft\commerce\models\OrderStatus;
 use craft\commerce\models\ProductType;
 use craft\commerce\Plugin as Commerce;
+use craft\commerce\records\Store;
 use craft\models\ImageTransform;
 
 /**
@@ -57,9 +58,12 @@ class CpController extends Controller
 	{
 		$this->requireAdmin();
 
-		$storeLocation = Address::find()->all();
+		$storeLocation = Commerce::getInstance()
+			->getStore()
+			->getStore()
+			->getLocationAddress();
 
-		$hasCountry = $storeLocation && $storeLocation[0]->countryCode;
+		$hasCountry = $storeLocation && $storeLocation->countryCode;
 
 		return $this->renderTemplate('mailchimp-commerce/_list', [
 			'settings' => MailchimpCommerce::$i->getSettings(),

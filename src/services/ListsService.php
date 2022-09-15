@@ -19,28 +19,27 @@ use ether\mc\MailchimpCommerce;
  */
 class ListsService extends Component
 {
+    /**
+     * Get all available mailchimp lists, formatted for Select fields
+     *
+     * @return array
+     */
+    public function all()
+    {
+        [$success, $data] = MailchimpCommerce::$i->chimp->get('lists', [
+            'fields' => 'lists.id,lists.name',
+            'count' => 1000000,
+        ]);
 
-	/**
-	 * Get all available mailchimp lists, formatted for Select fields
-	 *
-	 * @return array
-	 */
-	public function all ()
-	{
-		list($success, $data) = MailchimpCommerce::$i->chimp->get('lists', [
-			'fields' => 'lists.id,lists.name',
-			'count' => 1000000,
-		]);
+        if (!$success) {
+            return [];
+        }
 
-		if (!$success)
-			return [];
-
-		return array_map(function ($item) {
-			return [
-				'label' => $item['name'],
-				'value' => $item['id'],
-			];
-		}, $data['lists']);
-	}
-
+        return array_map(function ($item) {
+            return [
+                'label' => $item['name'],
+                'value' => $item['id'],
+            ];
+        }, $data['lists']);
+    }
 }
