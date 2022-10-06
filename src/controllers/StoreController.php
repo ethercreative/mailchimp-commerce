@@ -10,16 +10,16 @@
 namespace ether\mc\controllers;
 
 use Craft;
-use craft\errors\ElementNotFoundException;
-use craft\errors\SiteNotFoundException;
+use Throwable;
+use yii\web\Response;
+use yii\base\Exception;
 use craft\web\Controller;
 use ether\mc\MailchimpCommerce;
-use Throwable;
-use yii\base\Exception;
+use yii\web\ForbiddenHttpException;
 use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
-use yii\web\ForbiddenHttpException;
-use yii\web\Response;
+use craft\errors\SiteNotFoundException;
+use craft\errors\ElementNotFoundException;
 
 /**
  * Class StoreController
@@ -49,7 +49,7 @@ class StoreController extends Controller
 
 		$listId = Craft::$app->getRequest()->getRequiredBodyParam('listId');
 
-		$listId = "192fc81395";
+		// $listId = "192fc81395";
 
 		// $id = MailchimpCommerce::$i->getSettings();
 		// dd($id);
