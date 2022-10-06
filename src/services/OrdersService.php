@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
@@ -14,7 +15,7 @@ use craft\base\Field;
 use craft\commerce\elements\Order;
 use craft\commerce\elements\Product;
 use craft\commerce\elements\Variant;
-use craft\commerce\models\Address;
+use craft\elements\Address;
 use craft\commerce\Plugin as Commerce;
 use craft\helpers\Db;
 use craft\helpers\UrlHelper;
@@ -46,7 +47,7 @@ class OrdersService extends Component
 	 * @throws Throwable
 	 * @throws \yii\base\Exception
 	 */
-	public function syncOrderById ($orderId)
+	public function syncOrderById($orderId)
 	{
 		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
 			return true;
@@ -72,7 +73,7 @@ class OrdersService extends Component
 	 * @return bool|void
 	 * @throws Exception
 	 */
-	public function deleteOrderById ($orderId, $asCart = false)
+	public function deleteOrderById($orderId, $asCart = false)
 	{
 		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
 			return;
@@ -88,8 +89,7 @@ class OrdersService extends Component
 			'ecommerce/stores/' . $storeId . '/'  . $type . '/' . $orderId
 		);
 
-		if (!$success)
-		{
+		if (!$success) {
 			Craft::error($error, 'mailchimp-commerce');
 			return false;
 		}
@@ -109,7 +109,7 @@ class OrdersService extends Component
 	 *
 	 * @return int|string
 	 */
-	public function getTotalOrdersSynced ($getCarts = false)
+	public function getTotalOrdersSynced($getCarts = false)
 	{
 		return (new Query())
 			->from('{{%mc_orders_synced}}')
@@ -129,7 +129,7 @@ class OrdersService extends Component
 	 * @return bool
 	 * @throws Exception
 	 */
-	private function _createOrder (Order $order, $data)
+	private function _createOrder(Order $order, $data)
 	{
 		$storeId = MailchimpCommerce::$i->getSettings()->storeId;
 		$type = $order->isCompleted ? 'orders' : 'carts';
@@ -139,8 +139,7 @@ class OrdersService extends Component
 			$data
 		);
 
-		if (!$success)
-		{
+		if (!$success) {
 			Craft::error('Create: ' . $error, 'mailchimp-commerce');
 			return false;
 		}
@@ -168,7 +167,7 @@ class OrdersService extends Component
 	 * @return bool
 	 * @throws Exception
 	 */
-	private function _updateOrder ($order, $data)
+	private function _updateOrder($order, $data)
 	{
 		$storeId = MailchimpCommerce::$i->getSettings()->storeId;
 		$type    = $order->isCompleted ? 'orders' : 'carts';
@@ -178,8 +177,7 @@ class OrdersService extends Component
 			$data
 		);
 
-		if (!$success)
-		{
+		if (!$success) {
 			Craft::error('Update: ' . $error, 'mailchimp-commerce');
 			return false;
 		}
@@ -191,7 +189,7 @@ class OrdersService extends Component
 					'isCart'     => !$order->isCompleted,
 					'lastSynced' => Db::prepareDateForDb(new DateTime()),
 				],
-				[ 'orderId' => $order->id ],
+				['orderId' => $order->id],
 				[],
 				false
 			)->execute();
@@ -209,7 +207,7 @@ class OrdersService extends Component
 	 *
 	 * @return bool
 	 */
-	private function _hasOrderBeenSynced ($orderId)
+	private function _hasOrderBeenSynced($orderId)
 	{
 		return (new Query())
 			->from('{{%mc_orders_synced}}')
@@ -227,7 +225,7 @@ class OrdersService extends Component
 	 * @throws \yii\base\Exception
 	 * @throws InvalidConfigException
 	 */
-	private function _buildOrderData ($orderId)
+	private function _buildOrderData($orderId)
 	{
 		$order = Commerce::getInstance()->getOrders()->getOrderById($orderId);
 
@@ -245,12 +243,13 @@ class OrdersService extends Component
 				'id' => (string) $order->customer->id,
 				'email_address' => $order->customer->email ?: $order->email,
 				'opt_in_status' => $this->_hasOptedIn($order),
-				'first_name' => $order->billingAddress ? $order->billingAddress->firstName : '',
-				'last_name' => $order->billingAddress ? $order->billingAddress->lastName : '',
+				'first_name' => $order->customer->firstName ? $order->customer->firstName : '',
+				'last_name' => $order->customer->lastName ? $order->customer->lastName : '',
 				'orders_count' => (int) Order::find()->customer($order->customer)->isCompleted()->count(),
 				'total_spent' => (float) Order::find()->customer($order->customer)->isCompleted()->sum('[[commerce_orders.totalPaid]]') ?: 0,
 			],
 		];
+
 
 		if ($order->billingAddress)
 			$data['customer']['address'] = self::_address($order->billingAddress);
@@ -264,8 +263,7 @@ class OrdersService extends Component
 		if ($cid)
 			$data['campaign_id'] = $cid;
 
-		foreach ($order->lineItems as $item)
-		{
+		foreach ($order->lineItems as $item) {
 			if (!$item->purchasable)
 				continue;
 
@@ -287,8 +285,7 @@ class OrdersService extends Component
 		if (count($data['lines']) === 0)
 			return [$order, null];
 
-		if ($order->isCompleted)
-		{
+		if ($order->isCompleted) {
 			$completeData = [
 				'financial_status' => $order->lastTransaction ? $order->lastTransaction->status : 'paid',
 				'discount_total' => (float) $order->getTotalDiscount(),
@@ -314,11 +311,10 @@ class OrdersService extends Component
 
 			$promo =
 				$order->couponCode
-					? Commerce::getInstance()->getDiscounts()->getDiscountByCode($order->couponCode)
-					: null;
+				? Commerce::getInstance()->getDiscounts()->getDiscountByCode($order->couponCode)
+				: null;
 
-			foreach ($order->getAdjustments() as $adjustment)
-			{
+			foreach ($order->getAdjustments() as $adjustment) {
 				$isPromoCode = $promo && $promo->name === $adjustment->name;
 
 				$data['promos'][] = [
@@ -327,9 +323,7 @@ class OrdersService extends Component
 					'type'              => 'fixed',
 				];
 			}
-		}
-		else
-		{
+		} else {
 			$data['checkout_url'] = UrlHelper::siteUrl(
 				Craft::$app->getConfig()->getGeneral()->actionTrigger . '/mailchimp-commerce/order/restore',
 				['number' => $order->number]
@@ -346,7 +340,7 @@ class OrdersService extends Component
 	 *
 	 * @return bool
 	 */
-	private function _isOrderShipped (Order $order)
+	private function _isOrderShipped(Order $order)
 	{
 		return $order->orderStatus->handle === MailchimpCommerce::$i->getSettings()->shippedStatusHandle;
 	}
@@ -358,7 +352,7 @@ class OrdersService extends Component
 	 *
 	 * @return bool
 	 */
-	private function _hasOptedIn (Order $order)
+	private function _hasOptedIn(Order $order)
 	{
 		$fieldUid = MailchimpCommerce::$i->getSettings()->optInField;
 
@@ -375,9 +369,10 @@ class OrdersService extends Component
 			if (
 				$order->getCustomer() &&
 				$order->getCustomer()->getUser() &&
-			    $order->getCustomer()->getUser()->{$field->handle}
-		    ) return true;
-		} catch (\Exception $e) {}
+				$order->getCustomer()->getUser()->{$field->handle}
+			) return true;
+		} catch (\Exception $e) {
+		}
 
 		if ($order->{$field->handle})
 			return true;
@@ -393,14 +388,12 @@ class OrdersService extends Component
 	 * @return Product|null
 	 * @throws InvalidConfigException
 	 */
-	private function _getProduct ($purchasable)
+	private function _getProduct($purchasable)
 	{
 		$mailchimpProducts = MailchimpCommerce::getInstance()->chimp->getProducts();
 
-		foreach ($mailchimpProducts as $product)
-		{
-			if ($purchasable instanceof $product->variantClass)
-			{
+		foreach ($mailchimpProducts as $product) {
+			if ($purchasable instanceof $product->variantClass) {
 				$callable = [$purchasable, $product->variantToProductMethod];
 
 				return $callable();
@@ -418,9 +411,8 @@ class OrdersService extends Component
 	 *
 	 * @return array
 	 */
-	private static function _address (Address $address)
+	private static function _address(Address $address)
 	{
 		return array_filter(@AddressHelper::asArray($address));
 	}
-
 }

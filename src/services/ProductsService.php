@@ -432,18 +432,18 @@ class ProductsService extends Component
 		/** @var Asset $thumbnail */
 		$thumbnail = $field->one();
 
-		if ($thumbnail)
-		{
-			$transform = MailchimpCommerce::$i->getSettings()->thumbnailTransform;
+		// if ($thumbnail)
+		// {
+		// 	$transform = MailchimpCommerce::$i->getSettings()->thumbnailTransform;
 
-			if ($transform)
-				$transform = Craft::$app->getAssetTransforms()->getTransformByUid($transform);
+		// 	if ($transform)
+		// 		$transform = Craft::$app->imageTransforms->getTransformByUid($transform);
 
-			if (!$transform)
-				$transform = ['width'  => 1000, 'height' => 1000];
+		// 	if (!$transform)
+		// 		$transform = ['width'  => 1000, 'height' => 1000];
 
-			return UrlHelper::siteUrl($thumbnail->getUrl($transform));
-		}
+		// 	return UrlHelper::siteUrl($thumbnail->getUrl($transform));
+		// }
 
 		return $this->_getThumbnail($fallback);
 	}
@@ -471,7 +471,7 @@ class ProductsService extends Component
 		$transform = MailchimpCommerce::$i->getSettings()->thumbnailTransform;
 
 		if ($transform)
-			$transform = Craft::$app->getAssetTransforms()->getTransformByUid($transform);
+			$transform = Craft::$app->imageTransforms->getTransformByUid($transform);
 
 		if (!$transform)
 			$transform = ['width' => 1000, 'mode' => 'fit'];

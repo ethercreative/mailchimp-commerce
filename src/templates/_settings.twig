@@ -3,113 +3,133 @@
 {% set title = 'Settings'|t('app') %}
 {% set fullPageForm = true %}
 
-{% css %}
-.danger-zone {
-	position: relative;
-	z-index: 2;
-	margin: 0 -24px;
-	padding: 24px;
-}
-.danger-zone:before {
-	content: '';
-	position: absolute;
-	z-index: -1;
-	top: 0;
-	left: 0;
+{% css %}.danger-zone { position: relative; z-index: 2; margin: 0 -24px;
+padding: 24px; } .danger-zone:before { content: ''; position: absolute; z-index:
+-1; top: 0; left: 0;
 
-	display: block;
-	width: 100%;
-	height: 100px;
+display: block; width: 100%; height: 100px;
 
-	background-image: linear-gradient(
-		0deg,
-		rgba(255, 0, 0, 0) 0%,
-		rgba(255, 0, 0, 0.02) 40%,
-		rgba(255, 0, 0, 0.03) 65%,
-		rgba(255, 0, 0, 0.1) 100%
-	);
-	border-top: 2px dashed rgba(255, 0, 0, 0.1);
-}
-{% endcss %}
+background-image: linear-gradient( 0deg, rgba(255, 0, 0, 0) 0%, rgba(255, 0, 0,
+0.02) 40%, rgba(255, 0, 0, 0.03) 65%, rgba(255, 0, 0, 0.1) 100% ); border-top:
+2px dashed rgba(255, 0, 0, 0.1); }{% endcss %}
 
 {% block content %}
-	<input type="hidden" name="action" value="plugins/save-plugin-settings">
-	<input type="hidden" name="pluginHandle" value="mailchimp-commerce">
+	<input type="hidden" name="action" value="plugins/save-plugin-settings" />
+	<input type="hidden" name="pluginHandle" value="mailchimp-commerce" />
 
 	{% namespace 'settings' %}
 
-		{{ forms.selectField({
+	{{
+		forms.selectField({
 			first: true,
 			name: 'shippedStatusHandle',
 			label: 'Shipped Order Status'|t('mailchimp-commerce'),
-			instructions: 'The statues that is used to define when an order has been shipped.'|t('mailchimp-commerce'),
+			instructions: 'The statues that is used to define when an order has been shipped.'|t(
+				'mailchimp-commerce'
+			),
 			required: true,
 			options: orderStatuses,
-			value: settings.shippedStatusHandle,
-		}) }}
+			value: settings.shippedStatusHandle
+		})
+	}}
 
-		{{ forms.selectField({
+	{{
+		forms.selectField({
 			name: 'thumbnailTransform',
 			label: 'Thumbnail Transform'|t('mailchimp-commerce'),
-			instructions: 'What transform to use when transforming the product thumbnails. Defaults to 1000px square.'|t('mailchimp-commerce'),
+			instructions: 'What transform to use when transforming the product thumbnails. Defaults to 1000px square.'|t(
+				'mailchimp-commerce'
+			),
 			options: imageTransforms,
-			value: settings.thumbnailTransform,
-		}) }}
+			value: settings.thumbnailTransform
+		})
+	}}
 
-		{{ forms.selectField({
+	{{
+		forms.selectField({
 			name: 'imageTransform',
 			label: 'Image Transform'|t('mailchimp-commerce'),
-			instructions: 'What transform to use when transforming the product images. Defaults to 1000px wide, dynamic height.'|t('mailchimp-commerce'),
+			instructions: 'What transform to use when transforming the product images. Defaults to 1000px wide, dynamic height.'|t(
+				'mailchimp-commerce'
+			),
 			options: imageTransforms,
-			value: settings.imageTransform,
-		}) }}
+			value: settings.imageTransform
+		})
+	}}
 
-		{{ forms.textField({
+	{{
+		forms.textField({
 			name: 'promoRedemptionUrl',
 			label: 'Promo Redemption URL'|t('mailchimp-commerce'),
-			instructions: 'The URL that will be used for redeeming a promo code.'|t('mailchimp-commerce'),
+			instructions: 'The URL that will be used for redeeming a promo code.'|t(
+				'mailchimp-commerce'
+			),
 			value: settings.promoRedemptionUrl,
-			placeholder: 'i.e. /cart?discount={code}',
-		}) }}
+			placeholder: 'i.e. /cart?discount={code}'
+		})
+	}}
 
-		{{ forms.textField({
+	{{
+		forms.textField({
 			name: 'abandonedCartRestoreUrl',
 			label: 'Abandoned Cart Restore URL'|t('mailchimp-commerce'),
-			instructions: 'The URL that will be redirected to after an abandoned cart is restored.'|t('mailchimp-commerce'),
+			instructions: 'The URL that will be redirected to after an abandoned cart is restored.'|t(
+				'mailchimp-commerce'
+			),
 			value: settings.abandonedCartRestoreUrl,
-			placeholder: 'i.e. /cart',
-		}) }}
+			placeholder: 'i.e. /cart'
+		})
+	}}
 
-		{{ forms.textField({
+	{{
+		forms.textField({
 			name: 'expiredCartError',
 			label: 'Expired Cart Error'|t('mailchimp-commerce'),
-			instructions: 'The error notice sent when an abandoned cart has expired.'|t('mailchimp-commerce'),
-			value: settings.expiredCartError,
-		}) }}
+			instructions: 'The error notice sent when an abandoned cart has expired.'|t(
+				'mailchimp-commerce'
+			),
+			value: settings.expiredCartError
+		})
+	}}
 
-		{{ forms.textField({
+	{{
+		forms.textField({
 			name: 'completedCartError',
 			label: 'Completed Cart Error'|t('mailchimp-commerce'),
-			instructions: 'The error notice sent when an abandoned cart that has already been completed is attempted to be restored.'|t('mailchimp-commerce'),
-			value: settings.completedCartError,
-		}) }}
+			instructions: 'The error notice sent when an abandoned cart that has already been completed is attempted to be restored.'|t(
+				'mailchimp-commerce'
+			),
+			value: settings.completedCartError
+		})
+	}}
 
-		{{ forms.textField({
+	{{
+		forms.textField({
 			name: 'cartRestoredNotice',
 			label: 'Cart Restored Notice'|t('mailchimp-commerce'),
-			instructions: 'The success notice sent when an abandoned cart is restored.'|t('mailchimp-commerce'),
-			value: settings.cartRestoredNotice,
-		}) }}
+			instructions: 'The success notice sent when an abandoned cart is restored.'|t(
+				'mailchimp-commerce'
+			),
+			value: settings.cartRestoredNotice
+		})
+	}}
 
-		<div class="danger-zone">
-			<h2>{{ 'Danger Zone'|t('mailchimp-commerce') }}</h2>
+	<div class="danger-zone">
+		<h2>
+			{{ 'Danger Zone'|t('mailchimp-commerce') }}
+		</h2>
 
-			<p>{{ 'Use the button below to disconnect your store. This will remove it from Mailchimp, and purge any data the plugin has stored locally.'|t('mailchimp-commerce') }}</p>
-			<a href="{{ cpUrl('mailchimp-commerce/purge') }}" class="btn submit">
-				{{ 'Disconnect your store'|t('mailchimp-commerce') }}
-			</a>
-		</div>
+		<p>
+			{{
+				'Use the button below to disconnect your store. This will remove it from Mailchimp, and purge any data the plugin has stored locally.'|t(
+					'mailchimp-commerce'
+				)
+			}}
+		</p>
+		<a href="{{ cpUrl('mailchimp-commerce/purge') }}" class="btn submit">
+			{{ 'Disconnect your store'|t('mailchimp-commerce') }}
+		</a>
+	</div>
 
 	{% endnamespace %}
-
 {% endblock %}
