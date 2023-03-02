@@ -1,7 +1,7 @@
 {
-	"name": "crankd/mailchimp-commerce",
+	"name": "crankd/mailchimp-commerce-sync",
 	"description": "Mailchimp integration with Craft Commerce",
-	"version": "4.0.3",
+	"version": "1.0.0",
 	"type": "craft-plugin",
 	"keywords": [
 		"mailchimp",
@@ -27,9 +27,11 @@
 		}
 	},
 	"extra": {
-		"handle": "mailchimp-commerce",
-		"name": "Mailchimp Commerce 4.0",
-		"class": "crankd\\mc\\MailchimpCommerce",
+		"handle": "mailchimp-commerce-sync",
+		"name": "Mailchimp Commerce Sync",
+		"class": "crankd\\mc\\MailchimpCommerceSync",
 		"schemaVersion": "1.1.12"
-	}
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true
 }
