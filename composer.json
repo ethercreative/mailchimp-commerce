@@ -1,7 +1,7 @@
 {
 	"name": "crankd/mailchimp-commerce",
 	"description": "Mailchimp integration with Craft Commerce",
-	"version": "4.0.0",
+	"version": "4.0.1",
 	"type": "craft-plugin",
 	"keywords": [
 		"mailchimp",
@@ -35,8 +35,7 @@
 	},
 	"extra": {
 		"handle": "mailchimp-commerce",
-		"name": "Mailchimp Commerce",
-		"documentationUrl": "https://github.com/crankdcreative/mailchimp-commerce/blob/master/README.md",
+		"name": "Mailchimp Commerce 4.0",
 		"class": "crankd\\mc\\MailchimpCommerce",
 		"schemaVersion": "1.1.12"
 	}
