@@ -1,12 +1,13 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\models;
+namespace crankd\mc\models;
 
 use Craft;
 use craft\base\Model;
@@ -14,8 +15,8 @@ use craft\base\Model;
 /**
  * Class Settings
  *
- * @author  Ether Creative
- * @package ether\mc\models
+ * @author  Crankd Creative
+ * @package crankd\mc\models
  */
 class Settings extends Model
 {
@@ -140,7 +141,7 @@ class Settings extends Model
 	 *
 	 * @return string|null
 	 */
-	public function getDataCenter ()
+	public function getDataCenter()
 	{
 		if (!$this->apiKey)
 			return null;
@@ -148,5 +149,4 @@ class Settings extends Model
 		$parts = explode('-', Craft::parseEnv($this->apiKey));
 		return end($parts);
 	}
-
 }

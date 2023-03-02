@@ -3,11 +3,11 @@
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc;
+namespace crankd\mc;
 
 use Craft;
 use Throwable;
@@ -23,21 +23,21 @@ use craft\elements\Address;
 use craft\services\Plugins;
 use craft\helpers\UrlHelper;
 use craft\services\Addresses;
-use ether\mc\jobs\SyncOrders;
-use ether\mc\jobs\SyncPromos;
-use ether\mc\models\Settings;
-use ether\mc\jobs\SyncProducts;
+use crankd\mc\jobs\SyncOrders;
+use crankd\mc\jobs\SyncPromos;
+use crankd\mc\models\Settings;
+use crankd\mc\jobs\SyncProducts;
 use craft\commerce\elements\Order;
-use ether\mc\services\ChimpService;
-use ether\mc\services\ListsService;
-use ether\mc\services\StoreService;
+use crankd\mc\services\ChimpService;
+use crankd\mc\services\ListsService;
+use crankd\mc\services\StoreService;
 use craft\commerce\elements\Product;
 use craft\commerce\records\Discount;
-use ether\mc\services\FieldsService;
-use ether\mc\services\OrdersService;
-use ether\mc\services\PromosService;
+use crankd\mc\services\FieldsService;
+use crankd\mc\services\OrdersService;
+use crankd\mc\services\PromosService;
 use yii\base\InvalidConfigException;
-use ether\mc\services\ProductsService;
+use crankd\mc\services\ProductsService;
 use craft\errors\SiteNotFoundException;
 use craft\events\RegisterCpAlertsEvent;
 use craft\events\RegisterUrlRulesEvent;
@@ -46,8 +46,8 @@ use craft\errors\ElementNotFoundException;
 /**
  * Class MailchimpCommerce
  *
- * @author  Ether Creative
- * @package ether\mc
+ * @author  Crankd Creative
+ * @package crankd\mc
  * @property ChimpService $chimp
  * @property ListsService $lists
  * @property FieldsService $fields

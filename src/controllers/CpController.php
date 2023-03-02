@@ -3,11 +3,11 @@
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\controllers;
+namespace crankd\mc\controllers;
 
 use Craft;
 use craft\base\Field;
@@ -16,7 +16,7 @@ use craft\web\Controller;
 use craft\elements\Address;
 use craft\models\FieldGroup;
 use craft\fields\Lightswitch;
-use ether\mc\MailchimpCommerce;
+use crankd\mc\MailchimpCommerce;
 use craft\models\AssetTransform;
 use craft\commerce\records\Discount;
 use craft\commerce\models\OrderStatus;
@@ -28,8 +28,8 @@ use craft\models\ImageTransform;
 /**
  * Class CpController
  *
- * @author  Ether Creative
- * @package ether\mc\controllers
+ * @author  Crankd Creative
+ * @package crankd\mc\controllers
  */
 class CpController extends Controller
 {

@@ -3,11 +3,11 @@
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\helpers;
+namespace crankd\mc\helpers;
 
 use Craft;
 use craft\elements\Address;
@@ -15,8 +15,8 @@ use craft\elements\Address;
 /**
  * Class AddressHelper
  *
- * @author  Ether Creative
- * @package ether\mc\helpers
+ * @author  Crankd Creative
+ * @package crankd\mc\helpers
  */
 abstract class AddressHelper
 {

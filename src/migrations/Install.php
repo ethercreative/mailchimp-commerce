@@ -1,32 +1,33 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\migrations;
+namespace crankd\mc\migrations;
 
 use craft\db\Migration;
 
 /**
  * Class Install
  *
- * @author  Ether Creative
- * @package ether\mc\migrations
+ * @author  Crankd Creative
+ * @package crankd\mc\migrations
  */
 class Install extends Migration
 {
 
-	public function safeUp ()
+	public function safeUp()
 	{
 		$this->_upProductsSynced();
 		$this->_upOrdersSynced();
 		$this->_upPromosSynced();
 	}
 
-	public function safeDown ()
+	public function safeDown()
 	{
 		$this->_downProductsSynced();
 		$this->_downOrdersSynced();
@@ -36,7 +37,7 @@ class Install extends Migration
 	// Products Synced
 	// =========================================================================
 
-	private function _upProductsSynced ()
+	private function _upProductsSynced()
 	{
 		$this->createTable('{{%mc_products_synced}}', [
 			'productId' => $this->integer(),
@@ -59,7 +60,7 @@ class Install extends Migration
 		);
 	}
 
-	private function _downProductsSynced ()
+	private function _downProductsSynced()
 	{
 		$this->dropTableIfExists('{{%mc_products_synced}}');
 	}
@@ -67,7 +68,7 @@ class Install extends Migration
 	// Orders Synced
 	// =========================================================================
 
-	private function _upOrdersSynced ()
+	private function _upOrdersSynced()
 	{
 		$this->createTable('{{%mc_orders_synced}}', [
 			'orderId' => $this->integer(),
@@ -92,7 +93,7 @@ class Install extends Migration
 		);
 	}
 
-	private function _downOrdersSynced ()
+	private function _downOrdersSynced()
 	{
 		$this->dropTableIfExists('{{%mc_orders_synced}}');
 	}
@@ -100,7 +101,7 @@ class Install extends Migration
 	// Promos Synced
 	// =========================================================================
 
-	private function _upPromosSynced ()
+	private function _upPromosSynced()
 	{
 		$this->createTable('{{%mc_promos_synced}}', [
 			'promoId' => $this->integer(),
@@ -123,9 +124,8 @@ class Install extends Migration
 		);
 	}
 
-	private function _downPromosSynced ()
+	private function _downPromosSynced()
 	{
 		$this->dropTableIfExists('{{%mc_promos_synced}}');
 	}
-
 }

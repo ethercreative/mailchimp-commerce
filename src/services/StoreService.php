@@ -3,11 +3,11 @@
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\services;
+namespace crankd\mc\services;
 
 use Craft;
 use Throwable;
@@ -15,9 +15,9 @@ use craft\helpers\App;
 use yii\base\Exception;
 use craft\base\Component;
 use craft\elements\Address;
-use ether\mc\MailchimpCommerce;
-use ether\mc\migrations\Install;
-use ether\mc\helpers\AddressHelper;
+use crankd\mc\MailchimpCommerce;
+use crankd\mc\migrations\Install;
+use crankd\mc\helpers\AddressHelper;
 use yii\base\InvalidConfigException;
 use craft\commerce\Plugin as Commerce;
 use craft\errors\SiteNotFoundException;
@@ -26,8 +26,8 @@ use craft\errors\ElementNotFoundException;
 /**
  * Class StoreService
  *
- * @author  Ether Creative
- * @package ether\mc\services
+ * @author  Crankd Creative
+ * @package crankd\mc\services
  */
 class StoreService extends Component
 {

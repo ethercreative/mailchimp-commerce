@@ -3,11 +3,11 @@
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\services;
+namespace crankd\mc\services;
 
 use Craft;
 use craft\base\Component;
@@ -20,8 +20,8 @@ use craft\commerce\Plugin as Commerce;
 use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use DateTime;
-use ether\mc\helpers\AddressHelper;
-use ether\mc\MailchimpCommerce;
+use crankd\mc\helpers\AddressHelper;
+use crankd\mc\MailchimpCommerce;
 use Throwable;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
@@ -30,8 +30,8 @@ use yii\db\Query;
 /**
  * Class OrdersService
  *
- * @author  Ether Creative
- * @package ether\mc\services
+ * @author  Crankd Creative
+ * @package crankd\mc\services
  */
 class OrdersService extends Component
 {

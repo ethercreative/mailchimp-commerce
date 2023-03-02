@@ -1,12 +1,13 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2020 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2020 Crankd Creative
  */
 
-namespace ether\mc\events;
+namespace crankd\mc\events;
 
 use craft\base\Element;
 use yii\base\Event;
@@ -14,8 +15,8 @@ use yii\base\Event;
 /**
  * Class BuildSyncDataEvent
  *
- * @author  Ether Creative
- * @package ether\mc\events
+ * @author  Crankd Creative
+ * @package crankd\mc\events
  */
 class BuildSyncDataEvent extends Event
 {
@@ -25,5 +26,4 @@ class BuildSyncDataEvent extends Event
 
 	/** @var array */
 	public $syncData;
-
 }

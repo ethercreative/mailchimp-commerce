@@ -3,17 +3,17 @@
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\jobs;
+namespace crankd\mc\jobs;
 
 use Craft;
 use craft\db\QueryAbortedException;
 use craft\queue\BaseJob;
 use craft\queue\QueueInterface;
-use ether\mc\MailchimpCommerce;
+use crankd\mc\MailchimpCommerce;
 use Throwable;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
@@ -22,8 +22,8 @@ use yii\queue\Queue;
 /**
  * Class SyncOrders
  *
- * @author  Ether Creative
- * @package ether\mc\jobs
+ * @author  Crankd Creative
+ * @package crankd\mc\jobs
  */
 class SyncOrders extends BaseJob
 {

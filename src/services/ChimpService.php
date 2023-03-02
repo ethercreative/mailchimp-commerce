@@ -1,12 +1,13 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\services;
+namespace crankd\mc\services;
 
 use Craft;
 use craft\base\Component;
@@ -16,9 +17,9 @@ use craft\commerce\Plugin as Commerce;
 use craft\db\Query;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
-use ether\mc\base\MailchimpProduct;
-use ether\mc\events\RegisterMailchimpProductsEvent;
-use ether\mc\MailchimpCommerce;
+use crankd\mc\base\MailchimpProduct;
+use crankd\mc\events\RegisterMailchimpProductsEvent;
+use crankd\mc\MailchimpCommerce;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -26,8 +27,8 @@ use GuzzleHttp\Exception\ClientException;
 /**
  * Class ChimpService
  *
- * @author  Ether Creative
- * @package ether\mc\services
+ * @author  Crankd Creative
+ * @package crankd\mc\services
  */
 class ChimpService extends Component
 {
@@ -43,10 +44,10 @@ class ChimpService extends Component
 	 *   registering new Mailchimp products
 	 *
 	 * Event::on(
-	 *     \ether\mc\services\ChimpService::class,
-	 *     \ether\mc\services\ChimpService::EVENT_REGISTER_MAILCHIMP_PRODUCTS,
+	 *     \crankd\mc\services\ChimpService::class,
+	 *     \crankd\mc\services\ChimpService::EVENT_REGISTER_MAILCHIMP_PRODUCTS,
 	 *     function (RegisterMailchimpProductsEvent $event) {
-	 *         $event->products[] = new \ether\mc\base\MailchimpProduct([
+	 *         $event->products[] = new \crankd\mc\base\MailchimpProduct([
 	 *             // See ChimpService::getProducts() for examples
 	 *         ]);
 	 *     }
@@ -57,7 +58,7 @@ class ChimpService extends Component
 	// Methods
 	// -------------------------------------------------------------------------
 
-	public function getProducts ()
+	public function getProducts()
 	{
 		static $products;
 
@@ -68,10 +69,8 @@ class ChimpService extends Component
 
 		$plugins = Craft::$app->getPlugins();
 
-		try
-		{
-			if (class_exists(Commerce::class) && $plugins->isPluginEnabled('commerce'))
-			{
+		try {
+			if (class_exists(Commerce::class) && $plugins->isPluginEnabled('commerce')) {
 				$products[] = new MailchimpProduct([
 					'productName'                   => Craft::t('commerce', 'Products'),
 					'variantName'                   => Craft::t('commerce', 'Variants'),
@@ -84,13 +83,14 @@ class ChimpService extends Component
 					'productToTypeMethod'           => 'getType',
 					'getProductTypes'               => function () {
 						return Commerce::getInstance()->getProductTypes()
-						               ->getAllProductTypes();
+							->getAllProductTypes();
 					},
 					'getProductIds'                 => function ($typeId) {
 						$productIdsQuery = (new Query())
 							->select('[[p.id]]')
 							->leftJoin(
-								'{{%elements}} e', '[[e.id]] = [[p.id]]'
+								'{{%elements}} e',
+								'[[e.id]] = [[p.id]]'
 							)
 							->where(['e.dateDeleted' => null])
 							->from('{{%commerce_products}} p');
@@ -106,8 +106,7 @@ class ChimpService extends Component
 			}
 
 			/** @noinspection PhpFullyQualifiedNameUsageInspection */
-			if (class_exists(\verbb\events\elements\Event::class) && $plugins->isPluginEnabled('events'))
-			{
+			if (class_exists(\verbb\events\elements\Event::class) && $plugins->isPluginEnabled('events')) {
 				/** @noinspection PhpFullyQualifiedNameUsageInspection */
 				$products[] = new MailchimpProduct([
 					'productName'                   => Craft::t('events', 'Events'),
@@ -123,26 +122,27 @@ class ChimpService extends Component
 						/** @noinspection PhpFullyQualifiedNameUsageInspection */
 						/** @var \verbb\events\services\EventTypes $service */
 						$service = \verbb\events\Events::getInstance()
-						                               ->getEventTypes();
+							->getEventTypes();
 
 						return $service->getAllEventTypes();
 					},
 					'getProductIds'                 => function ($typeId) {
-							$productIdsQuery = (new Query())
-								->select('[[p.id]]')
-								->leftJoin(
-									'{{%elements}} e', '[[e.id]] = [[p.id]]'
-								)
-								->where(['e.dateDeleted' => null])
-								->from('{{%events_events}} p');
+						$productIdsQuery = (new Query())
+							->select('[[p.id]]')
+							->leftJoin(
+								'{{%elements}} e',
+								'[[e.id]] = [[p.id]]'
+							)
+							->where(['e.dateDeleted' => null])
+							->from('{{%events_events}} p');
 
-							if ($typeId)
-								$productIdsQuery->where(
-									['p.typeId' => $typeId]
-								);
+						if ($typeId)
+							$productIdsQuery->where(
+								['p.typeId' => $typeId]
+							);
 
-							return $productIdsQuery->column();
-						},
+						return $productIdsQuery->column();
+					},
 				]);
 			}
 		} catch (Exception $e) {
@@ -171,28 +171,28 @@ class ChimpService extends Component
 	// Methods: Public
 	// -------------------------------------------------------------------------
 
-	public function get ($uri, $params = [])
+	public function get($uri, $params = [])
 	{
 		$uri = UrlHelper::urlWithParams($uri, $params);
 		return $this->request('GET', $uri);
 	}
 
-	public function post ($uri, $body = [])
+	public function post($uri, $body = [])
 	{
 		return $this->request('POST', $uri, $body);
 	}
 
-	public function patch ($uri, $body = [])
+	public function patch($uri, $body = [])
 	{
 		return $this->request('PATCH', $uri, $body);
 	}
 
-	public function put ($uri, $body = [])
+	public function put($uri, $body = [])
 	{
 		return $this->request('PUT', $uri, $body);
 	}
 
-	public function delete ($uri)
+	public function delete($uri)
 	{
 		return $this->request('DELETE', $uri);
 	}
@@ -200,12 +200,11 @@ class ChimpService extends Component
 	// Methods: Private
 	// -------------------------------------------------------------------------
 
-	private function request ($method, $uri, $body = [])
+	private function request($method, $uri, $body = [])
 	{
 		$client = $this->client();
 
-		if (!$client)
-		{
+		if (!$client) {
 			return [
 				false, // Success
 				null, // Data
@@ -251,7 +250,7 @@ class ChimpService extends Component
 		}
 	}
 
-	private function client ()
+	private function client()
 	{
 		if (self::$_client)
 			return self::$_client;
@@ -269,5 +268,4 @@ class ChimpService extends Component
 			'auth' => ['MailchimpCommerce', $apiKey],
 		]);
 	}
-
 }

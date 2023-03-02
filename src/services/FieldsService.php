@@ -1,12 +1,13 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\services;
+namespace crankd\mc\services;
 
 use Craft;
 use craft\base\Component;
@@ -14,13 +15,13 @@ use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\fields\BaseRelationField;
-use ether\mc\MailchimpCommerce;
+use crankd\mc\MailchimpCommerce;
 
 /**
  * Class FieldsService
  *
- * @author  Ether Creative
- * @package ether\mc\services
+ * @author  Crankd Creative
+ * @package crankd\mc\services
  */
 class FieldsService extends Component
 {
@@ -35,7 +36,7 @@ class FieldsService extends Component
 	 *
 	 * @return string|null
 	 */
-	public function getMappedFieldValue ($setting, Element $element, $typeUid, $fallback = null)
+	public function getMappedFieldValue($setting, Element $element, $typeUid, $fallback = null)
 	{
 		$mappings = MailchimpCommerce::$i->getSettings()->{$setting};
 
@@ -60,7 +61,7 @@ class FieldsService extends Component
 	 *
 	 * @return ElementInterface[]|mixed|string|null
 	 */
-	public function getMappedFieldRelation ($setting, Element $element, $typeUid)
+	public function getMappedFieldRelation($setting, Element $element, $typeUid)
 	{
 		$mappings = MailchimpCommerce::$i->getSettings()->{$setting};
 
@@ -72,5 +73,4 @@ class FieldsService extends Component
 
 		return $element->{$field->handle};
 	}
-
 }

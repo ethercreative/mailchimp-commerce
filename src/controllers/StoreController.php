@@ -3,18 +3,18 @@
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\controllers;
+namespace crankd\mc\controllers;
 
 use Craft;
 use Throwable;
 use yii\web\Response;
 use yii\base\Exception;
 use craft\web\Controller;
-use ether\mc\MailchimpCommerce;
+use crankd\mc\MailchimpCommerce;
 use yii\web\ForbiddenHttpException;
 use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
@@ -24,8 +24,8 @@ use craft\errors\ElementNotFoundException;
 /**
  * Class StoreController
  *
- * @author  Ether Creative
- * @package ether\mc\controllers
+ * @author  Crankd Creative
+ * @package crankd\mc\controllers
  */
 class StoreController extends Controller
 {

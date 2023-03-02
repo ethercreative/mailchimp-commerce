@@ -1,12 +1,13 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\services;
+namespace crankd\mc\services;
 
 use Craft;
 use craft\base\Component;
@@ -15,15 +16,15 @@ use craft\db\Query;
 use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use DateTime;
-use ether\mc\MailchimpCommerce;
+use crankd\mc\MailchimpCommerce;
 use Throwable;
 use yii\db\Exception;
 
 /**
  * Class PromosService
  *
- * @author  Ether Creative
- * @package ether\mc\services
+ * @author  Crankd Creative
+ * @package crankd\mc\services
  */
 class PromosService extends Component
 {
@@ -39,7 +40,7 @@ class PromosService extends Component
 	 * @throws Throwable
 	 * @throws \yii\base\Exception
 	 */
-	public function syncPromoById ($promoId)
+	public function syncPromoById($promoId)
 	{
 		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
 			return true;
@@ -64,7 +65,7 @@ class PromosService extends Component
 	 * @return bool|void
 	 * @throws Exception
 	 */
-	public function deletePromoById ($promoId)
+	public function deletePromoById($promoId)
 	{
 		if (MailchimpCommerce::getInstance()->getSettings()->disableSyncing)
 			return;
@@ -78,8 +79,7 @@ class PromosService extends Component
 			'ecommerce/stores/' . $storeId . '/promo-rules/' . $promoId
 		);
 
-		if (!$success)
-		{
+		if (!$success) {
 			Craft::error($error, 'mailchimp-commerce');
 			return false;
 		}
@@ -97,7 +97,7 @@ class PromosService extends Component
 	 *
 	 * @return int|string
 	 */
-	public function getTotalPromosSynced ()
+	public function getTotalPromosSynced()
 	{
 		return (new Query())
 			->from('{{%mc_promos_synced}}')
@@ -117,7 +117,7 @@ class PromosService extends Component
 	 * @return bool
 	 * @throws Exception
 	 */
-	private function _createPromo ($promoId, $data, $code)
+	private function _createPromo($promoId, $data, $code)
 	{
 		$storeId = MailchimpCommerce::$i->getSettings()->storeId;
 
@@ -126,8 +126,7 @@ class PromosService extends Component
 			$data
 		);
 
-		if (!$success)
-		{
+		if (!$success) {
 			Craft::error($error, 'mailchimp-commerce');
 			return false;
 		}
@@ -137,8 +136,7 @@ class PromosService extends Component
 			$code
 		);
 
-		if (!$success)
-		{
+		if (!$success) {
 			Craft::error($error, 'mailchimp-commerce');
 			return false;
 		}
@@ -166,7 +164,7 @@ class PromosService extends Component
 	 * @return bool
 	 * @throws Exception
 	 */
-	private function _updatePromo ($promoId, $data, $code)
+	private function _updatePromo($promoId, $data, $code)
 	{
 		$storeId = MailchimpCommerce::$i->getSettings()->storeId;
 
@@ -175,8 +173,7 @@ class PromosService extends Component
 			$data
 		);
 
-		if (!$success)
-		{
+		if (!$success) {
 			Craft::error($error, 'mailchimp-commerce');
 			return false;
 		}
@@ -186,8 +183,7 @@ class PromosService extends Component
 			$code
 		);
 
-		if (!$success)
-		{
+		if (!$success) {
 			Craft::error($error, 'mailchimp-commerce');
 			return false;
 		}
@@ -195,8 +191,8 @@ class PromosService extends Component
 		Craft::$app->getDb()->createCommand()
 			->update(
 				'{{%mc_promos_synced}}',
-				[ 'lastSynced' => Db::prepareDateForDb(new DateTime()) ],
-				[ 'promoId' => $promoId ],
+				['lastSynced' => Db::prepareDateForDb(new DateTime())],
+				['promoId' => $promoId],
 				[],
 				false
 			)->execute();
@@ -214,7 +210,7 @@ class PromosService extends Component
 	 *
 	 * @return bool
 	 */
-	private function _hasPromoBeenSynced ($promoId)
+	private function _hasPromoBeenSynced($promoId)
 	{
 		return (new Query())
 			->from('{{%mc_promos_synced}}')
@@ -231,7 +227,7 @@ class PromosService extends Component
 	 * @throws Throwable
 	 * @throws \yii\base\Exception
 	 */
-	private function _buildPromoData ($promoId)
+	private function _buildPromoData($promoId)
 	{
 		$promo = Commerce::getInstance()->getDiscounts()->getDiscountById($promoId);
 
@@ -239,20 +235,15 @@ class PromosService extends Component
 		$type = null;
 		$target = null;
 
-		if ($promo->baseDiscount != 0)
-		{
+		if ($promo->baseDiscount != 0) {
 			$amount = $promo->baseDiscount * -1;
 			$type = 'fixed';
 			$target = 'total';
-		}
-		else if ($promo->perItemDiscount != 0)
-		{
+		} else if ($promo->perItemDiscount != 0) {
 			$amount = $promo->perItemDiscount * -1;
 			$type = 'fixed';
 			$target = 'per_item';
-		}
-		else if ($promo->percentDiscount != 0)
-		{
+		} else if ($promo->percentDiscount != 0) {
 			$amount = $promo->percentDiscount * -1;
 			$type = 'percentage';
 			$target = 'per_item';
@@ -281,8 +272,8 @@ class PromosService extends Component
 
 		$useLimitEnabled =
 			$promo->totalDiscountUseLimit > 0
-				? $promo->totalDiscountUses < $promo->totalDiscountUseLimit
-				: true;
+			? $promo->totalDiscountUses < $promo->totalDiscountUseLimit
+			: true;
 
 		$redemptionUrl = Craft::$app->getView()->renderObjectTemplate(
 			MailchimpCommerce::$i->getSettings()->promoRedemptionUrl ?: '/',
@@ -301,5 +292,4 @@ class PromosService extends Component
 
 		return [$data, $code];
 	}
-
 }

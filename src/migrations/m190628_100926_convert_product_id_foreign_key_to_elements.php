@@ -1,6 +1,6 @@
 <?php
 
-namespace ether\mc\migrations;
+namespace crankd\mc\migrations;
 
 use craft\db\Migration;
 
@@ -16,20 +16,20 @@ class m190628_100926_convert_product_id_foreign_key_to_elements extends Migratio
     public function safeUp()
     {
         $this->dropForeignKey(
-        	$this->getDb()->getForeignKeyName(
-		        '{{%mc_products_synced}}',
-		        ['productId']
-	        ),
-	        '{{%mc_products_synced}}'
+            $this->getDb()->getForeignKeyName(
+                '{{%mc_products_synced}}',
+                ['productId']
+            ),
+            '{{%mc_products_synced}}'
         );
 
         $this->addForeignKey(
-	        null,
-	        '{{%mc_products_synced}}',
-	        ['productId'],
-	        '{{%elements}}',
-	        ['id'],
-	        'CASCADE'
+            null,
+            '{{%mc_products_synced}}',
+            ['productId'],
+            '{{%elements}}',
+            ['id'],
+            'CASCADE'
         );
     }
 
@@ -41,5 +41,4 @@ class m190628_100926_convert_product_id_foreign_key_to_elements extends Migratio
         echo "m190628_100926_convert_product_id_foreign_key_to_elements cannot be reverted.\n";
         return false;
     }
-
 }

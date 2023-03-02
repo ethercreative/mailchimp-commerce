@@ -1,24 +1,25 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\controllers;
+namespace crankd\mc\controllers;
 
 use Craft;
 use craft\errors\MissingComponentException;
 use craft\web\Controller;
-use ether\mc\MailchimpCommerce;
+use crankd\mc\MailchimpCommerce;
 use yii\web\Response;
 
 /**
  * Class SyncedController
  *
- * @author  Ether Creative
- * @package ether\mc\controllers
+ * @author  Crankd Creative
+ * @package crankd\mc\controllers
  */
 class SyncedController extends Controller
 {
@@ -27,7 +28,7 @@ class SyncedController extends Controller
 	 * @return Response
 	 * @throws MissingComponentException
 	 */
-	public function actionProducts ()
+	public function actionProducts()
 	{
 		$offset = Craft::$app->getRequest()->getQueryParam('offset', 0);
 
@@ -41,5 +42,4 @@ class SyncedController extends Controller
 			'total' => $data['total'],
 		]);
 	}
-
 }

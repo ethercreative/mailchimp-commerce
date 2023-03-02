@@ -1,21 +1,22 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\events;
+namespace crankd\mc\events;
 
-use ether\mc\base\MailchimpProduct;
+use crankd\mc\base\MailchimpProduct;
 use yii\base\Event;
 
 /**
  * Class RegisterMailchimpProductsEvent
  *
- * @author  Ether Creative
- * @package ether\mc\events
+ * @author  Crankd Creative
+ * @package crankd\mc\events
  */
 class RegisterMailchimpProductsEvent extends Event
 {
@@ -24,5 +25,4 @@ class RegisterMailchimpProductsEvent extends Event
 	 * @var MailchimpProduct[] An array of mailchimp products
 	 */
 	public $products = [];
-
 }

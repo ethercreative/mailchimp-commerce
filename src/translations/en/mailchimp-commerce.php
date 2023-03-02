@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
 return [
@@ -44,29 +45,29 @@ return [
 
 	'Opt-in Field' => 'Opt-in Field',
 	'The field to use to check if the customer has opted in to marketing emails. This can be on the order or user. Must be a lightswitch.' =>
-		'The field to use to check if the customer has opted in to marketing emails. This can be on the order or user. Must be a lightswitch.',
+	'The field to use to check if the customer has opted in to marketing emails. This can be on the order or user. Must be a lightswitch.',
 
 	'Thumbnail Transform' => 'Thumbnail Transform',
 	'What transform to use when transforming the product thumbnails. Defaults to 1000px square.' =>
-		'What transform to use when transforming the product thumbnails. Defaults to 1000px square.',
+	'What transform to use when transforming the product thumbnails. Defaults to 1000px square.',
 
 	'Image Transform' => 'Image Transform',
 	'What transform to use when transforming the product images. Defaults to 1000px wide, dynamic height.' =>
-		'What transform to use when transforming the product images. Defaults to 1000px wide, dynamic height.',
+	'What transform to use when transforming the product images. Defaults to 1000px wide, dynamic height.',
 
 	'Promo Redemption URL' => 'Promo Redemption URL',
 	'The URL that will be used for redeeming a promo code.' => 'The URL that will be used for redeeming a promo code.',
 
 	'Abandoned Cart Restore URL' => 'Abandoned Cart Restore URL',
 	'The URL that will be redirected to after an abandoned cart is restored.' =>
-		'The URL that will be redirected to after an abandoned cart is restored.',
+	'The URL that will be redirected to after an abandoned cart is restored.',
 
 	'Expired Cart Error' => 'Expired Cart Error',
 	'The error notice sent when an abandoned cart has expired.' => 'The error notice sent when an abandoned cart has expired.',
 
 	'Completed Cart Error' => 'Completed Cart Error',
 	'The error notice sent when an abandoned cart that has already been completed is attempted to be restored.' =>
-		'The error notice sent when an abandoned cart that has already been completed is attempted to be restored.',
+	'The error notice sent when an abandoned cart that has already been completed is attempted to be restored.',
 
 	'Cart Restored Notice' => 'Cart Restored Notice',
 	'The success notice sent when an abandoned cart is restored.' => 'The success notice sent when an abandoned cart is restored.',
@@ -74,7 +75,7 @@ return [
 	'Danger Zone' => 'Danger Zone',
 	'Disconnect your store' => 'Disconnect your store',
 	'Use the button below to disconnect your store. This will remove it from Mailchimp, and purge any data the plugin has stored locally.' =>
-		'Use the button below to disconnect your store. This will remove it from Mailchimp, and purge any data the plugin has stored locally.',
+	'Use the button below to disconnect your store. This will remove it from Mailchimp, and purge any data the plugin has stored locally.',
 
 	// Purge
 	// =========================================================================
@@ -85,7 +86,7 @@ return [
 	'No, Cancel' => 'No, Cancel',
 	'Are you sure you want to disconnect your store from Mailchimp?' => 'Are you sure you want to disconnect your store from Mailchimp?',
 	'This will remove all synced data between your store and Mailchimp, including Orders, Products, Customers, etc.' =>
-		'This will remove all synced data between your store and Mailchimp, including Orders, Products, Customers, etc.',
+	'This will remove all synced data between your store and Mailchimp, including Orders, Products, Customers, etc.',
 	'The original Commerce data will not be touched.' => 'The original Commerce data will not be touched.',
 
 	// Jobs
@@ -99,9 +100,9 @@ return [
 	// =========================================================================
 
 	'You have already synced your store. You can\'t change the list ID after a store has been synced.' =>
-		'You have already synced your store. You can\'t change the list ID after a store has been synced.',
+	'You have already synced your store. You can\'t change the list ID after a store has been synced.',
 	'You need to [set your store\'s address](/admin/commerce/store-settings/location) before you can sync!' =>
-		'You need to [set your store\'s address](/admin/commerce/store-settings/location) before you can sync!',
+	'You need to [set your store\'s address](/admin/commerce/store-settings/location) before you can sync!',
 	'Manually sync the store if your domain or other details have changed.' => 'Manually sync the store if your domain or other details have changed.',
 	'Sync Store' => 'Sync Store',
 	'Store Synced.' => 'Store Synced.',
@@ -112,7 +113,7 @@ return [
 
 	'{synced} of {total, plural, =1{1 cart} other{# carts}} have been synced.' => '{synced} of {total, plural, =1{1 cart} other{# carts}} have been synced.',
 	'Some carts may not appear to sync. This is due to them not having either an email or any line items.' =>
-		'Some carts may not appear to sync. This is due to them not having either an email or any line items.',
+	'Some carts may not appear to sync. This is due to them not having either an email or any line items.',
 	'Sync All Carts' => 'Sync All Carts',
 
 	'{synced} of {total, plural, =1{1 order} other{# orders}} have been synced.' => '{synced} of {total, plural, =1{1 order} other{# orders}} have been synced.',

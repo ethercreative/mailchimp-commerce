@@ -12,15 +12,15 @@
 	"license": "proprietary",
 	"authors": [
 		{
-			"name": "Ether",
-			"homepage": "https://ethercreative.co.uk"
+			"name": "Crankd",
+			"homepage": "https://crankdcreative.co.uk"
 		}
 	],
 	"support": {
-		"email": "dev@ethercreative.co.uk",
-		"issues": "https://github.com/ethercreative/mailchimp-commerce/issues?state=open",
-		"source": "https://github.com/ethercreative/mailchimp-commerce",
-		"docs": "https://github.com/ethercreative/mailchimp-commerce/blob/v1/README.md"
+		"email": "dev@crankdcreative.co.uk",
+		"issues": "https://github.com/crankdcreative/mailchimp-commerce/issues?state=open",
+		"source": "https://github.com/crankdcreative/mailchimp-commerce",
+		"docs": "https://github.com/crankdcreative/mailchimp-commerce/blob/v1/README.md"
 	},
 	"require": {
 		"craftcms/cms": "^4.0.0",
@@ -30,14 +30,14 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"ether\\mc\\": "src/"
+			"crankd\\mc\\": "src/"
 		}
 	},
 	"extra": {
 		"handle": "mailchimp-commerce",
 		"name": "Mailchimp Commerce",
-		"documentationUrl": "https://github.com/ethercreative/mailchimp-commerce/blob/master/README.md",
-		"class": "ether\\mc\\MailchimpCommerce",
+		"documentationUrl": "https://github.com/crankdcreative/mailchimp-commerce/blob/master/README.md",
+		"class": "crankd\\mc\\MailchimpCommerce",
 		"schemaVersion": "1.1.12"
 	}
 }

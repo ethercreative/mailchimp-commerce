@@ -1,12 +1,13 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\controllers;
+namespace crankd\mc\controllers;
 
 use Craft;
 use craft\commerce\elements\Order;
@@ -15,10 +16,10 @@ use craft\db\Query;
 use craft\errors\ElementNotFoundException;
 use craft\errors\SiteNotFoundException;
 use craft\web\Controller;
-use ether\mc\jobs\SyncOrders;
-use ether\mc\jobs\SyncProducts;
-use ether\mc\jobs\SyncPromos;
-use ether\mc\MailchimpCommerce;
+use crankd\mc\jobs\SyncOrders;
+use crankd\mc\jobs\SyncProducts;
+use crankd\mc\jobs\SyncPromos;
+use crankd\mc\MailchimpCommerce;
 use Throwable;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
@@ -26,8 +27,8 @@ use yii\base\InvalidConfigException;
 /**
  * Class SyncController
  *
- * @author  Ether Creative
- * @package ether\mc\controllers
+ * @author  Crankd Creative
+ * @package crankd\mc\controllers
  */
 class SyncController extends Controller
 {
@@ -39,7 +40,7 @@ class SyncController extends Controller
 	 * @throws Exception
 	 * @throws InvalidConfigException
 	 */
-	public function actionStore ()
+	public function actionStore()
 	{
 		MailchimpCommerce::$i->store->update();
 
@@ -48,7 +49,7 @@ class SyncController extends Controller
 		);
 	}
 
-	public function actionAllProducts ()
+	public function actionAllProducts()
 	{
 		$productClass = Craft::$app->getRequest()->getRequiredBodyParam('class');
 		$typeId = Craft::$app->getRequest()->getBodyParam('type');
@@ -57,8 +58,7 @@ class SyncController extends Controller
 		$productIds = [];
 		$productName = 'Products';
 
-		foreach ($mailchimpProducts as $product)
-		{
+		foreach ($mailchimpProducts as $product) {
 			if ($product->productClass !== $productClass)
 				continue;
 
@@ -72,7 +72,7 @@ class SyncController extends Controller
 		);
 	}
 
-	public function actionAllCarts ()
+	public function actionAllCarts()
 	{
 		Craft::$app->getQueue()->push(
 			new SyncOrders([
@@ -81,7 +81,7 @@ class SyncController extends Controller
 		);
 	}
 
-	public function actionAllOrders ()
+	public function actionAllOrders()
 	{
 		Craft::$app->getQueue()->push(
 			new SyncOrders([
@@ -90,7 +90,7 @@ class SyncController extends Controller
 		);
 	}
 
-	public function actionAllPromos ()
+	public function actionAllPromos()
 	{
 		Craft::$app->getQueue()->push(
 			new SyncPromos([
@@ -98,5 +98,4 @@ class SyncController extends Controller
 			])
 		);
 	}
-
 }

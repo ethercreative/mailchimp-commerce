@@ -1,6 +1,6 @@
 <?php
 
-namespace ether\mc\migrations;
+namespace crankd\mc\migrations;
 
 use Craft;
 use craft\db\Migration;
@@ -16,9 +16,9 @@ class m190625_161725_add_cid_column_to_orders_synced extends Migration
     public function safeUp()
     {
         $this->addColumn(
-        	'{{%mc_orders_synced}}',
-	        'cid',
-	        $this->string()->null()
+            '{{%mc_orders_synced}}',
+            'cid',
+            $this->string()->null()
         );
     }
 
@@ -28,8 +28,8 @@ class m190625_161725_add_cid_column_to_orders_synced extends Migration
     public function safeDown()
     {
         $this->dropColumn(
-	        '{{%mc_orders_synced}}',
-	        'cid'
+            '{{%mc_orders_synced}}',
+            'cid'
         );
     }
 }

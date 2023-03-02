@@ -1,20 +1,21 @@
 <?php
+
 /**
  * Mailchimp for Craft Commerce
  *
- * @link      https://ethercreative.co.uk
- * @copyright Copyright (c) 2019 Ether Creative
+ * @link      https://crankdcreative.co.uk
+ * @copyright Copyright (c) 2023 Crankd Creative
  */
 
-namespace ether\mc\base;
+namespace crankd\mc\base;
 
 use Yii;
 
 /**
  * Class MailchimpProduct
  *
- * @author  Ether Creative
- * @package ether\mc\base
+ * @author  Crankd Creative
+ * @package crankd\mc\base
  */
 class MailchimpProduct
 {
@@ -58,7 +59,7 @@ class MailchimpProduct
 	public $variantStockProperty;
 
 	/**
-	 * @var string|null The name of the property used to check whether the
+	 * @var string|null The name of the property used to check whcrankd the
 	 *   variant has unlimited stock
 	 */
 	public $variantUnlimitedStockProperty = null;
@@ -83,10 +84,9 @@ class MailchimpProduct
 	// Methods
 	// =========================================================================
 
-	public function __construct ($config = [])
+	public function __construct($config = [])
 	{
 		if (!empty($config))
 			Yii::configure($this, $config);
 	}
-
 }
