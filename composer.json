@@ -1,7 +1,7 @@
 {
 	"name": "crankd/mailchimp-commerce",
 	"description": "Mailchimp integration with Craft Commerce",
-	"version": "4.0.2",
+	"version": "4.0.3",
 	"type": "craft-plugin",
 	"keywords": [
 		"mailchimp",
@@ -12,7 +12,7 @@
 	"authors": [
 		{
 			"name": "Crankd",
-			"homepage": "https://crankdcreative.co.uk"
+			"homepage": "https://crankd.nz"
 		}
 	],
 	"require": {
@@ -27,7 +27,7 @@
 		}
 	},
 	"extra": {
-		"handle": "mailchimp-commerce-4.0",
+		"handle": "mailchimp-commerce",
 		"name": "Mailchimp Commerce 4.0",
 		"class": "crankd\\mc\\MailchimpCommerce",
 		"schemaVersion": "1.1.12"
